@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fiveguys.login.mapper.LoginSqlMapper">
+
+    <select id="selectCustomerCheck" resultType="CustomerDto">
+        select * from fc_customer where customerId=#{customerId} and customerPassword=#{customerPassword}
+    </select>
+
+    <select id="selectSellerCheck" resultType="SellerDto">
+        select * from fc_seller where sellerId=#{sellerId} and sellerPassword=#{sellerPassword}
+    </select>
+
+    <select id="selectMasterCheck" resultType="MasterDto">
+        select * from fc_master where masterId=#{masterId} and masterPassword=#{masterPassword}
+    </select>
+
+</mapper>

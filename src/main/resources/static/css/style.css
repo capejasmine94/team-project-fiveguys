@@ -5,3 +5,18 @@
 .customer_main_loginFont {
     color: white;
 }
+
+.customer_main_loginBorder {
+    border: 1px solid #EF4A5F;
+    border-radius: 1rem;
+}
+
+.customer_main_link {
+    text-decoration: none;
+    color: white;
+}
+
+.customer_navi_link {
+    text-decoration: none;
+    color: black;
+}

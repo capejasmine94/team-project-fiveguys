@@ -11,4 +11,10 @@ public class CustomerController {
     public String mainPage() {
         return "customer/mainPage";
     }
+
+    @RequestMapping("myPage")
+    public String myPage() {
+
+        return "customer/myPage";
+    }
 }

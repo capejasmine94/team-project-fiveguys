@@ -45,9 +45,9 @@
 </div>
 <div class="container">
     <!-- 로그인시-->
-    <div class="row mt-2 py-3 customer_main_loginFont" th:if="${session.customerDto != null}">
+    <div class="row mt-2 py-3 customer_main_loginFont" th:unless="${session.customerDto == null}">
         <div class="col">
-            <span class="fs-5 fw-bold">심규진</span><span class="ms-1">님</span><br>
+            <span class="fs-5 fw-bold" th:text="${session.customerDto.customerName}">심규진</span><span class="ms-1">님</span><br>
             <span class="fs-4">환영합니닭!</span>
         </div>
             <div class="col-1 text-end d-flex justify-content-center align-items-center px-4 rounded-3" style="background-color: #D72239">
@@ -56,8 +56,8 @@
                 </a>
             </div>
     </div>
-    <!-- 비회원 -->
-    <div class="row mt-4 py-3 customer_main_loginFont customer_main_loginBorder" th:unless="${session.customerDto != null}">
+    <!-- 비회원 로그인 -->
+    <div class="row mt-4 py-3 customer_main_loginFont customer_main_loginBorder" th:if="${session.customerDto == null}">
         <div class="col fs-1 fw-bold text-center">
             <a href="/customer/myPage" class="customer_main_link">
                 <span><i class="bi bi-escape"></i></span>

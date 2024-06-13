@@ -2,7 +2,7 @@ package com.fiveguys.seller.controller;
 
 import com.fiveguys.dto.SellerCommunityDto;
 import com.fiveguys.dto.SellerCommunityImageDetailDto;
-import com.fiveguys.dto.eventDetailImageDto;
+import com.fiveguys.dto.EventDetailImageDto;
 import com.fiveguys.seller.service.SellerCommunityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

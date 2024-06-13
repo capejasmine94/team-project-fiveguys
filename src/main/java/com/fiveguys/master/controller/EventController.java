@@ -17,11 +17,11 @@ public class EventController {
     @Autowired
     private EventService eventService;
     
-    @RequestMapping("listPage")
+    @RequestMapping("eventlistPage")
     public String listPage(Model model){
         List<EventBoardDto> eventDtoList = eventService.selecteventList();
         model.addAttribute("eventDtoList", eventDtoList);
-        return "event/listPage";
+        return "master/eventlistPage";
     }
 
     

@@ -14,10 +14,8 @@ public class EventService {
     @Autowired
     private EventSqlMapper eventSqlMapper;
 
-
-    
-
     public List<EventBoardDto> selecteventList() {
+
         return eventSqlMapper.selecteventList();
     }
 }

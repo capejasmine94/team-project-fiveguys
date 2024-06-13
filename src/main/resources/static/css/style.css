@@ -10,6 +10,11 @@
     border: 1px solid #EF4A5F;
     border-radius: 1rem;
 }
+.customer_main_order {
+    border-radius: 1rem;
+    background-color: #D72239;
+    color: white;
+}
 
 .customer_main_link {
     text-decoration: none;

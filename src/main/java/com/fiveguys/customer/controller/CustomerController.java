@@ -9,15 +9,7 @@ public class CustomerController {
 
     @RequestMapping("mainPage")
     public String mainPage() {
-        System.out.println("DKSSU");
-        System.out.println("하하하");
-        System.out.println("HI");
         return "customer/mainPage";
-        
     }
-    
-    
-    
 }
 
-//안녕하세요

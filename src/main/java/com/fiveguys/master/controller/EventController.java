@@ -24,5 +24,13 @@ public class EventController {
         return "master/eventlistPage";
     }
 
+    @RequestMapping("eventInsertPage")
+    public String eventInsertPage(){
+
+
+        
+        return "master/eventInsertPage";
+    }
+
     
 }

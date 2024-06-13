@@ -10,6 +10,7 @@ public class CustomerController {
     @RequestMapping("mainPage")
     public String mainPage() {
         System.out.println("DKSSU");
+        System.out.println("HI");
         return "customer/mainPage";
         
     }

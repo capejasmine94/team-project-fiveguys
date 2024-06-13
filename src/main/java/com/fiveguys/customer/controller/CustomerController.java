@@ -11,4 +11,8 @@ public class CustomerController {
     public String mainPage() {
         return "customer/mainPage";
     }
+    
+    
 }
+
+//안녕하세요

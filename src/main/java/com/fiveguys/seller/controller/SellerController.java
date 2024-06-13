@@ -11,4 +11,10 @@ public class SellerController {
     public String mainPage() {
         return "seller/mainPage";
     }
+
+    @RequestMapping("sellerCommunity")
+    public String sellerCommunity(){
+        return "seller/sellerCommunity";
+    }
+
 }

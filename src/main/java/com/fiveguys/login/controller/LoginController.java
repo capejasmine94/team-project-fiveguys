@@ -64,20 +64,4 @@ public class LoginController {
         return "redirect:/master/mainPage";
 
     }
-
-    @RequestMapping("customerLogoutProcess")
-    public String customerLogoutProcess(HttpSession session) {
-        session.removeAttribute("customerDto");
-        return "redirect:./mainPage";
-    }
-    @RequestMapping("sellerLogoutProcess")
-    public String sellerLogoutProcess(HttpSession session) {
-        session.removeAttribute("sellerDto");
-        return "redirect:./mainPage";
-    }
-    @RequestMapping("masterLogoutProcess")
-    public String masterLogoutProcess(HttpSession session) {
-        session.removeAttribute("masterDto");
-        return "redirect:./mainPage";
-    }
 }

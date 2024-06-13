@@ -12,4 +12,3 @@ public class CustomerController {
         return "customer/mainPage";
     }
 }
-

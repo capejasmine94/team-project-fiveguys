@@ -9,8 +9,11 @@ public class CustomerController {
 
     @RequestMapping("mainPage")
     public String mainPage() {
+        System.out.println("DKSSU");
         return "customer/mainPage";
+        
     }
+    
     
     
 }

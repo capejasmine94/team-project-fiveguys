@@ -2,8 +2,6 @@ package com.fiveguys.dto;
 
 import lombok.Data;
 
-import java.util.Date;
-
 @Data
 public class SellerCommunityDto {
     private int sellerCommunityNumber;
@@ -12,5 +10,5 @@ public class SellerCommunityDto {
     private String sellerCommunityTitle;
     private String sellerCommunityContent;
     private int sellerCommunityVisitCount;
-    private Date sellerCommunityCreatedAt;
+    private String sellerCommunityCreatedAt;
 }

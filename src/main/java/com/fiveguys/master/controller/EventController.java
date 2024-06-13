@@ -19,9 +19,15 @@ public class EventController {
     
     @RequestMapping("eventlistPage")
     public String listPage(Model model){
-        List<EventBoardDto> eventDtoList = eventService.selecteventList();
+        List<EventBoardDto> eventDtoList = eventService.selectEventList();
         model.addAttribute("eventDtoList", eventDtoList);
         return "master/eventlistPage";
+    }
+
+    @RequestMapping("eventInsertPage")
+    public String eventInsertPage(){
+
+        return "master/eventInsertPage";
     }
 
     

@@ -9,6 +9,6 @@ import com.fiveguys.dto.EventBoardDto;
 @Mapper
 public interface EventSqlMapper {
 
-    List<EventBoardDto> selecteventList();
+    List<EventBoardDto> selectEventList();
 
 }

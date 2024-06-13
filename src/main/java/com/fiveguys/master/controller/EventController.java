@@ -2,10 +2,7 @@ package com.fiveguys.master.controller;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import com.fiveguys.dto.EventDetailImageDto;
 import jakarta.servlet.http.HttpSession;
@@ -30,7 +27,9 @@ public class EventController {
     @RequestMapping("eventlistPage")
     public String listPage(Model model){
         List<EventBoardDto> eventDtoList = eventService.selectEventList();
+        int selectRunningEvent = eventService.selectRunningEvent();
         model.addAttribute("eventDtoList", eventDtoList);
+        model.addAttribute("selectRunningEvent",selectRunningEvent);
         return "master/eventlistPage";
     }
 
@@ -130,6 +129,16 @@ public class EventController {
         String reLocation = todaypath + filename;
         return reLocation;
     }
+
+    @RequestMapping("eventDetailPage")
+    public String detailPage(@RequestParam("eventNumber") int eventNumber,Model model){
+        Map<String,Object> eventBoardDtoAndDetail =  eventService.eventBoardDtoAndDetail(eventNumber);
+        model.addAttribute("eventBoardDtoAndDetail",eventBoardDtoAndDetail);
+        return "master/eventDetailPage";
+    }
+
+
+
 
 
 

@@ -62,6 +62,26 @@ public class LoginController {
             session.setAttribute("masterDto", masterDto1);
         }
         return "redirect:/master/mainPage";
+    }
 
+    @RequestMapping("customerLogoutProcess")
+    public String customerLogoutProcess(HttpSession session) {
+
+        session.invalidate();
+        return "redirect:/customer/mainPage";
+    }
+
+    @RequestMapping("sellerLogoutProcess")
+    public String sellerLogoutProcess(HttpSession session) {
+
+        session.invalidate();
+        return "redirect:/seller/mainPage";
+    }
+
+    @RequestMapping("masterLogoutProcess")
+    public String masterLogoutProcess(HttpSession session) {
+
+        session.invalidate();
+        return "redirect:/master/mainPage";
     }
 }

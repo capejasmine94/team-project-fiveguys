@@ -27,10 +27,43 @@
         </div>
     </div>
     <div class="row mt-3 bg-white py-2 rounded">
+        <div class="col">
+            <a class="btn btn-primary" href="/seller/sellerCommunityWritePage">작성하기</a>
+        </div>
         <div class="col text-end">
             <span>최신순</span>
         </div>
     </div>
+    <div th:each="seller : ${sellerCommunity}" class="row mt-2 bg-white py-2 rounded">
+        <div class="col">
+            <div class="row">
+                <div class="col">
+                    <span class="fw-bold" th:text="${seller.sellerCommunityTitle}">하하호호호</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col line-limit">
+                    <span th:text="${seller.sellerCommunityContent}" class="font">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</span>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col font">
+                    <span>한조트레이서</span>
+                    <span><i class="bi bi-dot"></i></span>
+                    <span th:text="${seller.sellerCommunityCreatedAt}">15일전</span>
+                    <span class="ms-2"><i class="bi bi-eye"></i></span>
+                    <span>0</span>
+                    <span class="ms-2"><i class="bi-heart"></i></span>
+                    <span>0</span>
+                    <span class="ms-2"><i class="bi bi-chat-dots"></i></span>
+                    <span>0</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-2">
+            <img class="img-thumbnail" th:src="@{|/images/${seller.sellerCommunityImage}|}" alt="">
+        </div>
+    </div>
     <div class="row mt-2 bg-white py-2 rounded">
         <div class="col">
             <div class="row">
@@ -48,104 +81,6 @@
                     <span>한조트레이서</span>
                     <span><i class="bi bi-dot"></i></span>
                     <span>15일전</span>
-                    <span class="ms-2"><i class="bi bi-eye"></i></span>
-                    <span>0</span>
-                    <span class="ms-2"><i class="bi-heart"></i></span>
-                    <span>0</span>
-                    <span class="ms-2"><i class="bi bi-chat-dots"></i></span>
-                    <span>0</span>
-                </div>
-            </div>
-        </div>
-        <div class="col-2">
-            <img class="img-thumbnail" src="그래픽카드1.jpg" alt="">
-        </div>
-    </div>
-    <div class="row mt-2 bg-white py-2 rounded">
-        <div class="col">
-            <div class="row">
-                <div class="col">
-                    <span class="fw-bold">하하호호호</span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col line-limit">
-                    <span class="font">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</span>
-                </div>
-            </div>
-            <div class="row mt-4">
-                <div class="col font">
-                    <span>한조트레이서</span>
-                    <span><i class="bi bi-dot"></i></span>
-                    <span>15일전</span>
-                    <span class="ms-2"><i class="bi bi-eye"></i></span>
-                    <span>0</span>
-                    <span class="ms-2"><i class="bi-heart"></i></span>
-                    <span>0</span>
-                    <span class="ms-2"><i class="bi bi-chat-dots"></i></span>
-                    <span>0</span>
-                </div>
-            </div>
-        </div>
-        <div class="col-2">
-            <img class="img-thumbnail" src="그래픽카드1.jpg" alt="">
-        </div>
-    </div>
-    <div class="row mt-2 bg-white py-2 rounded">
-        <div class="col">
-            <div class="row">
-                <div class="col font">
-                    <span>한조트레이서</span>
-                    <span><i class="bi bi-dot"></i></span>
-                    <span>15일전</span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <span class="fw-bold">하하호호호</span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col line-limit">
-                    <span class="font">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</span>
-                </div>
-            </div>
-            <div class="row mt-1">
-                <div class="col font">
-                    <span class="ms-2"><i class="bi bi-eye"></i></span>
-                    <span>0</span>
-                    <span class="ms-2"><i class="bi-heart"></i></span>
-                    <span>0</span>
-                    <span class="ms-2"><i class="bi bi-chat-dots"></i></span>
-                    <span>0</span>
-                </div>
-            </div>
-        </div>
-        <div class="col-2">
-            <img class="img-thumbnail" src="그래픽카드1.jpg" alt="">
-        </div>
-    </div>
-    <div class="row mt-2 bg-white py-2 rounded">
-        <div class="col">
-            <div class="row">
-                <div class="col font">
-                    <span>한조트레이서</span>
-                    <span><i class="bi bi-dot"></i></span>
-                    <span>15일전</span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <span class="fw-bold">하하호호호</span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col line-limit">
-                    <span class="font">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</span>
-                </div>
-            </div>
-            <div class="row mt-1">
-                <div class="col font">
                     <span class="ms-2"><i class="bi bi-eye"></i></span>
                     <span>0</span>
                     <span class="ms-2"><i class="bi-heart"></i></span>

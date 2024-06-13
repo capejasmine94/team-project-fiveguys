@@ -11,11 +11,11 @@ public class AppConfig implements WebMvcConfigurer {
         if(System.getProperty("os.name").charAt(0) == 'W'){
             System.out.println("WINDOW");
             registry.addResourceHandler("images/**")
-                    .addResourceLocations("file:///C:/fiveguys_image/*");
+                    .addResourceLocations("file:///C:/fiveguys_image/");
         }else {
             System.out.println("MAC");
             registry.addResourceHandler("images/**")
-                    .addResourceLocations("file:///Users/fiveguys_image/*");
+                    .addResourceLocations("file:///Users/fiveguys_image/");
         }
 
     }

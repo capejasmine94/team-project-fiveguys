@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fiveguys.customer.mapper.CommunitySqlMapper">
+
+    <insert id="insertCommunity">
+        insert into fc_community(
+            customerNumber, communityTitle, communityContent, communityVisitCount
+        ) values(
+             1 , '제목입니다', '내용입니다' , 0
+        )
+    </insert>
+
+
+</mapper>

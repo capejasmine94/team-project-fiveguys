@@ -5,10 +5,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("seller")
-public class SellerController {
+public class SellerCommunityController {
 
-    @RequestMapping("mainPage")
-    public String mainPage() {
-        return "seller/mainPage";
+    @RequestMapping("sellerCommunity")
+    public String sellerCommunity(){
+        return "seller/sellerCommunity";
     }
 }

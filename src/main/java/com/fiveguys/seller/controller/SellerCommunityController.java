@@ -92,4 +92,9 @@ public class SellerCommunityController {
 
         return directory + filename;
     }
+
+    @RequestMapping("sellerCommunityDetail")
+    public String sellerCommunityDetail(Model model,int sellerNumber){
+        return "seller/sellerCommunityDetail";
+    }
 }

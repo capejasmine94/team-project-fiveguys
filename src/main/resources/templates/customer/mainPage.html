@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="/css/style.css">
 
 </head>
-<body class="container-fluid" style="background-color: #B41E30; height: 100rem;">
+<body class="container-fluid" style="background-color: #B41E30;">
 
 <div th:replace="common/navi::topNavi"></div>
 <div th:replace="common/navi::bottomNavi"></div>
@@ -44,11 +44,14 @@
     </div>
 </div>
 <div class="container">
-    <div class="row mt-3 border">
+    <div class="row mt-3 rounded-3 customer_main_loginFont">
         <div class="col">
-            <!-- 유저 이름 출력시킬것 -->
-            <span>심규진</span><span>님</span><br>
-            <span>환영합니다 파이브가이즈치킨 입니다.</span>
+            <!-- 로그인시-->
+            <span class="fs-5">심규진</span><span class="ms-1">님</span><br>
+            <span class="fs-4">환영합니닭!</span>
+        </div>
+        <div class="col-2 text-end d-flex justify-content-center align-items-center gs-0 rounded-4" style="background-color: #D72239">
+            <span><i class="bi bi-caret-right fa-2x"></i></span>
         </div>
     </div>
 

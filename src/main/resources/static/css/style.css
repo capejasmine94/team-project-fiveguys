@@ -31,3 +31,14 @@
     font-size: 1rem;
     color: #FFE165;
 }
+
+.storesMainImg {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 1rem;
+}
+
+.storesSideFont {
+    font-size: 0.8rem;
+
+}

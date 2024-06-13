@@ -6,6 +6,7 @@ import java.util.Date;
 
 @Data
 public class CommunityDto {
+
     private int communityNumber;
     private int customerNumber;
     private String communityTitle;

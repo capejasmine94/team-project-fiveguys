@@ -83,7 +83,7 @@ public class EventController {
 
                 //DB 작업용 Dto 생성
                 EventDetailImageDto eventDetailImageDto = new EventDetailImageDto();
-
+                eventDetailImageDto.setEventDetailImage(todaypath + filename);
                 eventDetailImageList.add(eventDetailImageDto);
 
 
@@ -91,9 +91,44 @@ public class EventController {
             }
         }
         //파일 처리 끝
+        
+
         return "redirect:./eventListPage";
     }
 
+    public String mainImageRemake(MultipartFile pp_mainImgLink){
+
+        String rootPath = "C:/uploadFiles/";
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd/");
+        String todaypath = sdf.format(new Date());
+
+        File todayFolderForCreate = new File(rootPath + todaypath);
+
+        if(!todayFolderForCreate.exists()){
+            todayFolderForCreate.mkdirs();
+        }
+
+        String originalFilename = pp_mainImgLink.getOriginalFilename();
+
+        String uuid = UUID.randomUUID().toString();
+        long currentTime = System.currentTimeMillis();
+
+        String filename = uuid + "_" + currentTime;
+
+        String ext = originalFilename.substring(originalFilename.lastIndexOf("."));
+
+        filename += ext;
+
+        try {
+            pp_mainImgLink.transferTo(new File(rootPath + todaypath + filename));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String reLocation = todaypath + filename;
+        return reLocation;
+    }
 
 
 

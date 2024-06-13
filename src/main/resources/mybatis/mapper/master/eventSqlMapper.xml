@@ -6,4 +6,20 @@
         select * from fc_eventBoard
     </select>
 
+    <insert id="insertEventProcess">
+        <selectKey keyProperty="eventNumber" order="AFTER" resultType="int">
+            select max(eventNumber) from fc_eventBoard
+        </selectKey>
+        insert into fc_eventBoard(
+        eventMainImage, eventTitle, eventStartDay, eventEndDay,eventVisitCount)
+        values(
+        #{eventMainImage},#{eventTitle},#{eventStartDay},#{eventEndDay},0)
+    </insert>
+
+    <insert id="insertDetailImageProcess">
+        insert into fc_eventDetailImage(
+        eventNumber,eventDetailImage)
+        values(#{eventNumber},#{eventDetailImage})
+    </insert>
+
 </mapper>

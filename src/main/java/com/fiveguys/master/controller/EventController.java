@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.fiveguys.dto.EventBoardDto;
 import com.fiveguys.master.service.EventService;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 
@@ -40,7 +41,9 @@ public class EventController {
     }
 
     @RequestMapping("insertEventProcess")
-    public String insertEventProcess(HttpSession session,EventBoardDto eventBoardDto,MultipartFile uploadFile ,MultipartFile[] uploadFiles){
+    public String insertEventProcess(HttpSession session,EventBoardDto eventBoardDto, @RequestParam("uploadFile")MultipartFile uploadFile , @RequestParam("uploadFiles")MultipartFile[] uploadFiles){
+        String mainImage = mainImageRemake(uploadFile);
+        eventBoardDto.setEventMainImage(mainImage);
 
         List<EventDetailImageDto> eventDetailImageList = new ArrayList<>();
         //파일 처리 시작
@@ -86,19 +89,17 @@ public class EventController {
                 eventDetailImageDto.setEventDetailImage(todaypath + filename);
                 eventDetailImageList.add(eventDetailImageDto);
 
-
-
             }
         }
         //파일 처리 끝
-        
+        eventService.insertEventProcess(eventBoardDto,eventDetailImageList);
 
-        return "redirect:./eventListPage";
+        return "redirect:./eventlistPage";
     }
 
     public String mainImageRemake(MultipartFile pp_mainImgLink){
 
-        String rootPath = "C:/uploadFiles/";
+        String rootPath = "C:/fiveguys_image/";
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd/");
         String todaypath = sdf.format(new Date());

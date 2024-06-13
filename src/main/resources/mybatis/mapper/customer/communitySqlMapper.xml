@@ -7,9 +7,20 @@
         insert into fc_community(
             customerNumber, communityTitle, communityContent, communityVisitCount
         ) values(
-             1 , '제목입니다', '내용입니다' , 0
+             #{customerNumber} , #{communityTitle}, #{communityContent} , #{communityVisitCount}
         )
     </insert>
+
+    <select id="selectCommunityList" resultType="CommunityDto">
+        select * from fc_community
+        order by communityNumber desc
+    </select>
+
+    <select id="selectCustomerNumber" resultType="int">
+        select * from fc_community where customerNumber = #{customerNumber}
+    </select>
+
+
 
 
 </mapper>

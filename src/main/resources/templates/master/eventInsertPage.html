@@ -14,7 +14,19 @@
 <div class="container">
     <div class="row">
         <div class="col">
-
+            <form action="./insertEventProcess" method="post" enctype="multipart/form-data">
+                <input name="uploadFile" type="file" accept="image/*">
+                닉네임: <span th:text="${session.masterDto.masterId}"></span><br>
+                제목: <input name="eventTitle" type="text"><br>
+                시작일:<input name="eventStartDay" type="date"><br>
+                종료일:<input name="eventEndDay" type="date"><br>
+                내용: <br>
+                <textarea name="content" rows="10" cols="30"></textarea>
+                <br>
+                <input name="uploadFiles" type="file" multiple accept="image/*">
+                <button>글쓰기</button>
+            </form>
+            </form>
         </div>
     </div>
 

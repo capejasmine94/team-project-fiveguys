@@ -11,4 +11,31 @@ public class SellerController {
     public String mainPage() {
         return "seller/mainPage";
     }
+
+
+    @RequestMapping("orderPage")
+    public String orderPage() {
+
+        return "seller/orderPage";
+    }
+
+    @RequestMapping("materialMenuPage")
+    public String materialMenuPage() {
+        return "seller/materialMenuPage";
+    }
+
+
+    @RequestMapping("sellerReviewPage")
+    public String sellerReviewPage() {
+        return "seller/sellerReviewPage";
+
+    }
+
+
+
+
+
+
+
+
 }

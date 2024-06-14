@@ -8,6 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("customer")
 public class CustomerController {
@@ -27,8 +29,10 @@ public class CustomerController {
     }
 
     @RequestMapping("selectAllStoresPage")
-    public String selectAllStoresPage() {
+    public String selectAllStoresPage(Model model) {
 
+        List<SellerDto> sellerDtoList = sellerService.getAllSellers();
+        model.addAttribute("sellerDtoList", sellerDtoList);
 
         return "customer/selectAllStoresPage";
     }

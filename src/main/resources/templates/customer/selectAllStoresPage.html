@@ -18,14 +18,15 @@
 
 
 <div class="container-fluid" style="margin-top: 4rem">
-    <div class="row border-top border-bottom py-4">
+
+    <div class="row border-top border-bottom py-4" th:each="sellerList : ${sellerDtoList}">
         <div class="col-auto mt-1">
             <img src="/img/매장메인사진.jpeg" class="storesMainImg">
         </div>
         <div class="col">
             <div class="row">
                 <div class="col">
-                    <span class="fs-4">00점 출력시킬것</span>
+                    <span class="fs-3" th:text="${sellerList.sellerName}"></span>
                 </div>
             </div>
             <div class="row">
@@ -39,7 +40,7 @@
                     <div class="row">
                         <div class="col storesSideFont">
                             <span style="color: #BDBDBD"><i class="bi bi-clock-fill"></i></span>
-                            <span class="border-end pe-1">배달:50분</span>
+                            <span class="pe-1 border-end border-2" style="border-color: #BDBDBD">배달:50분</span>
                             <span>픽업:20분</span>
                         </div>
                     </div>
@@ -51,6 +52,7 @@
                 </div>
             </div>
         </div>
+    </div>
 </div>
 
 

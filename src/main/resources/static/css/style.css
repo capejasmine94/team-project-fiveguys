@@ -46,3 +46,7 @@
 .storeOrderCommonFont {
     font-size: 0.9rem;
 }
+
+.storeOrderBorderBottom {
+    border-bottom-width: 1rem;
+}

@@ -12,7 +12,8 @@ public interface CommunitySqlMapper {
 
     public void insertCommunity(CommunityDto communityDto);
     public List<CommunityDto> selectCommunityList();
-    public CustomerDto selectCustomerNumber(int selectCustomerNumber);
+    public CustomerDto selectCommunityNumber(int customerNumber);
+    public int selectCustomerNumber(int customerNumber);
 
 
 }

@@ -49,6 +49,7 @@ public class SellerCommunityService {
         map.put("selectSellerCommunityById",sellerCommunitySqlMapper.selectSellerCommunityById(sellerCommunityNumber));
         map.put("selectImageListById",sellerCommunitySqlMapper.selectImageListById(sellerCommunityNumber));
         map.put("selectSellerCommunityLikeCount",sellerCommunitySqlMapper.selectSellerCommunityLikeCount(sellerCommunityNumber));
+        map.put("selectTotalCommentReplyCount",sellerCommunitySqlMapper.selectTotalCommentCount(sellerCommunityNumber)+sellerCommunitySqlMapper.selectTotalReplyCount(sellerCommunityNumber));
 
         List<Map<String,Object>> sellerCommunityCommentDtoList = sellerCommunitySqlMapper.selectSellerCommunityComment(sellerCommunityNumber);
         List<Map<String,Object>> result = new ArrayList<>();
@@ -98,5 +99,10 @@ public class SellerCommunityService {
     }
     public int checkIfSellerCommunityLikeExists(SellerCommunityLikeDto sellerCommunityLikeDto){
         return sellerCommunitySqlMapper.checkIfSellerCommunityLikeExists(sellerCommunityLikeDto);
+    }
+
+    //게시글 조회수 증가
+    public void updateSellerCommunityVisitCount(int sellerCommunityNumber){
+        sellerCommunitySqlMapper.updateSellerCommunityVisitCount(sellerCommunityNumber);
     }
 }

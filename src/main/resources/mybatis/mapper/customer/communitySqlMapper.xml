@@ -7,7 +7,7 @@
         insert into fc_community(
             customerNumber, communityTitle, communityContent, communityVisitCount
         ) values(
-             #{customerNumber} , #{communityTitle}, #{communityContent} , #{communityVisitCount}
+             #{customerNumber} , #{communityTitle}, #{communityContent} , 0
         )
     </insert>
 
@@ -16,8 +16,12 @@
         order by communityNumber desc
     </select>
 
-    <select id="selectCustomerNumber" resultType="int">
+    <select id="selectCommunityNumber" resultType="CommunityDto">
         select * from fc_community where customerNumber = #{customerNumber}
+    </select>
+
+    <select id="selectCustomerNumber" resultType="int">
+        select * from fc_customer where customerNumber = #{customerNumber}
     </select>
 
 

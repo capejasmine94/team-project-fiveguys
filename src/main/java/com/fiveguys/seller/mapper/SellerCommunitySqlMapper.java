@@ -37,4 +37,7 @@ public interface SellerCommunitySqlMapper {
     public Integer selectSellerCommunityLikeCount(int sellerCommunityNumber);
     public void deleteSellerCommunityLike(SellerCommunityLikeDto sellerCommunityLikeDto);
     public Integer checkIfSellerCommunityLikeExists(SellerCommunityLikeDto sellerCommunityLikeDto);
+
+    //게시글 조회수 증가
+    public void updateSellerCommunityVisitCount(int sellerCommunityNumber);
 }

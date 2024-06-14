@@ -27,8 +27,8 @@ public class CommunityService {
         List<Map<String, Object>> result = new ArrayList<>();
 
         for(CommunityDto communityDto : communityList) {
-            int writerPk = communityDto.getCustomerNumber();
-            CustomerDto customerDto = communitySqlMapper.selectCustomerNumber(writerPk);
+            int writerPk = communitySqlMapper.selectCustomerNumber(communityDto.getCustomerNumber());
+            CustomerDto customerDto = communitySqlMapper.selectCommunityNumber(writerPk);
 
             Map<String, Object> map = new HashMap<>();
 
@@ -39,6 +39,9 @@ public class CommunityService {
         }
         return result;
     }
+
+
+
 
 
 

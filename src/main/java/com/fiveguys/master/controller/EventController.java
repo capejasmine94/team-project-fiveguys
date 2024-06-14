@@ -4,14 +4,13 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import com.fiveguys.dto.EventDetailImageDto;
+import com.fiveguys.dto.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.fiveguys.dto.EventBoardDto;
 import com.fiveguys.master.service.EventService;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,12 +24,18 @@ public class EventController {
     private EventService eventService;
     
     @RequestMapping("eventlistPage")
-    public String listPage(Model model){
+    public String listPage(Model model, HttpSession session){
         List<EventBoardDto> eventDtoList = eventService.selectEventList();
         int selectRunningEvent = eventService.selectRunningEvent();
         model.addAttribute("eventDtoList", eventDtoList);
         model.addAttribute("selectRunningEvent",selectRunningEvent);
-        return "master/eventlistPage";
+        MasterDto masterDto = (MasterDto) session.getAttribute("masterDto");
+
+        if(masterDto != null){
+            return "master/eventlistPage";
+        }
+
+        return  "customer/eventlistPage";
     }
 
     @RequestMapping("eventInsertPage")
@@ -131,10 +136,58 @@ public class EventController {
     }
 
     @RequestMapping("eventDetailPage")
-    public String detailPage(@RequestParam("eventNumber") int eventNumber,Model model){
+    public String detailPage(@RequestParam("eventNumber") int eventNumber,Model model, HttpSession session){
         Map<String,Object> eventBoardDtoAndDetail =  eventService.eventBoardDtoAndDetail(eventNumber);
         model.addAttribute("eventBoardDtoAndDetail",eventBoardDtoAndDetail);
-        return "master/eventDetailPage";
+        List<Map<String,Object>> eventBoardCommentList = eventService.selectEventBoardComet(eventNumber);
+
+        MasterDto masterDto = (MasterDto) session.getAttribute("masterDto");
+        model.addAttribute("eventBoardCommentList",eventBoardCommentList);
+
+        if(masterDto != null){
+            return "master/eventDetailPage";
+        }
+        int selectLikeCheck =0;
+        CustomerDto customerDto = (CustomerDto) session.getAttribute("customerDto");
+
+        if(customerDto != null) {
+            EventLikeDto eventLikeDto = new EventLikeDto();
+            eventLikeDto.setEventNumber(eventNumber);
+            eventLikeDto.setCustomerNumber(customerDto.getCustomerNumber());
+            selectLikeCheck = eventService.selectEventBoardLikeCheck(eventLikeDto);
+            model.addAttribute("selectLikeCheck", selectLikeCheck);
+
+        }
+        return  "customer/eventDetailPage";
+    }
+
+    @RequestMapping("insertEventComment")
+    public String insertEventComment(HttpSession session,EventCommentDto eventCommentDto){
+        int eventBoardNumber = eventCommentDto.getEventNumber();
+        CustomerDto customerDto =  (CustomerDto) session.getAttribute("customerDto");
+        eventCommentDto.setCustomerNumber(customerDto.getCustomerNumber());
+        eventService.insertEventComment(eventCommentDto);
+        return  "redirect:./eventDetailPage?eventNumber="+eventBoardNumber;
+    }
+
+    @RequestMapping("insertDeleteLikeProcess")
+    public String insertDeleteLikeProcess(HttpSession session,@RequestParam("eventNumber")int eventNumber){
+
+        EventLikeDto eventLikeDto = new EventLikeDto();
+        CustomerDto customerDto = (CustomerDto)session.getAttribute("customerDto");
+        if(customerDto == null){
+            return "redirect:/login/customerLogin";
+        }
+        eventLikeDto.setEventNumber(eventNumber);
+        eventLikeDto.setCustomerNumber(customerDto.getCustomerNumber());
+        int selectLikeCheck = eventService.selectEventBoardLikeCheck(eventLikeDto);
+        if(selectLikeCheck == 1 ){
+            eventService.deleteEventLike(eventLikeDto);
+        }else{
+            eventService.insertEventLike(eventLikeDto);
+        }
+
+        return "redirect:./eventDetailPage?eventNumber="+eventNumber;
     }
 
 

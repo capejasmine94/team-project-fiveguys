@@ -54,7 +54,7 @@
         <div class="col-auto rounded-circle">
             <div class="row-auto text-center">
                 <div class="col">
-                    <a href="" class="customer_navi_link">
+                    <a href="/event/eventlistPage" class="customer_navi_link">
                         <span><i class="bi bi-calendar-date fa-2x"></i></span>
                     </a>
                 </div>
@@ -80,11 +80,11 @@
                 </div>
             </div>
         </div>
-        <!-- 게시판 페이지 -->
+        <!-- 지효 게시판 페이지 -->
         <div class="col-auto rounded-circle">
             <div class="row-auto text-center">
                 <div class="col">
-                    <a href="" class="customer_navi_link">
+                    <a href="/customer/communityPage" class="customer_navi_link">
                         <span><i class="bi bi-person-circle fa-2x"></i></span>
                     </a>
                 </div>
@@ -113,8 +113,9 @@
     </div>
 </div>
 
+
 <!--마이페이지 네비 상단-->
-<div th:fragment="myPageTopNavi" class="container-fluid fixed-top py-2">
+<div th:fragment="myPageTopNavi" class="container-fluid fixed-top py-2 bg-light">
     <div class="row">
         <div class="col"></div>
         <div class="col text-center">
@@ -130,10 +131,16 @@
     </div>
 </div>
 
-<!--주문하기 네비 상단-->
-<div th:fragment="orderTopNavi" class="container-fluid fixed-top py-2">
+<!--매장선택 네비 상단-->
+<div th:fragment="orderTopNavi" class="container-fluid fixed-top py-2 bg-light">
     <div class="row">
-        <div class="col"></div>
+        <div class="col">
+            <a href="/customer/mainPage">
+                <span class="fs-3" style="color: black">
+                    <i class="bi bi-chevron-left"></i>
+                </span>
+            </a>
+        </div>
         <div class="col text-center">
             <span class="fs-3">
                 전체 매장
@@ -144,6 +151,25 @@
                 <i class="bi bi-bag"></i>
             </span>
         </div>
+    </div>
+</div>
+
+<!--매장 주만 네비 상단-->
+<div th:fragment="orderTopNavi" class="container-fluid fixed-top py-2 bg-light">
+    <div class="row">
+        <div class="col">
+            <a href="/customer/mainPage">
+                <span class="fs-3" style="color: black">
+                    <i class="bi bi-chevron-left"></i>
+                </span>
+            </a>
+        </div>
+        <div class="col text-center">
+            <span class="fs-3">
+                전체 매장
+            </span>
+        </div>
+        <div class="col"></div>
     </div>
 </div>
 

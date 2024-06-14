@@ -6,5 +6,5 @@ import lombok.Data;
 public class EventLikeDto {
     private int eventLikeNumber;
     private int eventNumber;
-    private int custmerNumber;
+    private int customerNumber;
 }

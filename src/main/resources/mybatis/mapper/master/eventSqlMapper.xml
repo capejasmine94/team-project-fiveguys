@@ -38,4 +38,39 @@
         where eventNumber = #{eventNumber}
     </select>
 
+    <insert id="insertEventComment">
+        insert into fc_eventComment(
+        eventNumber,customerNumber,eventCommentContent)
+        values(
+        #{eventNumber},#{customerNumber},#{eventCommentContent})
+    </insert>
+
+    <select id="selectEventBoardComet" resultType="EventCommentDto">
+        select * from fc_eventComment
+        where eventNumber = #{eventNumber}
+    </select>
+
+    <select id="selectCustomerDto" resultType="CustomerDto">
+        select * from fc_customer
+        where customerNumber = #{customerNumber}
+    </select>
+
+    <select id="selectEventBoardLikeCheck" resultType="int">
+        select count(*) from fc_eventLike
+        where eventNumber = #{eventNumber} and customerNumber = #{customerNumber}
+    </select>
+
+    <delete id="deleteEventLike">
+        delete from fc_eventLike
+        where eventNumber = #{eventNumber} and customerNumber = #{customerNumber}
+    </delete>
+
+    <insert id="insertEventLike">
+        insert into fc_eventLike(
+        eventNumber,customerNumber
+        )values(
+        #{eventNumber},#{customerNumber}
+        )
+    </insert>
+
 </mapper>

@@ -56,12 +56,11 @@
 
             <div class="row pt-3">
 
-                <div class="col">
+                <div class="col-2">
                     <div class="card border-danger h-60 bg-danger">
                         <img src="/img/userIcon.jpg" class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title fs-4 text-center text-white">000 님</h5>
-                            <p class="card-text fs-6 text-center text-white">00지점</p>
+                        <div class="card-body text-center">
+                            <span class="fs-5 text-white fw-bold" th:text="${session.sellerDto.sellerName}"></span>
                         </div>
                     </div>
                 </div>
@@ -78,12 +77,12 @@
                             </button>
                             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                                 <div class="navbar-nav">
-                                    <a class="nav-link active" href="#">생닭</a>
-                                    <a class="nav-link active" href="#">소스</a>
-                                    <a class="nav-link active" href="#">사이드</a>
-                                    <a class="nav-link active" href="#">음료</a>
-                                    <a class="nav-link active" href="#">치킨박스</a>
-                                    <a class="nav-link active" href="#">봉지</a>
+                                    <a class="nav-link active" href="/seller/materialMenuPage1">생닭</a>
+                                    <a class="nav-link active" href="/seller/materialMenuPage2">소스</a>
+                                    <a class="nav-link active" href="/seller/materialMenuPage3">사이드</a>
+                                    <a class="nav-link active" href="/seller/materialMenuPage4">음료</a>
+                                    <a class="nav-link active" href="/seller/materialMenuPage5">치킨박스</a>
+                                    <a class="nav-link active" href="/seller/materialMenuPage6">봉지</a>
                                 </div>
                             </div>
                         </div>

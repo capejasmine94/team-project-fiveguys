@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.fiveguys.seller.mapper.SellerSqlMapper">
+<mapper namespace="com.fiveguys.seller.mapper.SellerCustomerSqlMapper">
 
     <select id="selectAllSellers" resultType="SellerDto">
         SELECT * FROM fc_seller ORDER BY sellerNumber
     </select>
 
-
-
-    <select id="sellerLoginProcess" resultType="SellerDto">
-        select * from fc_seller
-        where sellerId=#{sellerId} and sellerpassword=#{sellerpassword}
+    <select id="selectSellersByNumber" resultType="sellerDto">
+        SELECT sellerName, sellerAddress,sellerPhoneNumber FROM fc_seller WHERE sellerNumber = #{sellerNumber}
     </select>
 
 </mapper>

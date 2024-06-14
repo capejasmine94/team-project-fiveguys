@@ -2,10 +2,8 @@ package com.fiveguys.master.mapper;
 
 import java.util.List;
 
-import com.fiveguys.dto.EventDetailImageDto;
+import com.fiveguys.dto.*;
 import org.apache.ibatis.annotations.Mapper;
-
-import com.fiveguys.dto.EventBoardDto;
 
 @Mapper
 public interface EventSqlMapper {
@@ -21,4 +19,16 @@ public interface EventSqlMapper {
     EventBoardDto eventBoardDto(int eventNumber);
 
     List<EventDetailImageDto> eventBoardDetail(int eventNumber);
+
+    void insertEventComment(EventCommentDto eventCommentDto);
+
+    List<EventCommentDto> selectEventBoardComet(int eventNumber);
+
+    CustomerDto selectCustomerDto(int customerNumber);
+
+    int selectEventBoardLikeCheck(EventLikeDto eventLikeDto);
+
+    void deleteEventLike(EventLikeDto eventLikeDto);
+
+    void insertEventLike(EventLikeDto eventLikeDto);
 }

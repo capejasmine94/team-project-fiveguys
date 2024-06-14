@@ -8,7 +8,7 @@
 }
 .customer_main_order {
     border-radius: 1rem;
-    background-color: #D72239;
+        background-color: #D72239;
     color: white;
 }
 
@@ -41,4 +41,12 @@
 .storesSideFont {
     font-size: 0.8rem;
 
+}
+
+.storeOrderCommonFont {
+    font-size: 0.9rem;
+}
+
+.storeOrderBorderBottom {
+    border-top: 10px solid #F9F9F9;
 }

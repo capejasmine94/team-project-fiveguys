@@ -1,15 +1,14 @@
 package com.fiveguys.master.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.fiveguys.dto.EventDetailImageDto;
+import com.fiveguys.dto.*;
 import com.fiveguys.master.mapper.EventSqlMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.fiveguys.dto.EventBoardDto;
 
 @Service
 public class EventService {
@@ -43,5 +42,37 @@ public class EventService {
         map.put("eventDetailImageDtoList",eventDetailImageDtoList);
 
         return map;
+    }
+
+    public void insertEventComment(EventCommentDto eventCommentDto) {
+        eventSqlMapper.insertEventComment(eventCommentDto);
+    }
+
+
+
+    public List<Map<String, Object>> selectEventBoardComet(int eventNumber) {
+        List<Map<String,Object>> selectEventBoardCometInfoList = new ArrayList<>();
+        List<EventCommentDto> selectEventCommentList = eventSqlMapper.selectEventBoardComet(eventNumber);
+        for(EventCommentDto eventCommentDto: selectEventCommentList){
+            Map<String,Object> map = new HashMap<>();
+            CustomerDto customerDto = eventSqlMapper.selectCustomerDto(eventCommentDto.getCustomerNumber());
+            map.put("customerDto",customerDto);
+            map.put("eventCommentDto",eventCommentDto);
+
+            selectEventBoardCometInfoList.add(map);
+        }
+        return selectEventBoardCometInfoList;
+    }
+
+    public int selectEventBoardLikeCheck(EventLikeDto eventLikeDto) {
+         return eventSqlMapper.selectEventBoardLikeCheck(eventLikeDto);
+    }
+
+    public void deleteEventLike(EventLikeDto eventLikeDto) {
+        eventSqlMapper.deleteEventLike(eventLikeDto);
+    }
+
+    public void insertEventLike(EventLikeDto eventLikeDto) {
+        eventSqlMapper.insertEventLike(eventLikeDto);
     }
 }

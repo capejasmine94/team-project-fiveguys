@@ -9,7 +9,7 @@ import java.util.Map;
 @Mapper
 public interface SellerCommunitySqlMapper {
 
-    public SellerDto selectSeller(int sellerNumber);
+    public SellerDto selectSeller(int sellerCommunityNumber);
 
     public void insertSellerCommunityWrite(SellerCommunityDto sellerCommunityDto);
     public void insertSellerCommunityImageDetail(SellerCommunityImageDetailDto sellerCommunityImageDetailDto);
@@ -40,4 +40,18 @@ public interface SellerCommunitySqlMapper {
 
     //게시글 조회수 증가
     public void updateSellerCommunityVisitCount(int sellerCommunityNumber);
+
+    //댓글 좋아요 싫어요
+    public void insertSellerCommentLikeStatus(SellerCommunityCommentLikeStatusDto sellerCommunityCommentLikeStatusDto);
+    public SellerCommunityCommentLikeStatusDto selectSellerCommentLikeStatus(SellerCommunityCommentLikeStatusDto sellerCommunityCommentLikeStatusDto);
+    public void updateSellerCommentLikeStatus(SellerCommunityCommentLikeStatusDto sellerCommunityCommentLikeStatusDto);
+    public Integer selectSellerCommentLikeCount(int sellerCommunityCommentLikeStatusNumber);
+    public Integer selectSellerCommentDisLikeCount(int sellerCommunityCommentLikeStatusNumber);
+
+    //대댓글 좋아요 싫어요
+    public void insertSellerReplyLikeStatus(SellerCommunityReplyLikeStatusDto sellerCommunityReplyLikeStatusDto);
+    public SellerCommunityReplyLikeStatusDto selectSellerReplyLikeStatus(int sellerCommunityReplyNumber);
+    public Integer selectSellerReplyLikeCount(int sellerCommunityReplyLikeStatusNumber);
+    public Integer selectSellerReplyDisLikeCount(int sellerCommunityReplyLikeStatusNumber);
+    public void updateSellerReplyLikeStatus(SellerCommunityReplyLikeStatusDto sellerCommunityReplyLikeStatusDto);
 }

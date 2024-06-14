@@ -112,9 +112,11 @@ public class SellerCommunityController {
             sellerCommunityLikeDto.setSellerNumber(sellerDto.getSellerNumber());
             sellerCommunityLikeDto.setSellerCommunityNumber(sellerCommunityNumber);
             model.addAttribute("checkIfSellerCommunityLikeExists",sellerCommunityService.checkIfSellerCommunityLikeExists(sellerCommunityLikeDto));
+            model.addAttribute("sellerCommunityDetail", sellerCommunityService.selectSellerCommunityByIdWithSession(sellerCommunityNumber,sellerDto.getSellerNumber()));
+        }else{
+            model.addAttribute("sellerCommunityDetail", sellerCommunityService.selectSellerCommunityById(sellerCommunityNumber));
         }
         sellerCommunityService.updateSellerCommunityVisitCount(sellerCommunityNumber);
-        model.addAttribute("sellerCommunityDetail", sellerCommunityService.selectSellerCommunityById(sellerCommunityNumber));
         return "seller/sellerCommunityDetail";
     }
 
@@ -145,6 +147,57 @@ public class SellerCommunityController {
         }else{
             sellerCommunityService.deleteSellerCommunityLike(sellerCommunityLikeDto);
         }
+        return "redirect:./sellerCommunityDetail?sellerCommunityNumber="+sellerCommunityNumber;
+    }
+
+    @RequestMapping("sellerCommentLikeProcess")
+    public String sellerCommentLikeProcess(SellerCommunityCommentLikeStatusDto sellerCommunityCommentLikeStatusDto,int sellerCommunityNumber){
+        if(sellerCommunityCommentLikeStatusDto.getSellerCommentLikeStatus().isEmpty()){
+            sellerCommunityCommentLikeStatusDto.setSellerCommentLikeStatus("like");
+        }else if(sellerCommunityCommentLikeStatusDto.getSellerCommentLikeStatus().equals("dislike")){
+            sellerCommunityCommentLikeStatusDto.setSellerCommentLikeStatus("like");
+        }else{
+            sellerCommunityCommentLikeStatusDto.setSellerCommentLikeStatus("");
+        }
+        sellerCommunityService.updateSellerCommentLikeStatus(sellerCommunityCommentLikeStatusDto);
+        return "redirect:./sellerCommunityDetail?sellerCommunityNumber="+sellerCommunityNumber;
+    }
+
+    @RequestMapping("sellerCommentDisLikeProcess")
+    public String sellerCommentDisLikeProcess(SellerCommunityCommentLikeStatusDto sellerCommunityCommentLikeStatusDto,int sellerCommunityNumber){
+        if(sellerCommunityCommentLikeStatusDto.getSellerCommentLikeStatus().isEmpty()){
+            sellerCommunityCommentLikeStatusDto.setSellerCommentLikeStatus("dislike");
+        }else if(sellerCommunityCommentLikeStatusDto.getSellerCommentLikeStatus().equals("like")){
+            sellerCommunityCommentLikeStatusDto.setSellerCommentLikeStatus("dislike");
+        }else{
+            sellerCommunityCommentLikeStatusDto.setSellerCommentLikeStatus("");
+        }
+        sellerCommunityService.updateSellerCommentLikeStatus(sellerCommunityCommentLikeStatusDto);
+        return "redirect:./sellerCommunityDetail?sellerCommunityNumber="+sellerCommunityNumber;
+    }
+
+    @RequestMapping("sellerReplyLikeProcess")
+    public String sellerReplyLikeProcess(SellerCommunityReplyLikeStatusDto sellerCommunityReplyLikeStatusDto,int sellerCommunityNumber){
+        if(sellerCommunityReplyLikeStatusDto.getSellerCommunityReplyLikeStatus().isEmpty()){
+            sellerCommunityReplyLikeStatusDto.setSellerCommunityReplyLikeStatus("like");
+        }else if(sellerCommunityReplyLikeStatusDto.getSellerCommunityReplyLikeStatus().equals("dislike")){
+            sellerCommunityReplyLikeStatusDto.setSellerCommunityReplyLikeStatus("like");
+        }else{
+            sellerCommunityReplyLikeStatusDto.setSellerCommunityReplyLikeStatus("");
+        }
+        sellerCommunityService.updateSellerReplyLikeStatus(sellerCommunityReplyLikeStatusDto);
+        return "redirect:./sellerCommunityDetail?sellerCommunityNumber="+sellerCommunityNumber;
+    }
+    @RequestMapping("sellerReplyDisLikeProcess")
+    public String sellerReplyDisLikeProcess(SellerCommunityReplyLikeStatusDto sellerCommunityReplyLikeStatusDto,int sellerCommunityNumber){
+        if(sellerCommunityReplyLikeStatusDto.getSellerCommunityReplyLikeStatus().isEmpty()){
+            sellerCommunityReplyLikeStatusDto.setSellerCommunityReplyLikeStatus("dislike");
+        }else if(sellerCommunityReplyLikeStatusDto.getSellerCommunityReplyLikeStatus().equals("like")){
+            sellerCommunityReplyLikeStatusDto.setSellerCommunityReplyLikeStatus("dislike");
+        }else{
+            sellerCommunityReplyLikeStatusDto.setSellerCommunityReplyLikeStatus("");
+        }
+        sellerCommunityService.updateSellerReplyLikeStatus(sellerCommunityReplyLikeStatusDto);
         return "redirect:./sellerCommunityDetail?sellerCommunityNumber="+sellerCommunityNumber;
     }
 

@@ -111,10 +111,31 @@
                                     <a href="/login/sellerLogin" th:if="${session.sellerDto==null}">답글쓰기</a>
                                 </div>
                                 <div class="col text-end me-2">
-                                    <span><i class="bi bi-hand-thumbs-up"></i></span>
-                                    <span>0</span>
-                                    <span><i class="bi bi-hand-thumbs-down"></i></span>
-                                    <span>0</span>
+                                    <a th:if="${session.sellerDto!=null}" th:href="@{/seller/sellerCommentLikeProcess(sellerCommunityNumber=${sellerComment.sellerCommunityCommentDto.sellerCommunityNumber}, sellerNumber=${session.sellerDto.sellerNumber},sellerCommunityCommentNumber=${sellerComment.selectSellerCommentLikeStatus.sellerCommunityCommentNumber}, sellerCommentLikeStatus=${sellerComment.selectSellerCommentLikeStatus.sellerCommentLikeStatus})}">
+                                        <span th:if="${sellerComment.selectSellerCommentLikeStatus.sellerCommentLikeStatus=='like'}">
+                                            <i class="bi bi-hand-thumbs-up-fill"></i>
+                                        </span>
+                                        <span th:if="${sellerComment.selectSellerCommentLikeStatus.sellerCommentLikeStatus=='' || sellerComment.selectSellerCommentLikeStatus.sellerCommentLikeStatus=='dislike'}">
+                                            <i class="bi bi-hand-thumbs-up"></i>
+                                        </span>
+                                    </a>
+                                    <a th:if="${session.sellerDto==null}" href="/login/sellerLogin">
+                                        <i class="bi bi-hand-thumbs-up"></i>
+                                    </a>
+                                    <span th:text="${sellerComment.selectSellerCommentLikeCount}"></span>
+
+                                    <a th:if="${session.sellerDto!=null}" th:href="@{/seller/sellerCommentDisLikeProcess(sellerCommunityNumber=${sellerComment.sellerCommunityCommentDto.sellerCommunityNumber}, sellerNumber=${session.sellerDto.sellerNumber},sellerCommunityCommentNumber=${sellerComment.selectSellerCommentLikeStatus.sellerCommunityCommentNumber}, sellerCommentLikeStatus=${sellerComment.selectSellerCommentLikeStatus.sellerCommentLikeStatus})}">
+                                         <span th:if="${sellerComment.selectSellerCommentLikeStatus.sellerCommentLikeStatus=='dislike'}">
+                                            <i class="bi bi-hand-thumbs-down-fill"></i>
+                                        </span>
+                                        <span th:if="${sellerComment.selectSellerCommentLikeStatus.sellerCommentLikeStatus=='' || sellerComment.selectSellerCommentLikeStatus.sellerCommentLikeStatus=='like'}">
+                                           <i class="bi bi-hand-thumbs-down"></i>
+                                        </span>
+                                    </a>
+                                    <a th:if="${session.sellerDto==null}" href="/login/sellerLogin">
+                                        <i class="bi bi-hand-thumbs-down"></i>
+                                    </a>
+                                    <span th:text="${sellerComment.selectSellerCommentDisLikeCount}"></span>
                                 </div>
                             </div>
                         </div>
@@ -134,7 +155,7 @@
                             </div>
                         </div>
                     </form>
-                    <div th:each="sellerReply : ${sellerComment.selectSellerCommunityReply}" class="row border-top">
+                    <div th:each="sellerReply : ${sellerComment.sellerCommunityReplyContainer}" class="row border-top">
                         <div class="col ms-5">
                             <div class="row">
                                 <div class="col-md-auto">
@@ -143,23 +164,46 @@
                                 <div class="col g-0">
                                     <div class="row">
                                         <div class="col">
-                                            <span th:text="${sellerReply.sellerName}"></span>
+                                            <span th:text="${sellerReply.selectSellerCommunityReply.sellerName}"></span>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col">
-                                            <span th:text="${sellerReply.sellerCommunityReplyContent}"></span>
+                                            <span th:text="${sellerReply.selectSellerCommunityReply.sellerCommunityReplyContent}"></span>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col">
-                                            <span th:text="${#dates.format(sellerReply.sellerCommunityReplyCreatedAt,'yyyy.MM.dd HH:ss')}">2024.05.13 15:48</span>
+                                            <span th:text="${#dates.format(sellerReply.selectSellerCommunityReply.sellerCommunityReplyCreatedAt,'yyyy.MM.dd HH:ss')}">2024.05.13 15:48</span>
                                         </div>
                                         <div class="col text-end me-2">
-                                            <span><i class="bi bi-hand-thumbs-up"></i></span>
-                                            <span>0</span>
-                                            <span><i class="bi bi-hand-thumbs-down"></i></span>
-                                            <span>0</span>
+                                            <a th:if="${session.sellerDto!=null}"
+                                               th:href="@{/seller/sellerReplyLikeProcess(sellerCommunityNumber=${sellerComment.sellerCommunityCommentDto.sellerCommunityNumber}, sellerCommunityReplyLikeStatusNumber=${sellerReply.sellerCommunityReplyLikeStatusDto.sellerCommunityReplyLikeStatusNumber},sellerCommunityReplyLikeStatus=${sellerReply.sellerCommunityReplyLikeStatusDto.sellerCommunityReplyLikeStatus})}">
+                                                <span th:if="${sellerReply.sellerCommunityReplyLikeStatusDto.sellerCommunityReplyLikeStatus=='like'}">
+                                                    <i class="bi bi-hand-thumbs-up-fill"></i>
+                                                </span>
+                                                <span th:if="${sellerReply.sellerCommunityReplyLikeStatusDto.sellerCommunityReplyLikeStatus=='' || sellerReply.sellerCommunityReplyLikeStatusDto.sellerCommunityReplyLikeStatus=='dislike'}">
+                                                    <i class="bi bi-hand-thumbs-up"></i>
+                                                </span>
+                                            </a>
+                                            <a th:if="${session.sellerDto==null}" href="/login/sellerLogin">
+                                                <i class="bi bi-hand-thumbs-up"></i>
+                                            </a>
+                                            <span th:text="${sellerReply.selectSellerReplyLikeCount}"></span>
+
+                                            <a th:if="${session.sellerDto!=null}"
+                                               th:href="@{/seller/sellerReplyDisLikeProcess(sellerCommunityNumber=${sellerComment.sellerCommunityCommentDto.sellerCommunityNumber}, sellerCommunityReplyLikeStatusNumber=${sellerReply.sellerCommunityReplyLikeStatusDto.sellerCommunityReplyLikeStatusNumber},sellerCommunityReplyLikeStatus=${sellerReply.sellerCommunityReplyLikeStatusDto.sellerCommunityReplyLikeStatus})}">
+                                                <span th:if="${sellerReply.sellerCommunityReplyLikeStatusDto.sellerCommunityReplyLikeStatus=='dislike'}">
+                                                    <i class="bi bi-hand-thumbs-down-fill"></i>
+                                                </span>
+                                                <span th:if="${sellerReply.sellerCommunityReplyLikeStatusDto.sellerCommunityReplyLikeStatus=='' || sellerReply.sellerCommunityReplyLikeStatusDto.sellerCommunityReplyLikeStatus=='like'}">
+                                                    <i class="bi bi-hand-thumbs-down"></i>
+                                                </span>
+                                            </a>
+                                            <a th:if="${session.sellerDto==null}" href="/login/sellerLogin">
+                                                <i class="bi bi-hand-thumbs-down"></i>
+                                            </a>
+                                            <span th:text="${sellerReply.selectSellerReplyDisLikeCount}"></span>
                                         </div>
                                     </div>
                                 </div>

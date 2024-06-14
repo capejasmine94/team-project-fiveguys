@@ -149,4 +149,64 @@
         set sellerCommunityVisitCount =sellerCommunityVisitCount+1
         where sellerCommunityNumber=#{sellerCommunityNumber}
     </update>
+
+    <!--댓글 좋아요 싫어요 상태 삽입-->
+    <insert id="insertSellerCommentLikeStatus">
+        insert into fc_sellerCommunityCommentLikeStatus(
+            sellerCommunityCommentNumber,
+            sellerNumber,
+            sellerCommentLikeStatus
+        ) values(
+            #{sellerCommunityCommentNumber},
+            #{sellerNumber},
+            ''
+        )
+    </insert>
+    <select id ="selectSellerCommentLikeStatus">
+        select * from fc_sellerCommunityCommentLikeStatus
+        where sellerCommunityCommentNumber=#{sellerCommunityCommentNumber} and sellerNumber=#{sellerNumber}
+    </select>
+    <update id="updateSellerCommentLikeStatus">
+        update fc_sellerCommunityCommentLikeStatus
+        set sellerCommentLikeStatus=#{sellerCommentLikeStatus}
+        where sellerNumber=#{sellerNumber} and sellerCommunityCommentNumber=#{sellerCommunityCommentNumber}
+    </update>
+    <select id="selectSellerCommentLikeCount">
+        select coalesce(count(*),0) from fc_sellerCommunityCommentLikeStatus
+        where sellerCommunityCommentLikeStatusNumber=#{sellerCommunityCommentLikeStatusNumber} and sellerCommentLikeStatus='like'
+    </select>
+    <select id="selectSellerCommentDisLikeCount">
+        select coalesce(count(*),0) from fc_sellerCommunityCommentLikeStatus
+        where sellerCommunityCommentLikeStatusNumber=#{sellerCommunityCommentLikeStatusNumber} and sellerCommentLikeStatus='dislike'
+    </select>
+
+    <!--대댓글좋아요 싫어요 상태 삽입-->
+    <insert id="insertSellerReplyLikeStatus">
+        insert into fc_sellerCommunityReplyLikeStatus(
+            sellerCommunityReplyNumber,
+            sellerNumber,
+            sellerCommunityReplyLikeStatus
+        ) values(
+            #{sellerCommunityReplyNumber},
+            #{sellerNumber},
+            ''
+        )
+    </insert>
+    <select id ="selectSellerReplyLikeStatus">
+        select * from fc_sellerCommunityReplyLikeStatus
+        where sellerCommunityReplyNumber=#{sellerCommunityReplyNumber}
+    </select>
+    <update id="updateSellerReplyLikeStatus">
+        update fc_sellerCommunityReplyLikeStatus
+        set sellerCommunityReplyLikeStatus=#{sellerCommunityReplyLikeStatus}
+        where sellerCommunityReplyLikeStatusNumber=#{sellerCommunityReplyLikeStatusNumber}
+    </update>
+    <select id="selectSellerReplyLikeCount">
+        select coalesce(count(*),0) from fc_sellerCommunityReplyLikeStatus
+        where sellerCommunityReplyLikeStatusNumber=#{sellerCommunityReplyLikeStatusNumber} and sellerCommunityReplyLikeStatus='like'
+    </select>
+    <select id="selectSellerReplyDisLikeCount">
+        select coalesce(count(*),0) from fc_sellerCommunityReplyLikeStatus
+        where sellerCommunityReplyLikeStatusNumber=#{sellerCommunityReplyLikeStatusNumber} and sellerCommunityReplyLikeStatus='dislike'
+    </select>
 </mapper>

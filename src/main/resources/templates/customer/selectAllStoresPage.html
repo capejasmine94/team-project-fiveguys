@@ -14,12 +14,11 @@
 <body>
 
 <div th:replace="common/customerNavi::orderTopNavi"></div>
-<div th:replace="common/customerNavi::bottomNavi"></div>
 
+<!--화면 상단 시작-->
+<div class="container-fluid" style="margin-top: 3rem">
 
-<div class="container-fluid" style="margin-top: 4rem">
-
-    <div class="row border-top border-bottom py-4" th:each="sellerList : ${sellerDtoList}">
+    <div class="row border-bottom py-4" th:each="sellerList : ${sellerDtoList}">
         <div class="col-auto mt-1">
             <img src="/img/매장메인사진.jpeg" class="storesMainImg">
         </div>
@@ -46,14 +45,19 @@
                     </div>
                 </div>
                 <div class="col-auto text-end">
-                    <button class="btn rounded-3" style="color: white; background-color: #B41E30">
-                        매장선택
-                    </button>
+                    <a th:href="@{/customer/storesDetailPage(sellerNumber=${sellerList.sellerNumber})}  ">
+                        <button class="btn rounded-5" style="color: white; background-color: #D72239">
+                            매장선택
+                        </button>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<!--화면 하단 끝-->
+<div class="container-fluid" style="margin-top: 1rem"></div>
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.mn.js"></script>

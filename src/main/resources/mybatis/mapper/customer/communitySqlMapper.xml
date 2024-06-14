@@ -24,6 +24,14 @@
         select * from fc_customer where customerNumber = #{customerNumber}
     </select>
 
+    <select id="selectCommunityDetail" resultType="int">
+        select * from fc_community
+    </select>
+
+
+
+
+
 
 
 

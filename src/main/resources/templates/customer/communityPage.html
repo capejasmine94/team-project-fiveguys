@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -14,13 +14,16 @@
     <div class="container">
         <div class="row">
             <div class="col">
-                닉네임:
+                닉네임: <input th:text="session.customerDto.customerName">
                 작성시간:
+                <script>
+                    setInterval(() => document.getElementById('time-display').innerText = `${new Date().getHours()}시간 전`, 1000);
+                </script>
             </div>
         </div>
         <div class="row">
             <div class="col">
-                글제목:
+                글제목: <input name="communityTitle" th:text="session.customerDto.communityTitle">
             </div>
         </div>
         <div class="row border-bottom">

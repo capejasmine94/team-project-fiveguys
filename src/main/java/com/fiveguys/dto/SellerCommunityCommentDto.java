@@ -8,6 +8,7 @@ import java.util.Date;
 public class SellerCommunityCommentDto {
     private int sellerCommunityCommentNumber;
     private int sellerCommunityNumber;
+    private int sellerNumber;
     private String sellerCommunityCommentContent;
     private Date sellerCommunityCommentCreatedAt;
 }

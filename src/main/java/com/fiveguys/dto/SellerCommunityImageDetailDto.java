@@ -7,4 +7,5 @@ public class SellerCommunityImageDetailDto {
     private int sellerCommunityImageDetailNumber;
     private int sellerCommunityNumber;
     private String sellerCommunityImageList;
+
 }

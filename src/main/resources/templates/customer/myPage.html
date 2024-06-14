@@ -11,20 +11,20 @@
     <link rel="stylesheet" href="/css/style.css">
 
 </head>
-<body class="container-fluid">
+<body>
 
-<div th:replace="common/customerNavi::commonTopNavi"></div>
+<div th:replace="common/customerNavi::myPageTopNavi"></div>
 <div th:replace="common/customerNavi::bottomNavi"></div>
 
 
-<div class="container_main">
+<div class="container" style="margin-top: 4rem">
 
     <div class="row">
-        <div class="col">
-            <a href="/login/customerLogin" th:if="${session.customerDto != null}">로그인</a>
+        <div class="col" th:if="${session.customerDto == null}">
+            <a href="/login/customerLogin">로그인</a>
         </div>
-        <div class="col">
-            <a href="/login/customerLogin" th:unless="${session.customerDto != null}">로그인</a>
+        <div class="col" th:unless="${session.customerDto == null}">
+            <a href="/login/customerLogoutProcess">로그아웃</a>
         </div>
     </div>
 </div>

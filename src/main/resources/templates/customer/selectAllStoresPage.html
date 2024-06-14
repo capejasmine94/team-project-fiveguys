@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+
+</head>
+<body>
+
+<div th:replace="common/customerNavi::orderTopNavi"></div>
+<div th:replace="common/customerNavi::bottomNavi"></div>
+
+
+<div class="container-fluid" style="margin-top: 4rem">
+
+    <div class="row border-top border-bottom py-4" th:each="sellerList : ${sellerDtoList}">
+        <div class="col-auto mt-1">
+            <img src="/img/매장메인사진.jpeg" class="storesMainImg">
+        </div>
+        <div class="col">
+            <div class="row">
+                <div class="col">
+                    <span class="fs-3" th:text="${sellerList.sellerName}"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="row">
+                        <div class="col storesSideFont fw-bold" style="color: #BDBDBD">
+                            <span><i class="bi bi-geo-alt-fill"></i></span>
+                            <span>운영시간: 12:00~23:30</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col storesSideFont">
+                            <span style="color: #BDBDBD"><i class="bi bi-clock-fill"></i></span>
+                            <span class="pe-1 border-end border-2" style="border-color: #BDBDBD">배달:50분</span>
+                            <span>픽업:20분</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-auto text-end">
+                    <button class="btn rounded-3" style="color: white; background-color: #B41E30">
+                        매장선택
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.mn.js"></script>
+<script src="https://kit.fontawesome.com/7b271bba58.js" crossorigin="anonymous"></script>
+</body>
+</html>

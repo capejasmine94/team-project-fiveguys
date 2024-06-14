@@ -1,6 +1,9 @@
 package com.fiveguys.seller.controller;
 
 import com.fiveguys.dto.*;
+import com.fiveguys.dto.SellerCommunityDto;
+import com.fiveguys.dto.SellerCommunityImageDetailDto;
+import com.fiveguys.dto.EventDetailImageDto;
 import com.fiveguys.seller.service.SellerCommunityService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;

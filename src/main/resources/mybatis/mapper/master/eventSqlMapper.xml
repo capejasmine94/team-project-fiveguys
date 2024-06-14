@@ -4,6 +4,38 @@
 <mapper namespace="com.fiveguys.master.mapper.EventSqlMapper">
     <select id="selectEventList" resultType="EventBoardDto">
         select * from fc_eventBoard
+        order by eventCreatedAt desc
+    </select>
+
+    <insert id="insertEventProcess">
+        <selectKey keyProperty="eventNumber" order="AFTER" resultType="int">
+            select max(eventNumber) from fc_eventBoard
+        </selectKey>
+        insert into fc_eventBoard(
+        eventMainImage, eventTitle, eventStartDay, eventEndDay,eventVisitCount)
+        values(
+        #{eventMainImage},#{eventTitle},#{eventStartDay},#{eventEndDay},0)
+    </insert>
+
+    <insert id="insertDetailImageProcess">
+        insert into fc_eventDetailImage(
+        eventNumber,eventDetailImage)
+        values(#{eventNumber},#{eventDetailImage})
+    </insert>
+
+    <select id="selectRuningEvent" resultType="int">
+        select count(*) from fc_eventBoard
+        where eventEndDay > now()
+    </select>
+
+    <select id="eventBoardDto" resultType="EventBoardDto">
+        select * from fc_eventBoard
+        where eventNumber = #{eventNumber}
+    </select>
+
+    <select id="eventBoardDetail" resultType="EventDetailImageDto">
+        select * from fc_eventDetailImage
+        where eventNumber = #{eventNumber}
     </select>
 
 </mapper>

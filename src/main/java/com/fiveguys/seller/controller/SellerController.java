@@ -10,5 +10,7 @@ public class SellerController {
     @RequestMapping("mainPage")
     public String mainPage() {
         return "seller/mainPage";
+
     }
+
 }

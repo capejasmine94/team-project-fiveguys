@@ -40,6 +40,20 @@ public class CommunityService {
         return result;
     }
 
+//    public Map<String, Object> selectCommunityNumber(int customerNumber){
+//        Map<String, Object> map = new HashMap<>();
+//
+//        CommunityDto communityDto = communitySqlMapper.selectCommunityNumber(communityNumber);
+//        CustomerDto customerDto = communitySqlMapper.selectCustomerNumber(communityDto.getCustomerNumber());  ;
+//
+//        map.put("communityDto", communityDto);
+//        map.put("customerDto", customerDto);
+//
+//        return map;
+//    }
+
+
+
 
 
 

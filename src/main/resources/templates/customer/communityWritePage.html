@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -12,39 +12,42 @@
 <body>
     <!--글작성 페이지-->
     <div class="container">
-        <div class="row">
-
-            <div class="col">
-                <div class="row">
-                    <div class="col">
-                        닉네임:
+        <form action="./communityWriteProcess" method="post">
+            <div class="row">
+                <div class="col">
+                    <div class="row">
+                        <div class="col">
+                            닉네임: <input type="text" th:value="${session.customerDto.customerName}">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            작성시간:
+                            <script>
+                                setInterval(() => document.getElementById('time-display').innerText = `${new Date().getHours()}시간 전`, 1000);
+                            </script>
+                            조회수:
+                        </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col">
-                        작성시간:
-                        조회수:
-                    </div>
+
+                <div class="col">
+
                 </div>
             </div>
 
-            <div class="col">
-
+            <div class="row">
+                <div class="col">
+                    제목: <input type="text" name="communityTitle">
+                </div>
             </div>
-        </div>
 
-        <div class="row">
-            <div class="col">
-                제목:
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col">
-                내용:
-            </div>
-        </div>
-
+                <div class="row">
+                    <div class="col">
+                        내용: <textarea name="communityContent" ></textarea>
+                    </div>
+                </div>
+        </form>
     </div>
 
 

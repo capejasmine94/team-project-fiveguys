@@ -15,4 +15,10 @@ public interface EventSqlMapper {
     void insertEventProcess(EventBoardDto eventBoardDto);
 
     void insertDetailImageProcess(EventDetailImageDto eventDetailImageDto);
+
+    int selectRuningEvent();
+
+    EventBoardDto eventBoardDto(int eventNumber);
+
+    List<EventDetailImageDto> eventBoardDetail(int eventNumber);
 }

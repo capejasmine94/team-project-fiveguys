@@ -3,6 +3,9 @@
 
 <mapper namespace="com.fiveguys.seller.mapper.SellerCommunitySqlMapper">
     <insert id="insertSellerCommunityWrite">
+        <selectKey order="AFTER" keyProperty="sellerCommunityNumber" resultType="int">
+            select max(sellerCommunityNumber) from fc_sellerCommunity;
+        </selectKey>
         insert into fc_sellerCommunity(
             sellerNumber,
             sellerCommunityImage,
@@ -26,6 +29,12 @@
             #{sellerCommunityImageList}
         )
     </insert>
+    <select id="selectSeller">
+        select * from fc_seller fs
+        inner join fc_sellerCommunity fsc
+        on fs.sellerNumber =fsc.sellerNumber
+        where fsc.sellerCommunityNumber=#{sellerCommunityNumber}
+    </select>
     <select id="selectSellerCommunityList">
         select
             sellerCommunityNumber,
@@ -42,5 +51,95 @@
                 ELSE CONCAT(TIMESTAMPDIFF(MINUTE, sellerCommunityCreatedAt, NOW()), '분전')
                 end as sellerCommunityCreatedAt
         from fc_sellerCommunity
+    </select>
+    <select id="selectSellerCommunityById">
+        select
+            sellerCommunityNumber,
+            sellerNumber,
+            sellerCommunityImage,
+            sellerCommunityTitle,
+            sellerCommunityContent,
+            sellerCommunityVisitCount,
+            CASE
+                WHEN FLOOR(TIMESTAMPDIFF(MONTH, sellerCommunityCreatedAt, NOW()) / 12) >= 1 THEN CONCAT(FLOOR(TIMESTAMPDIFF(MONTH, sellerCommunityCreatedAt, NOW()) / 12), '년전')
+                WHEN TIMESTAMPDIFF(MONTH, sellerCommunityCreatedAt, NOW()) >= 1 THEN CONCAT(TIMESTAMPDIFF(MONTH, sellerCommunityCreatedAt, NOW()), '달전')
+                WHEN DATEDIFF(CURRENT_DATE, sellerCommunityCreatedAt) >= 1 THEN CONCAT(DATEDIFF(CURRENT_DATE, sellerCommunityCreatedAt), '일전')
+                WHEN TIMESTAMPDIFF(HOUR, sellerCommunityCreatedAt, NOW()) >= 1 THEN CONCAT(TIMESTAMPDIFF(HOUR, sellerCommunityCreatedAt, NOW()), '시간전')
+                ELSE CONCAT(TIMESTAMPDIFF(MINUTE, sellerCommunityCreatedAt, NOW()), '분전')
+                end as sellerCommunityCreatedAt
+        from fc_sellerCommunity
+        where sellerCommunityNumber=#{sellerCommunityNumber}
+    </select>
+    <select id="selectImageListById">
+        select * from fc_sellerCommunityImageDetail where sellerCommunityNumber=#{sellerCommunityNumber}
+    </select>
+    <!--댓글 삽입 쿼리-->
+    <insert id="insertSellerCommunityComment">
+        insert into fc_sellerCommunityComment(
+              sellerCommunityNumber,
+              sellerNumber,
+              sellerCommunityCommentContent
+        ) values(
+             #{sellerCommunityNumber},
+             #{sellerNumber},
+             #{sellerCommunityCommentContent}
+        )
+    </insert>
+    <select id="selectSellerCommunityComment" resultType="map">
+        select * from fc_sellerCommunityComment scc
+        inner join fc_seller fs
+        on scc.sellerNumber  =fs.sellerNumber
+        where sellerCommunityNumber=#{sellerCommunityNumber}
+    </select>
+
+    <!--대댓글 삽입 쿼리-->
+    <insert id="insertSellerCommunityReply">
+        insert into fc_sellerCommunityReply(
+            sellerCommunityCommentNumber,
+            sellerNumber,
+            sellerCommunityReplyContent
+        ) values(
+            #{sellerCommunityCommentNumber},
+            #{sellerNumber},
+            #{sellerCommunityReplyContent}
+        )
+    </insert>
+    <select id="selectSellerCommunityReply" resultType="map">
+        select * from fc_sellerCommunityReply fsc
+        inner join fc_seller fs
+        on fsc.sellerNumber  =fs.sellerNumber
+        where sellerCommunityCommentNumber=#{sellerCommunityCommentNumber}
+    </select>
+
+    <!--채팅수 표시 댓글 +대댓글-->
+    <select id="selectTotalCommentCount">
+       select coalesce(count(*),0) from  fc_sellerCommunityComment where sellerCommunityNumber=#{sellerCommunityNumber}
+    </select>
+    <select id="selectTotalReplyCount">
+        select coalesce(count(*),0) from  fc_sellerCommunityReply fsr
+        inner join fc_sellerCommunityComment fsc
+        on fsr.sellerCommunityCommentNumber =fsc.sellerCommunityCommentNumber
+        where fsc.sellerCommunityNumber =#{sellerCommunityNumber}
+    </select>
+
+    <!--게시글 좋아요 싫어요-->
+    <insert id="insertSellerCommunityLike">
+        insert into fc_sellerCommunityLike(
+            sellerCommunityNumber,
+            sellerNumber
+        ) values(
+            #{sellerCommunityNumber},
+            #{sellerNumber}
+        )
+    </insert>
+    <select id="selectSellerCommunityLikeCount">
+        select coalesce(count(*),0) from fc_sellerCommunityLike where sellerCommunityNumber=#{sellerCommunityNumber}
+    </select>
+    <delete id="deleteSellerCommunityLike">
+        delete from fc_sellerCommunityLike
+        where sellerCommunityNumber=#{sellerCommunityNumber} and sellerNumber=#{sellerNumber}
+    </delete>
+    <select id="checkIfSellerCommunityLikeExists">
+        select coalesce(count(*),0) from fc_sellerCommunityLike  where sellerNumber=#{sellerNumber} and sellerCommunityNumber=#{sellerCommunityNumber}
     </select>
 </mapper>

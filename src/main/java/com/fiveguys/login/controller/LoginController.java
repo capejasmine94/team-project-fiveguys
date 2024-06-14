@@ -50,7 +50,7 @@ public class LoginController {
         }else{
             session.setAttribute("sellerDto", sellerDto1);
         }
-        return "redirect:/seller/mainPage";
+        return "redirect:/seller/sellerCommunity";
 
     }
     @RequestMapping("masterLoginProcess")

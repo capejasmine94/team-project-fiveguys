@@ -1,13 +1,16 @@
 package com.fiveguys.seller.controller;
 
+import com.fiveguys.dto.*;
 import com.fiveguys.dto.SellerCommunityDto;
 import com.fiveguys.dto.SellerCommunityImageDetailDto;
 import com.fiveguys.dto.EventDetailImageDto;
 import com.fiveguys.seller.service.SellerCommunityService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -31,7 +34,11 @@ public class SellerCommunityController {
     }
 
     @RequestMapping("sellerCommunityWritePage")
-    public String sellerCommunityWritePage(){
+    public String sellerCommunityWritePage(HttpSession session){
+        SellerDto sellerDto = (SellerDto) session.getAttribute("sellerDto");
+        if(sellerDto==null){
+            return "redirect:/login/sellerLogin";
+        }
         return "seller/sellerCommunityWritePage";
     }
 
@@ -94,7 +101,50 @@ public class SellerCommunityController {
     }
 
     @RequestMapping("sellerCommunityDetail")
-    public String sellerCommunityDetail(Model model,int sellerNumber){
+    public String sellerCommunityDetail(
+            Model model,
+            int sellerCommunityNumber,
+            HttpSession session
+    ){
+        SellerDto sellerDto = (SellerDto) session.getAttribute("sellerDto");
+        if(sellerDto!=null){
+            SellerCommunityLikeDto sellerCommunityLikeDto = new SellerCommunityLikeDto();
+            sellerCommunityLikeDto.setSellerNumber(sellerDto.getSellerNumber());
+            sellerCommunityLikeDto.setSellerCommunityNumber(sellerCommunityNumber);
+            model.addAttribute("checkIfSellerCommunityLikeExists",sellerCommunityService.checkIfSellerCommunityLikeExists(sellerCommunityLikeDto));
+        }
+        model.addAttribute("sellerCommunityDetail", sellerCommunityService.selectSellerCommunityById(sellerCommunityNumber));
         return "seller/sellerCommunityDetail";
     }
+
+    @RequestMapping("sellerCommunityCommentInsertProcess")
+    public String sellerCommunityCommentInsertProcess(HttpSession session, SellerCommunityCommentDto sellerCommunityCommentDto){
+        SellerDto sellerDto = (SellerDto) session.getAttribute("sellerDto");
+        if(sellerDto==null){
+            return "redirect:/login/sellerLogin";
+        }
+        sellerCommunityService.insertSellerCommunityComment(sellerCommunityCommentDto);
+        return "redirect:./sellerCommunityDetail?sellerCommunityNumber="+sellerCommunityCommentDto.getSellerCommunityNumber();
+    }
+    @RequestMapping("sellerCommunityReplyInsertProcess")
+    public String sellerCommunityReplyInsertProcess(HttpSession session, SellerCommunityReplyDto sellerCommunityReplyDto,int sellerCommunityNumber){
+        SellerDto sellerDto = (SellerDto) session.getAttribute("sellerDto");
+        if(sellerDto==null){
+            return "redirect:/login/sellerLogin";
+        }
+        sellerCommunityService.insertSellerCommunityReply(sellerCommunityReplyDto);
+        return "redirect:./sellerCommunityDetail?sellerCommunityNumber="+sellerCommunityNumber;
+    }
+
+    @RequestMapping("sellerCommunityLikeProcess")
+    public String sellerCommunityLikeProcess(HttpSession session, SellerCommunityLikeDto sellerCommunityLikeDto,int sellerCommunityNumber){
+        int checkIfSellerCommunityLikeExists = sellerCommunityService.checkIfSellerCommunityLikeExists(sellerCommunityLikeDto);
+        if(checkIfSellerCommunityLikeExists==0){
+            sellerCommunityService.insertSellerCommunityLike(sellerCommunityLikeDto);
+        }else{
+            sellerCommunityService.deleteSellerCommunityLike(sellerCommunityLikeDto);
+        }
+        return "redirect:./sellerCommunityDetail?sellerCommunityNumber="+sellerCommunityNumber;
+    }
+
 }

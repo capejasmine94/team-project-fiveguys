@@ -37,7 +37,7 @@
     <div class="row mt-3">
         <div class="col">
             <form action="./sellerCommunityWriteProcess" method="post" enctype="multipart/form-data">
-                <input type="hidden" name="sellerNumber" value="1">
+                <input type="hidden" name="sellerNumber" th:value="${session.sellerDto.sellerNumber}">
                 <div class="row">
                     <div class="col">
                         <span class="font">게시글제목</span>

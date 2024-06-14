@@ -8,7 +8,6 @@ import java.util.Date;
 public class SellerCommunityLikeDto {
     private int sellerCommunityLike;
     private int sellerCommunityNumber;
-    private String sellerCommunityName;
     private int sellerNumber;
     private Date sellerCommunityLikeCreatedAt;
 }

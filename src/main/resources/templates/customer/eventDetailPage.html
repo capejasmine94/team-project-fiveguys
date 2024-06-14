@@ -21,7 +21,7 @@
             <div class="row">
                 <div class="col">
                     <div class="row mt-4">
-                        <div class="col px-0">
+                        <div class="col text-center px-0">
                             <span class="fw-bold text-secondary" style="font-size:0.8em;">이벤트</span>
                         </div>
                     </div>
@@ -37,21 +37,21 @@
                     </div>
                     <div class="row mt-2">
                         <div class="col px-0">
-                            <span class="fw-bold text-secondary" style="font-size:0.8em;">이벤트기간 :</span>
+                            <span class="fw-bold text-secondary" style="font-size:0.8em;">기간 :</span>
                             <span class="fw-bold text-secondary" style="font-size:0.8em;" th:text="${eventBoardDtoAndDetail.eventBoardDto.eventStartDay}"></span>
                             <span class="fw-bold text-secondary" style="font-size:0.8em;">~</span>
                             <span class="fw-bold text-secondary" style="font-size:0.8em;" th:text="${eventBoardDtoAndDetail.eventBoardDto.eventEndDay}"></span>
                         </div>
-                        <div class="col-1 text-end">
-                            <a th:href="@{insertDeleteLikeProcess(eventNumber=${eventBoardDtoAndDetail.eventBoardDto.eventNumber})}">
+                        <div class="col-auto pe-0 text-end">
+                            <a class="link-underline link-underline-opacity-0" th:href="@{insertDeleteLikeProcess(eventNumber=${eventBoardDtoAndDetail.eventBoardDto.eventNumber})}">
                                 <i th:if="${selectLikeCheck} != 1" class="bi bi-hand-thumbs-up"></i>
                                 <i th:if="${selectLikeCheck} == 1" class="bi bi-hand-thumbs-up-fill"></i>
                             </a>
-                            <span></span>
+                            <span th:text="${eventBoardLikeCount}"></span>
                         </div>
-                        <div class="col">
+                        <div class="col-auto">
                             <i class="bi bi-eye"></i>
-                            <span th:text="${eventBoardDtoAndDetail.eventBoardDto."></span>
+                            <span th:text="${eventBoardDtoAndDetail.eventBoardDto.eventVisitCount}"></span>
                         </div>
                     </div>
                     <div class="row mt-4" >

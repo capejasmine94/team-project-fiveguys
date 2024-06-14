@@ -38,6 +38,23 @@ public class EventController {
         return  "customer/eventlistPage";
     }
 
+    @RequestMapping("endEventlistPage")
+    public String endEventlistPage(Model model, HttpSession session){
+        List<EventBoardDto> eventDtoList = eventService.selectEndEventList();
+        int selectRunningEvent = eventService.selectRunningEvent();
+        int selectEndEvent = eventService.selectEndEvent();
+        model.addAttribute("eventDtoList", eventDtoList);
+        model.addAttribute("selectRunningEvent",selectRunningEvent);
+        model.addAttribute("selectEndEvent",selectEndEvent);
+        MasterDto masterDto = (MasterDto) session.getAttribute("masterDto");
+
+        if(masterDto != null){
+            return "master/endEventlistPage";
+        }
+
+        return  "customer/EndeventlistPage";
+    }
+
     @RequestMapping("eventInsertPage")
     public String eventInsertPage(){
 
@@ -140,6 +157,10 @@ public class EventController {
         Map<String,Object> eventBoardDtoAndDetail =  eventService.eventBoardDtoAndDetail(eventNumber);
         model.addAttribute("eventBoardDtoAndDetail",eventBoardDtoAndDetail);
         List<Map<String,Object>> eventBoardCommentList = eventService.selectEventBoardComet(eventNumber);
+
+        int eventBoardLikeCount = eventService.selectEventBoardLikeCount(eventNumber);
+        model.addAttribute("eventBoardLikeCount",eventBoardLikeCount);
+        eventService.updateEventBoardVisitCount(eventNumber);
 
         MasterDto masterDto = (MasterDto) session.getAttribute("masterDto");
         model.addAttribute("eventBoardCommentList",eventBoardCommentList);

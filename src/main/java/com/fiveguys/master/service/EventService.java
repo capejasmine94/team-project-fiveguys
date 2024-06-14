@@ -75,4 +75,20 @@ public class EventService {
     public void insertEventLike(EventLikeDto eventLikeDto) {
         eventSqlMapper.insertEventLike(eventLikeDto);
     }
+
+    public int selectEventBoardLikeCount(int eventNumber) {
+        return eventSqlMapper.selectEventBoardLikeCount(eventNumber);
+    }
+
+    public void updateEventBoardVisitCount(int eventNumber) {
+        eventSqlMapper.updateEventBoardVisitCount(eventNumber);
+    }
+
+    public List<EventBoardDto> selectEndEventList() {
+        return eventSqlMapper.selectEndEventList();
+    }
+
+    public int selectEndEvent() {
+        return eventSqlMapper.selectEndEvent();
+    }
 }

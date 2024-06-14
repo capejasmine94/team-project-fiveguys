@@ -31,4 +31,12 @@ public interface EventSqlMapper {
     void deleteEventLike(EventLikeDto eventLikeDto);
 
     void insertEventLike(EventLikeDto eventLikeDto);
+
+    int selectEventBoardLikeCount(int eventNumber);
+
+    void updateEventBoardVisitCount(int eventNumber);
+
+    List<EventBoardDto> selectEndEventList();
+
+    int selectEndEvent();
 }

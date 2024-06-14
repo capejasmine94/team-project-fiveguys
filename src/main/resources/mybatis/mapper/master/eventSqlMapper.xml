@@ -3,8 +3,11 @@
 
 <mapper namespace="com.fiveguys.master.mapper.EventSqlMapper">
     <select id="selectEventList" resultType="EventBoardDto">
-        select * from fc_eventBoard
-        order by eventCreatedAt desc
+        <![CDATA[
+            select * from fc_eventBoard
+            where eventEndDay >= now()
+            order by eventCreatedAt desc
+        ]]>
     </select>
 
     <insert id="insertEventProcess">
@@ -24,8 +27,10 @@
     </insert>
 
     <select id="selectRuningEvent" resultType="int">
-        select count(*) from fc_eventBoard
-        where eventEndDay > now()
+        <![CDATA[
+            select count(*) from fc_eventBoard
+            where eventEndDay >= now()
+        ]]>
     </select>
 
     <select id="eventBoardDto" resultType="EventBoardDto">
@@ -72,5 +77,33 @@
         #{eventNumber},#{customerNumber}
         )
     </insert>
+
+    <select id="selectEventBoardLikeCount" resultType="int">
+        select count(*) from fc_eventLike
+        where eventNumber = #{eventNumber}
+    </select>
+
+    <update id="updateEventBoardVisitCount">
+        update fc_eventBoard
+        set eventVisitCount = eventVisitCount + 1
+        where eventNumber = #{eventNumber};
+    </update>
+
+    <select id="selectEndEventList" resultType="EventBoardDto">
+        <![CDATA[
+            select * from fc_eventBoard
+            where eventEndDay < now()
+            order by eventCreatedAt desc
+        ]]>
+    </select>
+
+    <select id="selectEndEvent" resultType="int">
+        <![CDATA[
+            select count(*) from fc_eventBoard
+            where eventEndDay < now()
+        ]]>
+    </select>
+
+
 
 </mapper>

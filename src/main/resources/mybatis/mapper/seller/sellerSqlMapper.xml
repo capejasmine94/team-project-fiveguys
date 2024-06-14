@@ -6,4 +6,13 @@
     <select id="selectAllSellers" resultType="SellerDto">
         SELECT * FROM fc_seller ORDER BY sellerNumber
     </select>
+
+
+
+    <select id="sellerLoginProcess" resultType="SellerDto">
+        select * from fc_seller
+        where sellerId=#{sellerId} and sellerpassword=#{sellerpassword}
+    </select>
+
+
 </mapper>

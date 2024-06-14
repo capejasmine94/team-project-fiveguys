@@ -56,12 +56,11 @@
 
             <div class="row pt-3">
 
-                <div class="col">
+                <div class="col-2">
                     <div class="card border-danger h-60 bg-danger">
                         <img src="/img/userIcon.jpg" class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title fs-4 text-center text-white">000 님</h5>
-                            <p class="card-text fs-6 text-center text-white">00지점</p>
+                        <div class="card-body text-center">
+                            <span class="fs-5 text-white fw-bold" th:text="${session.sellerDto.sellerName}"></span>
                         </div>
                     </div>
                 </div>

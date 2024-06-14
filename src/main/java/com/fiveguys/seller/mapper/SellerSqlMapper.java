@@ -9,4 +9,8 @@ import java.util.List;
 public interface SellerSqlMapper {
 
     public List<SellerDto> selectAllSellers();
+
+
+    public SellerDto sellerLoginProcess(SellerDto sellerDto);
+
 }

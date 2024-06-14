@@ -13,9 +13,19 @@ public class SellerService {
     @Autowired
     private SellerSqlMapper sellerSqlMapper;
 
+
     public List<SellerDto> getAllSellers() {
 
          return sellerSqlMapper.selectAllSellers();
+    }
+
+
+
+    public SellerDto sellerLoginProcess(SellerDto sellerDto) {
+        SellerDto sellerInform = sellerSqlMapper.sellerLoginProcess(sellerDto);
+
+        return sellerInform;
+
     }
 
 }

@@ -1,11 +1,21 @@
 package com.fiveguys.seller.controller;
 
+import com.fiveguys.dto.SellerDto;
+import com.fiveguys.seller.service.SellerService;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("seller")
 public class SellerController {
+
+    @Autowired
+    SellerService sellerService;
+
+
+
 
     @RequestMapping("mainPage")
     public String mainPage() {
@@ -53,7 +63,7 @@ public class SellerController {
 
     @RequestMapping("sellerReviewPage")
     public String sellerReviewPage() {
-        return "seller/sellerReviewPage";
+        return "/seller/sellerReviewPage";
 
     }
 

@@ -31,6 +31,8 @@ public interface SellerCommunitySqlMapper {
     //댓글 대댓글 카운트
     public Integer selectTotalCommentCount(int sellerCommunityNumber);
     public Integer selectTotalReplyCount(int sellerCommunityNumber);
+    //댓글에 달린 대댓글 카운트
+    public Integer selectEachSellerCommentReplyCount(int sellerCommunityCommentNumber);
 
     //게시글에 대한 좋아요
     public void insertSellerCommunityLike(SellerCommunityLikeDto sellerCommunityLikeDto);
@@ -45,13 +47,13 @@ public interface SellerCommunitySqlMapper {
     public void insertSellerCommentLikeStatus(SellerCommunityCommentLikeStatusDto sellerCommunityCommentLikeStatusDto);
     public SellerCommunityCommentLikeStatusDto selectSellerCommentLikeStatus(SellerCommunityCommentLikeStatusDto sellerCommunityCommentLikeStatusDto);
     public void updateSellerCommentLikeStatus(SellerCommunityCommentLikeStatusDto sellerCommunityCommentLikeStatusDto);
-    public Integer selectSellerCommentLikeCount(int sellerCommunityCommentLikeStatusNumber);
-    public Integer selectSellerCommentDisLikeCount(int sellerCommunityCommentLikeStatusNumber);
+    public Integer selectSellerCommentLikeCount(int sellerCommunityCommentNumber);
+    public Integer selectSellerCommentDisLikeCount(int sellerCommunityCommentNumber);
 
     //대댓글 좋아요 싫어요
     public void insertSellerReplyLikeStatus(SellerCommunityReplyLikeStatusDto sellerCommunityReplyLikeStatusDto);
-    public SellerCommunityReplyLikeStatusDto selectSellerReplyLikeStatus(int sellerCommunityReplyNumber);
-    public Integer selectSellerReplyLikeCount(int sellerCommunityReplyLikeStatusNumber);
-    public Integer selectSellerReplyDisLikeCount(int sellerCommunityReplyLikeStatusNumber);
+    public SellerCommunityReplyLikeStatusDto selectSellerReplyLikeStatus(SellerCommunityReplyLikeStatusDto sellerCommunityReplyLikeStatusDto);
+    public Integer selectSellerReplyLikeCount(int sellerCommunityReplyNumber);
+    public Integer selectSellerReplyDisLikeCount(int sellerCommunityReplyNumber);
     public void updateSellerReplyLikeStatus(SellerCommunityReplyLikeStatusDto sellerCommunityReplyLikeStatusDto);
 }

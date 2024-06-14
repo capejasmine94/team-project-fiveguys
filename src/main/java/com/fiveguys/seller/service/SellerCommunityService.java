@@ -58,16 +58,18 @@ public class SellerCommunityService {
 
             List<Map<String,Object>> result2 = new ArrayList<>();
             List<Map<String,Object>> sellerCommunityReplyLikeStatusList = sellerCommunitySqlMapper.selectSellerCommunityReply((int)sellerCommunityCommentDto.get("sellerCommunityCommentNumber"));
-            System.out.println("오류찾기2");
 
             for(Map<String,Object> sellerCommunityReplyLikeStatusMap : sellerCommunityReplyLikeStatusList){
 
                 Map<String,Object> verySmallMap = new HashMap<>();
-                SellerCommunityReplyLikeStatusDto sellerCommunityReplyLikeStatusDto = sellerCommunitySqlMapper.selectSellerReplyLikeStatus((int)sellerCommunityReplyLikeStatusMap.get("sellerCommunityReplyNumber"));
+                SellerCommunityReplyLikeStatusDto sellerCommunityReplyLikeStatusDto1= new SellerCommunityReplyLikeStatusDto();
+                sellerCommunityReplyLikeStatusDto1.setSellerCommunityReplyNumber((int)sellerCommunityReplyLikeStatusMap.get("sellerCommunityReplyNumber"));
+                sellerCommunityReplyLikeStatusDto1.setSellerNumber((int)sellerCommunityReplyLikeStatusMap.get("sellerNumber"));
+                SellerCommunityReplyLikeStatusDto sellerCommunityReplyLikeStatusDto = sellerCommunitySqlMapper.selectSellerReplyLikeStatus(sellerCommunityReplyLikeStatusDto1);
 
                 verySmallMap.put("selectSellerCommunityReply",sellerCommunityReplyLikeStatusMap);
-                verySmallMap.put("selectSellerReplyLikeCount",sellerCommunitySqlMapper.selectSellerReplyLikeCount(sellerCommunityReplyLikeStatusDto.getSellerCommunityReplyLikeStatusNumber()));
-                verySmallMap.put("selectSellerReplyDisLikeCount",sellerCommunitySqlMapper.selectSellerReplyDisLikeCount(sellerCommunityReplyLikeStatusDto.getSellerCommunityReplyLikeStatusNumber()));
+                verySmallMap.put("selectSellerReplyLikeCount",sellerCommunitySqlMapper.selectSellerReplyLikeCount(sellerCommunityReplyLikeStatusDto.getSellerCommunityReplyNumber()));
+                verySmallMap.put("selectSellerReplyDisLikeCount",sellerCommunitySqlMapper.selectSellerReplyDisLikeCount(sellerCommunityReplyLikeStatusDto.getSellerCommunityReplyNumber()));
                 result2.add(verySmallMap);
             }
             smallMap.put("sellerCommunityReplyContainer",result2);
@@ -75,10 +77,12 @@ public class SellerCommunityService {
             SellerCommunityCommentLikeStatusDto sellerCommunityCommentLikeStatusDtoTemp = new SellerCommunityCommentLikeStatusDto();
             sellerCommunityCommentLikeStatusDtoTemp.setSellerNumber((int)sellerCommunityCommentDto.get("sellerNumber"));
             sellerCommunityCommentLikeStatusDtoTemp.setSellerCommunityCommentNumber((int)sellerCommunityCommentDto.get("sellerCommunityCommentNumber"));
+
             SellerCommunityCommentLikeStatusDto sellerCommunityCommentLikeStatusDto = sellerCommunitySqlMapper.selectSellerCommentLikeStatus(sellerCommunityCommentLikeStatusDtoTemp);
 
-            smallMap.put("selectSellerCommentLikeCount",sellerCommunitySqlMapper.selectSellerCommentLikeCount(sellerCommunityCommentLikeStatusDto.getSellerCommunityCommentLikeStatusNumber()));
-            smallMap.put("selectSellerCommentDisLikeCount",sellerCommunitySqlMapper.selectSellerCommentDisLikeCount(sellerCommunityCommentLikeStatusDto.getSellerCommunityCommentLikeStatusNumber()));
+            smallMap.put("selectEachSellerCommentReplyCount",sellerCommunitySqlMapper.selectEachSellerCommentReplyCount((int)sellerCommunityCommentDto.get("sellerCommunityCommentNumber")));
+            smallMap.put("selectSellerCommentLikeCount",sellerCommunitySqlMapper.selectSellerCommentLikeCount(sellerCommunityCommentLikeStatusDto.getSellerCommunityCommentNumber()));
+            smallMap.put("selectSellerCommentDisLikeCount",sellerCommunitySqlMapper.selectSellerCommentDisLikeCount(sellerCommunityCommentLikeStatusDto.getSellerCommunityCommentNumber()));
             smallMap.put("selectSellerCommentLikeStatus",sellerCommunityCommentLikeStatusDto);
             result.add(smallMap);
         }
@@ -106,27 +110,31 @@ public class SellerCommunityService {
             for(Map<String,Object> sellerCommunityReplyLikeStatusMap : sellerCommunityReplyLikeStatusList){
 
                 Map<String,Object> verySmallMap = new HashMap<>();
-                SellerCommunityReplyLikeStatusDto sellerCommunityReplyLikeStatusDto = sellerCommunitySqlMapper.selectSellerReplyLikeStatus((int)sellerCommunityReplyLikeStatusMap.get("sellerCommunityReplyNumber"));
+                SellerCommunityReplyLikeStatusDto sellerCommunityReplyLikeStatusDto1= new SellerCommunityReplyLikeStatusDto();
+                sellerCommunityReplyLikeStatusDto1.setSellerCommunityReplyNumber((int)sellerCommunityReplyLikeStatusMap.get("sellerCommunityReplyNumber"));
+                sellerCommunityReplyLikeStatusDto1.setSellerNumber(sellerNumber);
+                SellerCommunityReplyLikeStatusDto sellerCommunityReplyLikeStatusDto = sellerCommunitySqlMapper.selectSellerReplyLikeStatus(sellerCommunityReplyLikeStatusDto1);
 
                 if(sellerCommunityReplyLikeStatusDto ==null){
-                    SellerCommunityReplyLikeStatusDto sellerCommunityReplyLikeStatusDto1 = new SellerCommunityReplyLikeStatusDto();
-                    sellerCommunityReplyLikeStatusDto1.setSellerCommunityReplyNumber((int)sellerCommunityReplyLikeStatusMap.get("sellerCommunityReplyNumber"));
-                    sellerCommunityReplyLikeStatusDto1.setSellerNumber(sellerNumber);
-                    sellerCommunitySqlMapper.insertSellerReplyLikeStatus(sellerCommunityReplyLikeStatusDto1);
-                    sellerCommunityReplyLikeStatusDto=sellerCommunityReplyLikeStatusDto1;
+                    SellerCommunityReplyLikeStatusDto sellerCommunityReplyLikeStatusDto2 = new SellerCommunityReplyLikeStatusDto();
+                    sellerCommunityReplyLikeStatusDto2.setSellerCommunityReplyNumber((int)sellerCommunityReplyLikeStatusMap.get("sellerCommunityReplyNumber"));
+                    sellerCommunityReplyLikeStatusDto2.setSellerNumber(sellerNumber);
+                    sellerCommunityReplyLikeStatusDto2.setSellerCommunityReplyLikeStatus("");
+                    sellerCommunitySqlMapper.insertSellerReplyLikeStatus(sellerCommunityReplyLikeStatusDto2);
+                    sellerCommunityReplyLikeStatusDto=sellerCommunityReplyLikeStatusDto2;
                 }
 
                 verySmallMap.put("sellerCommunityReplyLikeStatusDto",sellerCommunityReplyLikeStatusDto);
                 verySmallMap.put("selectSellerCommunityReply",sellerCommunityReplyLikeStatusMap);
-                verySmallMap.put("selectSellerReplyLikeCount",sellerCommunitySqlMapper.selectSellerReplyLikeCount(sellerCommunityReplyLikeStatusDto.getSellerCommunityReplyLikeStatusNumber()));
-                verySmallMap.put("selectSellerReplyDisLikeCount",sellerCommunitySqlMapper.selectSellerReplyDisLikeCount(sellerCommunityReplyLikeStatusDto.getSellerCommunityReplyLikeStatusNumber()));
+                verySmallMap.put("selectSellerReplyLikeCount",sellerCommunitySqlMapper.selectSellerReplyLikeCount(sellerCommunityReplyLikeStatusDto.getSellerCommunityReplyNumber()));
+                verySmallMap.put("selectSellerReplyDisLikeCount",sellerCommunitySqlMapper.selectSellerReplyDisLikeCount(sellerCommunityReplyLikeStatusDto.getSellerCommunityReplyNumber()));
                 result2.add(verySmallMap);
             }
             smallMap.put("sellerCommunityReplyContainer",result2);
             smallMap.put("sellerCommunityCommentDto",sellerCommunityCommentDto);
 
             SellerCommunityCommentLikeStatusDto sellerCommunityCommentLikeStatusDtoTemp = new SellerCommunityCommentLikeStatusDto();
-            sellerCommunityCommentLikeStatusDtoTemp.setSellerNumber((int)sellerCommunityCommentDto.get("sellerNumber"));
+            sellerCommunityCommentLikeStatusDtoTemp.setSellerNumber(sellerNumber);
             sellerCommunityCommentLikeStatusDtoTemp.setSellerCommunityCommentNumber((int)sellerCommunityCommentDto.get("sellerCommunityCommentNumber"));
             SellerCommunityCommentLikeStatusDto sellerCommunityCommentLikeStatusDto = sellerCommunitySqlMapper.selectSellerCommentLikeStatus(sellerCommunityCommentLikeStatusDtoTemp);
             //댓글 좋아요 싫어요 삽입
@@ -134,13 +142,14 @@ public class SellerCommunityService {
                 SellerCommunityCommentLikeStatusDto sellerCommunityCommentLikeStatusDto1 = new SellerCommunityCommentLikeStatusDto();
                 sellerCommunityCommentLikeStatusDto1.setSellerCommunityCommentNumber((int)sellerCommunityCommentDto.get("sellerCommunityCommentNumber"));
                 sellerCommunityCommentLikeStatusDto1.setSellerNumber(sellerNumber);
+                sellerCommunityCommentLikeStatusDto1.setSellerCommentLikeStatus("");
                 sellerCommunitySqlMapper.insertSellerCommentLikeStatus(sellerCommunityCommentLikeStatusDto1);
                 sellerCommunityCommentLikeStatusDto=sellerCommunityCommentLikeStatusDto1;
             }
-            smallMap.put("selectSellerCommentLikeCount",sellerCommunitySqlMapper.selectSellerCommentLikeCount(sellerCommunityCommentLikeStatusDto.getSellerCommunityCommentLikeStatusNumber()));
-            smallMap.put("selectSellerCommentDisLikeCount",sellerCommunitySqlMapper.selectSellerCommentDisLikeCount(sellerCommunityCommentLikeStatusDto.getSellerCommunityCommentLikeStatusNumber()));
+            smallMap.put("selectEachSellerCommentReplyCount",sellerCommunitySqlMapper.selectEachSellerCommentReplyCount((int)sellerCommunityCommentDto.get("sellerCommunityCommentNumber")));
+            smallMap.put("selectSellerCommentLikeCount",sellerCommunitySqlMapper.selectSellerCommentLikeCount(sellerCommunityCommentLikeStatusDto.getSellerCommunityCommentNumber()));
+            smallMap.put("selectSellerCommentDisLikeCount",sellerCommunitySqlMapper.selectSellerCommentDisLikeCount(sellerCommunityCommentLikeStatusDto.getSellerCommunityCommentNumber()));
             smallMap.put("selectSellerCommentLikeStatus",sellerCommunityCommentLikeStatusDto);
-            System.out.println(sellerCommunityCommentLikeStatusDto);
             result.add(smallMap);
         }
         map.put("selectSellerCommunityComment",result);

@@ -142,4 +142,11 @@
     <select id="checkIfSellerCommunityLikeExists">
         select coalesce(count(*),0) from fc_sellerCommunityLike  where sellerNumber=#{sellerNumber} and sellerCommunityNumber=#{sellerCommunityNumber}
     </select>
+
+    <!--조회수 카운트 증가-->
+    <update id="updateSellerCommunityVisitCount">
+        update fc_sellerCommunity
+        set sellerCommunityVisitCount =sellerCommunityVisitCount+1
+        where sellerCommunityNumber=#{sellerCommunityNumber}
+    </update>
 </mapper>

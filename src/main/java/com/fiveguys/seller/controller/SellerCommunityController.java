@@ -113,6 +113,7 @@ public class SellerCommunityController {
             sellerCommunityLikeDto.setSellerCommunityNumber(sellerCommunityNumber);
             model.addAttribute("checkIfSellerCommunityLikeExists",sellerCommunityService.checkIfSellerCommunityLikeExists(sellerCommunityLikeDto));
         }
+        sellerCommunityService.updateSellerCommunityVisitCount(sellerCommunityNumber);
         model.addAttribute("sellerCommunityDetail", sellerCommunityService.selectSellerCommunityById(sellerCommunityNumber));
         return "seller/sellerCommunityDetail";
     }

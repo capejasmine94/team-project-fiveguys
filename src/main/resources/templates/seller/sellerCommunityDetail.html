@@ -81,10 +81,10 @@
                         <i class="bi-heart text-danger"></i>
                     </a>
                     <span>좋아요</span>
-                    <span th:text="${sellerCommunityDetail.selectSellerCommunityLikeCount}">0</span>
+                    <span th:text="${sellerCommunityDetail.selectSellerCommunityLikeCount}"></span>
                     <span><i class="bi bi-chat-dots"></i></span>
                     <span>댓글</span>
-                    <span>2</span>
+                    <span th:text="${sellerCommunityDetail.selectTotalCommentReplyCount}"></span>
                 </div>
             </div>
             <div th:each="sellerComment : ${sellerCommunityDetail.selectSellerCommunityComment}" class="row border-top border-bottom chatContainer">

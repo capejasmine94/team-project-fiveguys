@@ -4,6 +4,7 @@ import com.fiveguys.dto.*;
 import com.fiveguys.seller.mapper.SellerCommunitySqlMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,8 +46,14 @@ public class SellerCommunityService {
 
     public Map<String,Object> selectSellerCommunityById(int sellerCommunityNumber){
         Map<String,Object> map = new HashMap<>();
+
+        SellerCommunityDto sellerCommunityDto =sellerCommunitySqlMapper.selectSellerCommunityById(sellerCommunityNumber);
+        String escapedContent = StringUtils.escapeXml(sellerCommunityDto.getSellerCommunityContent());
+        escapedContent=escapedContent.replaceAll("\n","<br>");
+        sellerCommunityDto.setSellerCommunityContent(escapedContent);
+
         map.put("sellerName",sellerCommunitySqlMapper.selectSeller(sellerCommunityNumber));
-        map.put("selectSellerCommunityById",sellerCommunitySqlMapper.selectSellerCommunityById(sellerCommunityNumber));
+        map.put("selectSellerCommunityById",sellerCommunityDto);
         map.put("selectImageListById",sellerCommunitySqlMapper.selectImageListById(sellerCommunityNumber));
         map.put("selectSellerCommunityLikeCount",sellerCommunitySqlMapper.selectSellerCommunityLikeCount(sellerCommunityNumber));
         map.put("selectTotalCommentReplyCount",sellerCommunitySqlMapper.selectTotalCommentCount(sellerCommunityNumber)+sellerCommunitySqlMapper.selectTotalReplyCount(sellerCommunityNumber));
@@ -55,6 +62,8 @@ public class SellerCommunityService {
         List<Map<String,Object>> result = new ArrayList<>();
         for(Map<String,Object> sellerCommunityCommentDto: sellerCommunityCommentDtoList){
             Map<String,Object> smallMap = new HashMap<>();
+            System.out.println(sellerCommunityCommentDto);
+
 
             List<Map<String,Object>> result2 = new ArrayList<>();
             List<Map<String,Object>> sellerCommunityReplyLikeStatusList = sellerCommunitySqlMapper.selectSellerCommunityReply((int)sellerCommunityCommentDto.get("sellerCommunityCommentNumber"));
@@ -92,8 +101,14 @@ public class SellerCommunityService {
     }
     public Map<String,Object> selectSellerCommunityByIdWithSession(int sellerCommunityNumber,int sellerNumber){
         Map<String,Object> map = new HashMap<>();
+
+        SellerCommunityDto sellerCommunityDto =sellerCommunitySqlMapper.selectSellerCommunityById(sellerCommunityNumber);
+        String escapedContent = StringUtils.escapeXml(sellerCommunityDto.getSellerCommunityContent());
+        escapedContent=escapedContent.replaceAll("\n","<br>");
+        sellerCommunityDto.setSellerCommunityContent(escapedContent);
+
         map.put("sellerName",sellerCommunitySqlMapper.selectSeller(sellerCommunityNumber));
-        map.put("selectSellerCommunityById",sellerCommunitySqlMapper.selectSellerCommunityById(sellerCommunityNumber));
+        map.put("selectSellerCommunityById",sellerCommunityDto);
         map.put("selectImageListById",sellerCommunitySqlMapper.selectImageListById(sellerCommunityNumber));
         map.put("selectSellerCommunityLikeCount",sellerCommunitySqlMapper.selectSellerCommunityLikeCount(sellerCommunityNumber));
         map.put("selectTotalCommentReplyCount",sellerCommunitySqlMapper.selectTotalCommentCount(sellerCommunityNumber)+sellerCommunitySqlMapper.selectTotalReplyCount(sellerCommunityNumber));

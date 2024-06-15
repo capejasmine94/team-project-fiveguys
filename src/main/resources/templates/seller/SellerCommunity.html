@@ -24,51 +24,189 @@
         }
     </style>
 </head>
-<body class="bg-body-secondary">
-<div style="width:800px; margin-left:10%;">
-    <div class="row mt-3">
-        <div class="col">
-            <span class="fw-bold">점주 커뮤니티 게시판</span>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-2"></div>
+        <div class="col-8">
+            <div class="row pt-3">
+                <div class="col-2 fw-bold fs-1 text-danger">F.Guys</div>
+            </div>
+            <div class="row pt-3">
+                <nav class="navbar navbar-expand-lg bg-danger">
+                    <div class="container-fluid">
+                        <div class="col-2 d-flex justify-content-center align-items-center">
+                            <a class="navbar-brand bi bi-house-door-fill text-white text-center"
+                               href="/seller/mainPage"></a>
+                        </div>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+                                aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarNav">
+                            <ul class="navbar-nav row w-100">
+                                <li class="nav-item col-2">
+                                    <a class="nav-link active text-white fw-bold text-start"
+                                       href="/seller/materialMenuPage1">재료메뉴</a>
+                                </li>
+                                <li class="nav-item col-2">
+                                    <a class="nav-link active text-white fw-bold text-start" href="/seller/orderPage">주문하기</a>
+                                </li>
+                                <li class="nav-item col-2">
+                                    <a class="nav-link active text-white fw-bold text-start"
+                                       href="/seller/sellerReviewPage">리뷰하기</a>
+                                </li>
+                                <li class="nav-item col-2">
+                                    <a class="nav-link active text-white fw-bold text-start"
+                                       href="/seller/sellerCommunity">커뮤니티</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+
+            </div>
+            <div class="row pt-3">
+                <div class="col-2">
+                    <div class="card border-danger h-60 bg-danger">
+                        <img src="/img/userIcon.jpg" class="card-img-top" alt="...">
+                        <div class="card-body text-center">
+                            <!--                            <span class="fs-5 text-white fw-bold" th:text="${session.sellerDto.sellerName}"></span>-->
+                        </div>
+                    </div>
+                </div>
+                <!--커뮤니티게시판 삽입부분-->
+                <div class="col-10">
+                    <div class="row">
+                        <div class="col">
+                            <div class="row mt-3">
+                                <div class="col ">
+                                    <span class="fw-bold fs-3">점주 커뮤니티 게시판</span>
+                                </div>
+                            </div>
+                            <div class="row mt-3 bg-white py-2 border-bottom">
+                                <div class="col ps-0">
+                                    <a class="btn btn-danger " href="/seller/sellerCommunityWritePage">
+                                        <i class="bi bi-pencil"></i>
+                                        <span>작성하기</span>
+                                    </a>
+                                </div>
+                                <div class="col-3 text-end pe-0 position-relative">
+                                    <div class="row position-absolute" style="top:12%; left:16%;">
+                                        <div class="col">
+                                            <span><i class="bi bi-list-ul fs-5"></i></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col ">
+                                            <select class="form-select ps-5" aria-label="Large select example">
+                                                <option selected>최신순</option>
+                                                <option value="1">One</option>
+                                                <option value="2">Two</option>
+                                                <option value="3">Three</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row pt-2 pb-1">
+                                <div class="col-4">
+                                    <span class="fs-4"><i class="bi bi-arrow-counterclockwise"></i></span>
+                                </div>
+                                <div class="col-4 ps-0 position-relative">
+                                    <div class="row position-absolute" style="top:18%; left:4%;">
+                                        <div class="col">
+                                            <span><i class="bi bi-search"></i></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <input type="text" name="" class="form-control ps-5" placeholder="커뮤니티내 검색">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col text-end" style="margin-top:0.3%;">
+                                    <span>1 / 7312 페이지</span>
+                                    <i class="bi bi-arrow-left ms-3 fs-5"></i>
+                                    <i class="bi bi-arrow-right fs-5 ms-3"></i>
+                                </div>
+                            </div>
+                            <a th:each="seller : ${sellerCommunity}" class="row border shadow-sm py-2 mt-1 rounded" th:href="@{/seller/sellerCommunityDetail(sellerCommunityNumber=${seller.sellerCommunityDto.sellerCommunityNumber})}">
+                                <div class="col">
+                                    <div class="row">
+                                        <div class="col">
+                                            <span class="fw-bold" th:text="${seller.sellerCommunityDto.sellerCommunityTitle}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col line-limit">
+                                            <span th:text="${seller.sellerCommunityDto.sellerCommunityContent}" class="font"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-4">
+                                        <div class="col font">
+                                            <span th:text="${seller.sellerName.sellerName}"></span>
+                                            <span><i class="bi bi-dot"></i></span>
+                                            <span th:text="${seller.sellerCommunityDto.sellerCommunityCreatedAt}"></span>
+                                            <span class="ms-2"><i class="bi bi-eye"></i></span>
+                                            <span th:text="${seller.sellerCommunityDto.sellerCommunityVisitCount}"></span>
+                                            <span class="ms-2"><i class="bi-heart"></i></span>
+                                            <span th:text="${seller.selectSellerCommunityLikeCount}"></span>
+                                            <span class="ms-2"><i class="bi bi-chat-dots"></i></span>
+                                            <span th:text="${seller.selectTotalCommentReplyCount}"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <img class="img-thumbnail" th:src="@{|/images/${seller.sellerCommunityDto.sellerCommunityImage}|}" alt="">
+                                </div>
+                            </a>
+                            <div class="row">
+                                <div class="col pt-3">
+                                    <div class="row">
+                                        <div class="col-3 text-start ps-0">
+                                            <a href="">
+                                                <i class="bi bi-arrow-left me-2"></i>
+                                                <span>Previous</span>
+                                            </a>
+                                        </div>
+                                        <div class="col text-center">
+                                            <a href="" class="px-3 pt-3">
+                                                <span>1</span>
+                                            </a>
+                                            <span>...</span>
+                                            <a href="" class="px-3 border-top border-primary pt-3">
+                                                <span class="text-primary">1</span>
+                                            </a>
+                                            <a href="" class="px-3 pt-3">
+                                                <span>2</span>
+                                            </a>
+                                            <a href="" class="px-3 pt-3">
+                                                <span>3</span>
+                                            </a>
+                                            <span>...</span>
+                                            <a href="" class="px-3 pt-3">
+                                                <span>7312</span>
+                                            </a>
+                                        </div>
+                                        <div class="col-3 text-end pe-0">
+                                            <a href="">
+                                                <span >Next</span>
+                                                <i class="bi bi-arrow-right ms-2"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row pt-5"></div>
         </div>
+        <div class="col-2"></div>
     </div>
-    <div class="row mt-3 bg-white py-2 rounded">
-        <div class="col">
-            <a class="btn btn-primary" href="/seller/sellerCommunityWritePage">작성하기</a>
-        </div>
-        <div class="col text-end">
-            <span>최신순</span>
-        </div>
-    </div>
-    <a th:each="seller : ${sellerCommunity}" class="row mt-2 bg-white py-2 rounded" th:href="@{/seller/sellerCommunityDetail(sellerCommunityNumber=${seller.sellerCommunityDto.sellerCommunityNumber})}">
-        <div class="col">
-            <div class="row">
-                <div class="col">
-                    <span class="fw-bold" th:text="${seller.sellerCommunityDto.sellerCommunityTitle}"></span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col line-limit">
-                    <span th:text="${seller.sellerCommunityDto.sellerCommunityContent}" class="font"></span>
-                </div>
-            </div>
-            <div class="row mt-4">
-                <div class="col font">
-                    <span th:text="${seller.sellerName.sellerName}"></span>
-                    <span><i class="bi bi-dot"></i></span>
-                    <span th:text="${seller.sellerCommunityDto.sellerCommunityCreatedAt}"></span>
-                    <span class="ms-2"><i class="bi bi-eye"></i></span>
-                    <span th:text="${seller.sellerCommunityDto.sellerCommunityVisitCount}"></span>
-                    <span class="ms-2"><i class="bi-heart"></i></span>
-                    <span th:text="${seller.selectSellerCommunityLikeCount}"></span>
-                    <span class="ms-2"><i class="bi bi-chat-dots"></i></span>
-                    <span th:text="${seller.selectTotalCommentReplyCount}"></span>
-                </div>
-            </div>
-        </div>
-        <div class="col-2">
-            <img class="img-thumbnail" th:src="@{|/images/${seller.sellerCommunityDto.sellerCommunityImage}|}" alt="">
-        </div>
-    </a>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

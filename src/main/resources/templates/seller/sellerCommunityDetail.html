@@ -24,90 +24,143 @@
         }
     </style>
 </head>
-<body class="bg-body-secondary">
-<div style="width:800px; margin-left:10%;">
-    <div class="row mt-3">
-        <div class="col">
-            <span class="fw-bold">점주 커뮤니티 게시판</span>
-        </div>
-    </div>
-    <div class="row  bg-white">
-        <div class="col">
-            <div class="row">
-                <div class="col">
-                    <span class="fw-bold fs-1" th:text="${sellerCommunityDetail.selectSellerCommunityById.sellerCommunityTitle}"></span>
-                </div>
+<body>
+<div class="container-fluid">
+
+    <div class="row">
+
+        <div class="col-2"></div>
+
+        <div class="col-8">
+
+            <div class="row pt-3">
+
+                <div class="col-2 fw-bold fs-1 text-danger">F.Guys</div>
+
             </div>
-            <div class="row border-bottom border-dark">
-                <div class="col-md-auto">
-                    <span><i class="bi-person-circle fs-1"></i></span>
-                </div>
-                <div class="col g-0">
-                    <div class="row">
-                        <div class="col">
-                            <span th:text="${sellerCommunityDetail.sellerName.sellerName}"></span>
+
+
+            <div class="row pt-3">
+
+                <nav class="navbar navbar-expand-lg bg-danger">
+                    <div class="container-fluid">
+                        <div class="col-2 d-flex justify-content-center align-items-center">
+                            <a class="navbar-brand bi bi-house-door-fill text-white text-center" href="/seller/mainPage"></a>
+                        </div>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarNav">
+                            <ul class="navbar-nav row w-100">
+                                <li class="nav-item col-2">
+                                    <a class="nav-link active text-white fw-bold text-start" href="/seller/materialMenuPage1">재료메뉴</a>
+                                </li>
+                                <li class="nav-item col-2">
+                                    <a class="nav-link active text-white fw-bold text-start" href="/seller/orderPage">주문하기</a>
+                                </li>
+                                <li class="nav-item col-2">
+                                    <a class="nav-link active text-white fw-bold text-start" href="/seller/sellerReviewPage">리뷰하기</a>
+                                </li>
+                                <li class="nav-item col-2">
+                                    <a class="nav-link active text-white fw-bold text-start" href="/seller/sellerCommunity">커뮤니티</a>
+                                </li>
+                            </ul>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col">
-                            <span th:text="${sellerCommunityDetail.selectSellerCommunityById.sellerCommunityCreatedAt}">2024.11.12 09:23</span>
-                            <span><i class="bi-eye"></i></span>
-                            <span th:text="${sellerCommunityDetail.selectSellerCommunityById.sellerCommunityVisitCount}">0</span>
-                        </div>
-                    </div>
-                </div>
+                </nav>
+
             </div>
-            <div th:each="image : ${sellerCommunityDetail.selectImageListById}" class="row">
+
+
+            <div class="row pt-3">
                 <div class="col">
-                    <img class="img-fluid" th:src="@{|/images/${image.sellerCommunityImageList}|}" alt="">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <span th:utext="${sellerCommunityDetail.selectSellerCommunityById.sellerCommunityContent}"></span>
-                </div>
-            </div>
-            <div class="row border-top border-dark py-2">
-                <div class="col">
-                    <a th:if="${session.sellerDto!=null}" th:href="@{/seller/sellerCommunityLikeProcess(sellerCommunityNumber=${sellerCommunityDetail.selectSellerCommunityById.sellerCommunityNumber},sellerNumber=${session.sellerDto.sellerNumber},sellerCommunityNumber=${sellerCommunityDetail.selectSellerCommunityById.sellerCommunityNumber})}">
-                        <span th:if="${checkIfSellerCommunityLikeExists!=0}">
-                            <i class="bi-heart-fill text-danger"></i>
-                        </span>
-                        <span th:if="${checkIfSellerCommunityLikeExists==0}">
-                             <i class="bi-heart text-danger"></i>
-                        </span>
-                    </a>
-                    <a th:if="${session.sellerDto==null}" href="/login/sellerLogin">
-                        <i class="bi-heart text-danger"></i>
-                    </a>
-                    <span>좋아요</span>
-                    <span th:text="${sellerCommunityDetail.selectSellerCommunityLikeCount}"></span>
-                    <span><i class="bi bi-chat-dots"></i></span>
-                    <span>댓글</span>
-                    <span th:text="${sellerCommunityDetail.selectTotalCommentReplyCount}"></span>
-                </div>
-            </div>
-            <div th:each="sellerComment : ${sellerCommunityDetail.selectSellerCommunityComment}" class="row border-top border-bottom chatContainer">
-                <div class="col">
-                    <div class="row">
+                    <div class="row ">
                         <div class="col-md-auto">
                             <span><i class="bi-person-circle fs-2"></i></span>
                         </div>
                         <div class="col g-0">
                             <div class="row">
                                 <div class="col">
-                                    <span th:text="${sellerComment.sellerCommunityCommentDto.sellerName}"></span>
-                                    <span class="ms-2" th:text="${#dates.format(sellerComment.sellerCommunityCommentDto.sellerCommunityCommentCreatedAt,'yyyy.MM.dd HH:mm')}"></span>
+                                    <span class="fw-bold" th:text="${sellerCommunityDetail.sellerName.sellerName}"></span>
                                 </div>
                             </div>
                             <div class="row">
+                                <div class="col">
+                                    <span th:text="${sellerCommunityDetail.selectSellerCommunityById.sellerCommunityCreatedAt}"></span>
+                                    <span><i class="bi-dot"></i></span>
+                                    <span><i class="bi-eye"></i></span>
+                                    <span th:text="${sellerCommunityDetail.selectSellerCommunityById.sellerCommunityVisitCount}">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row pb-5 pt-3" >
+                        <div class="col">
+                            <div class="row">
+                                <div class="col">
+                                    <span class="fw-bold fs-1" th:text="${sellerCommunityDetail.selectSellerCommunityById.sellerCommunityTitle}"></span>
+                                </div>
+                            </div>
+                            <div th:each="image : ${sellerCommunityDetail.selectImageListById}" class="row py-5">
+                                <div class="col">
+                                    <img class="img-fluid" th:src="@{|/images/${image.sellerCommunityImageList}|}" alt="">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <span th:utext="${sellerCommunityDetail.selectSellerCommunityById.sellerCommunityContent}"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row border-top border-dark py-2">
+                        <div class="col">
+                            <a th:if="${session.sellerDto!=null}" th:href="@{/seller/sellerCommunityLikeProcess(sellerCommunityNumber=${sellerCommunityDetail.selectSellerCommunityById.sellerCommunityNumber},sellerNumber=${session.sellerDto.sellerNumber},sellerCommunityNumber=${sellerCommunityDetail.selectSellerCommunityById.sellerCommunityNumber})}">
+                                <span th:if="${checkIfSellerCommunityLikeExists!=0}">
+                                    <i class="bi-heart-fill text-danger"></i>
+                                </span>
+                                <span th:if="${checkIfSellerCommunityLikeExists==0}">
+                                    <i class="bi-heart text-danger"></i>
+                                </span>
+                            </a>
+                            <a th:if="${session.sellerDto==null}" href="/login/sellerLogin">
+                                <i class="bi-heart text-danger"></i>
+                            </a>
+                            <span>좋아요</span>
+                            <span th:text="${sellerCommunityDetail.selectSellerCommunityLikeCount}"></span>
+                            <span class="ms-2"><i class="bi bi-chat-dots"></i></span>
+                            <span>댓글</span>
+                            <span th:text="${sellerCommunityDetail.selectTotalCommentReplyCount}"></span>
+                        </div>
+                    </div>
+                    <div th:each="sellerComment : ${sellerCommunityDetail.selectSellerCommunityComment}" class="row border-top border-bottom chatContainer">
+                        <div class="col">
+                            <div class="row">
+                                <div class="col-md-auto">
+                                    <span><i class="bi-person-circle fs-2"></i></span>
+                                </div>
+                                <div class="col">
+                                    <div class="row mt-2">
+                                        <div class="col">
+                                            <span class="fw-bold" th:text="${sellerComment.sellerCommunityCommentDto.sellerName}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <span  th:text="${#dates.format(sellerComment.sellerCommunityCommentDto.sellerCommunityCommentCreatedAt,'yyyy.MM.dd HH:mm')}"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-1">
                                 <div class="col">
                                     <span th:text="${sellerComment.sellerCommunityCommentDto.sellerCommunityCommentContent}"></span>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row py-2">
                                 <div class="col">
                                     <span th:if="${session.sellerDto!=null}">
+                                        <span>답글</span>
                                          <span th:if="${session.sellerDto!=null}" class="fw-bold" th:text="${sellerComment.selectEachSellerCommentReplyCount}"  onclick="addReply(this)" style="cursor:pointer;" ></span>
                                     </span>
                                     <a href="/login/sellerLogin" th:if="${session.sellerDto==null}">
@@ -131,11 +184,11 @@
                                     <span th:text="${sellerComment.selectSellerCommentLikeCount}"></span>
 
                                     <a th:if="${session.sellerDto!=null}" th:href="@{/seller/sellerCommentDisLikeProcess(sellerCommunityNumber=${sellerComment.sellerCommunityCommentDto.sellerCommunityNumber}, sellerNumber=${session.sellerDto.sellerNumber},sellerCommunityCommentNumber=${sellerComment.selectSellerCommentLikeStatus.sellerCommunityCommentNumber}, sellerCommentLikeStatus=${sellerComment.selectSellerCommentLikeStatus.sellerCommentLikeStatus})}">
-                                         <span th:if="${sellerComment.selectSellerCommentLikeStatus.sellerCommentLikeStatus=='dislike'}">
+                                        <span th:if="${sellerComment.selectSellerCommentLikeStatus.sellerCommentLikeStatus=='dislike'}">
                                             <i class="bi bi-hand-thumbs-down-fill"></i>
                                         </span>
                                         <span th:if="${sellerComment.selectSellerCommentLikeStatus.sellerCommentLikeStatus=='' || sellerComment.selectSellerCommentLikeStatus.sellerCommentLikeStatus=='like'}">
-                                           <i class="bi bi-hand-thumbs-down"></i>
+                                            <i class="bi bi-hand-thumbs-down"></i>
                                         </span>
                                     </a>
                                     <a th:if="${session.sellerDto==null}" href="/login/sellerLogin">
@@ -144,33 +197,35 @@
                                     <span th:text="${sellerComment.selectSellerCommentDisLikeCount}"></span>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <form action="/seller/sellerCommunityReplyInsertProcess"  class="row addReply d-none">
-                        <input type="hidden" name="sellerCommunityNumber" th:value="${sellerComment.sellerCommunityCommentDto.sellerCommunityNumber}">
-                        <input type="hidden" name="sellerCommunityCommentNumber" th:value="${sellerComment.sellerCommunityCommentDto.sellerCommunityCommentNumber}">
-                        <input th:if="${session.sellerDto!=null}" type="hidden" name="sellerNumber" th:value="${session.sellerDto.sellerNumber}">
-                        <div class="col">
-                            <div class="row">
+                            <form action="/seller/sellerCommunityReplyInsertProcess"  class="row addReply d-none py-2">
+                                <input type="hidden" name="sellerCommunityNumber" th:value="${sellerComment.sellerCommunityCommentDto.sellerCommunityNumber}">
+                                <input type="hidden" name="sellerCommunityCommentNumber" th:value="${sellerComment.sellerCommunityCommentDto.sellerCommunityCommentNumber}">
+                                <input th:if="${session.sellerDto!=null}" type="hidden" name="sellerNumber" th:value="${session.sellerDto.sellerNumber}">
                                 <div class="col-10">
-                                    <textarea class="form-control" name="sellerCommunityReplyContent" placeholder="대댓글쓰기"></textarea>
+                                    <textarea class="form-control py-1" name="sellerCommunityReplyContent" placeholder="대댓글쓰기"></textarea>
+
                                 </div>
                                 <div class="col">
-                                    <input class="form-control btn btn-primary" type="submit" value="작성">
+                                    <input class="form-control btn btn-primary py-3" type="submit" value="작성">
                                 </div>
-                            </div>
-                        </div>
-                    </form>
-                    <div th:each="sellerReply : ${sellerComment.sellerCommunityReplyContainer}" class="row border-top">
-                        <div class="col ms-5">
-                            <div class="row">
-                                <div class="col-md-auto">
-                                    <span><i class="bi-person-circle fs-2"></i></span>
-                                </div>
-                                <div class="col g-0">
+                            </form>
+                            <div th:each="sellerReply : ${sellerComment.sellerCommunityReplyContainer}" class="row border-top">
+                                <div class="col ms-5">
                                     <div class="row">
+                                        <div class="col-md-auto">
+                                            <span><i class="bi-person-circle fs-2"></i></span>
+                                        </div>
                                         <div class="col">
-                                            <span th:text="${sellerReply.selectSellerCommunityReply.sellerName}"></span>
+                                            <div class="row mt-2">
+                                                <div class="col">
+                                                    <span class="fw-bold" th:text="${sellerReply.selectSellerCommunityReply.sellerName}"></span>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <span th:text="${#dates.format(sellerReply.selectSellerCommunityReply.sellerCommunityReplyCreatedAt,'yyyy.MM.dd HH:ss')}">2024.05.13 15:48</span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -178,10 +233,7 @@
                                             <span th:text="${sellerReply.selectSellerCommunityReply.sellerCommunityReplyContent}"></span>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col">
-                                            <span th:text="${#dates.format(sellerReply.selectSellerCommunityReply.sellerCommunityReplyCreatedAt,'yyyy.MM.dd HH:ss')}">2024.05.13 15:48</span>
-                                        </div>
+                                    <div class="row py-2">
                                         <div class="col text-end me-2">
                                             <a th:if="${session.sellerDto!=null}"
                                                th:href="@{/seller/sellerReplyLikeProcess(sellerCommunityNumber=${sellerComment.sellerCommunityCommentDto.sellerCommunityNumber}, sellerCommunityReplyNumber=${sellerReply.sellerCommunityReplyLikeStatusDto.sellerCommunityReplyNumber},sellerNumber=${session.sellerDto.sellerNumber}, sellerCommunityReplyLikeStatus=${sellerReply.sellerCommunityReplyLikeStatusDto.sellerCommunityReplyLikeStatus})}">
@@ -214,22 +266,23 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
+                    <form action="/seller/sellerCommunityCommentInsertProcess" class="row mt-2">
+                        <input type="hidden" name="sellerCommunityNumber" th:value="${sellerCommunityDetail.selectSellerCommunityById.sellerCommunityNumber}">
+                        <input th:if="${session.sellerDto!=null}"  type="hidden" name="sellerNumber"  th:value="${session.sellerDto.sellerNumber}">
+                        <div class="col-10">
+                            <textarea class="form-control py-1" name="sellerCommunityCommentContent" placeholder="댓글쓰기"></textarea>
+                        </div>
+                        <div class="col">
+                            <input class=" form-control btn btn-primary py-3" type="submit" value="작성">
+                        </div>
+                    </form>
                 </div>
             </div>
-            <form action="/seller/sellerCommunityCommentInsertProcess" class="row">
-                <input type="hidden" name="sellerCommunityNumber" th:value="${sellerCommunityDetail.selectSellerCommunityById.sellerCommunityNumber}">
-                <input th:if="${session.sellerDto!=null}"  type="hidden" name="sellerNumber"  th:value="${session.sellerDto.sellerNumber}">
-                <div class="col-10">
-                    <textarea class="form-control" name="sellerCommunityCommentContent" placeholder="댓글쓰기"></textarea>
-                </div>
-                <div class="col">
-                    <input class=" form-control btn btn-primary" type="submit" value="작성">
-                </div>
-            </form>
+            <div class="row pt-5"></div>
         </div>
+        <div class="col-2"></div>
     </div>
 </div>
 <script>
@@ -258,15 +311,12 @@
         for (const e of hideEditBox) {
             if(e !==showEditBox) {
                 e.classList.add("d-none");
-                e.classList.remove("d-block");
             }
         }
         if (showEditBox.classList.contains("d-none")) {
-            showEditBox.classList.add("d-block");
             showEditBox.classList.remove("d-none");
-        } else if (showEditBox.classList.contains("d-block")) {
+        }else {
             showEditBox.classList.add("d-none");
-            showEditBox.classList.remove("d-block");
         }
     }
     function updateReply(target) {

@@ -45,7 +45,7 @@
                 <div class="col">
                     <div class="row mt-3">
                         <div class="col">
-                            <div class="row mb-2" th:each="eventBoardDto : ${eventDtoList}">
+                            <div class="row mb-2" th:each="eventBoardDto : ${eventEndDtoList}">
                                 <div class="col">
                                     <a th:href="@{./eventDetailPage(eventNumber=${eventBoardDto.eventNumber})}"><img class="img-fluid" th:src="|/images/${eventBoardDto.eventMainImage}|"></a>
                                 </div>

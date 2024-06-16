@@ -39,4 +39,24 @@ public interface EventSqlMapper {
     List<EventBoardDto> selectEndEventList();
 
     int selectEndEvent();
+
+    void updateEventCommentMasterReply(EventCommentDto eventCommentDto);
+
+    void insertWinnerProcess(WinnerDto winnerDto);
+
+    void deleteEventProcess(int eventNumber);
+
+    void updateEventProcess(EventBoardDto eventBoardDto);
+
+    void deleteEventDetailImage(int eventNumber);
+
+    List<WinnerDto> selectWinnerList();
+
+    int selectWinnerEventCount();
+
+    WinnerDto selectWinnerDto(int winnerNumber);
+
+    void updateWinnerProcess(WinnerDto winnerDto);
+
+    void deleteWinner(int winnerNumber);
 }

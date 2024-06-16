@@ -14,10 +14,11 @@
 <div class="container">
     <div class="row">
         <div class="col">
-            <form class="row mt-3" action="./insertEventProcess" method="post" enctype="multipart/form-data">
+            <form class="row mt-3" action="./updateEventProcess" method="post" enctype="multipart/form-data">
                 <div class="col">
                     <div class="row">
                         <div class="col">
+                            <input type="hidden" name="eventNumber" th:value=${eventBoardDtoAndDetail.eventBoardDto.eventNumber}>
                             닉네임: <span th:text="${session.masterDto.masterId}"></span>
                         </div>
                     </div>
@@ -26,7 +27,7 @@
                             <span>이벤트 제목</span> 
                         </div>
                         <div class="col">
-                            <input class="form-control" name="eventTitle" type="text">
+                            <input class="form-control" name="eventTitle" type="text" th:value="${eventBoardDtoAndDetail.eventBoardDto.eventTitle}">
                         </div>
                     </div>
                     <div class="row mt-2">
@@ -52,7 +53,7 @@
                     </div>
                     <div class="row mt-2">
                         <div class="col">
-                            <input name="eventStartDay" type="date">
+                            <input name="eventStartDay" type="date" th:value="${eventBoardDtoAndDetail.eventBoardDto.eventStartDay}">
                         </div>
                     </div>
                     <div class="row mt-2">
@@ -62,22 +63,12 @@
                     </div>
                     <div class="row mt-2">
                         <div class="col">
-                            <input name="eventEndDay" type="date">
-                        </div>
-                    </div>
-                    <div class="row mt-2">
-                        <div class="col-2">
-                            <span>이벤트 내용</span>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <textarea name="content" class="form-control"></textarea>
+                            <input name="eventEndDay" type="date" th:value="${eventBoardDtoAndDetail.eventBoardDto.eventEndDay}">
                         </div>
                     </div>
                     <div class="row mt-2">
                         <div class="col text-end">
-                            <button> 이벤트 등록</button>
+                            <button> 이벤트 변경</button>
                         </div>
                     </div>
                 </div>

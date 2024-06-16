@@ -13,32 +13,152 @@
 <body>
 <div class="container">
     <div class="row">
-        <div class="col-1"></div>
-        <div class="col border mt-2">
-            <div class="row">
-                <div class="col text-center py-2">
-                    <a type="button">이벤트</a>
-                </div>
-                <div class="col text-center border-bottom border-start bg-body-tertiary py-2">
-                    <a type="button">종료된 이벤트</a>
-                </div>
-            </div>
+        <div class="col">
             <div class="row">
                 <div class="col">
-                    <div class="row mt-2">
-                        <div class="col pt-1">
-                            <span class="fw-bold" style="font-size: 0.8em;">Total</span>
-                            <span class="fw-bold" style="font-size: 0.8em;" th:text="${selectRunningEvent}"></span>
+                    <span class="fs-3">이벤트 관리</span>
+                </div>
+            </div>
+            <div class="row mt-3 border">
+                <div class="col py-3">
+                    <div class="row">
+                        <div class="col-2">
+                            이벤트 분류
                         </div>
-                        <div class="col text-end">
-                            <a class="btn btn-primary" style="font-size: 0.8em;" href="./eventInsertPage">이벤트 등록</a>
+                        <div class="col-2">
+                            <select class="form-select form-select-sm" name="haha">
+                                <option selected>선택</option>
+                                <option value="1">진행중인 이벤트</option>
+                                <option value="2">종료된 이벤트</option>
+                                <option value="3">당첨자</option>
+                            </select>
                         </div>
                     </div>
-                    <div class="row mt-3">
+                    <div class="row mt-1">
+                        <div class="col-2">
+                            등록일
+                        </div>
                         <div class="col">
-                            <div class="row mb-5" th:each="eventBoardDto : ${eventDtoList}">
+                            <input type="date">
+                            <span>~</span>
+                            <input type="date">
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-2">
+                            검색어
+                        </div>
+                        <div class="col-2">
+                            <select class="form-select form-select-sm" name="hehe">
+                                <option selected>이벤트명</option>
+                                <option value="1">이벤트 내용</option>
+                            </select>
+                        </div>
+                        <div class="col ps-0 pe-0">
+                            <input class="form-control form-control-sm" type="text">
+                        </div>
+                        <div class="col-auto">
+                            <a class="btn btn-secondary btn-sm">검색하기</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3 border py-3 px-1">
+                <div class="col">
+                    <div class="row">
+                        <div class="col-9"></div>
+                        <div class="col d-grid pe-0">
+                            <a href="./eventInsertPage" class="btn btn btn-secondary btn-sm">이벤트 등록</a>
+                        </div>
+                        <div class="col d-grid">
+                            <a href="./winnerInsertPage" class="btn btn btn-secondary btn-sm">당첨자 등록</a>
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col">
+                            <div class="row border-bottom pb-3">
                                 <div class="col">
-                                    <a th:href="@{./eventDetailPage(eventNumber=${eventBoardDto.eventNumber})}"><img class="img-fluid" th:src="|/images/${eventBoardDto.eventMainImage}|"></a>
+                                    <div class="row">
+                                        <div class="col-auto">진행중인 이벤트</div>
+                                        <div class="col">
+                                            <span>Total</span><span th:text="${selectRunningEvent}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row bg-secondary text-center">
+                                        <div class="col-2">이벤트번호</div>
+                                        <div class="col-3">이미지</div>
+                                        <div class="col">이벤트명</div>
+                                        <div class="col-2">관리</div>
+                                    </div>
+                                    <div class="row align-items-center text-center mt-1" th:each="eventBoardDto : ${eventDtoList}">
+                                        <div class="col-2">
+                                            <span th:text="${eventBoardDto.eventNumber}"></span>
+                                        </div>
+                                        <div class="col-3"><img style="height: 5em;" class="img-fluid" th:src="|/images/${eventBoardDto.eventMainImage}|"></div>
+                                        <div class="col">
+                                            <span th:text="${eventBoardDto.eventTitle}"></span>
+                                        </div>
+                                        <div class="col-2">
+                                            <a class="btn btn-secondary btn-sm" th:href="@{updateEventPage(eventNumber=${eventBoardDto.eventNumber})}">수정</a>
+                                            <a class="btn btn-secondary btn-sm" th:href="@{deleteEventProcess(eventNumber=${eventBoardDto.eventNumber})}">삭제</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3 border-bottom pb-3">
+                                <div class="col">
+                                    <div class="row">
+                                        <div class="col-auto">종료된 이벤트</div>
+                                        <div class="col">
+                                            <span>Total</span><span th:text="${selectEndEvent}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row bg-secondary text-center">
+                                        <div class="col-2">이벤트번호</div>
+                                        <div class="col-3">이미지</div>
+                                        <div class="col">이벤트명</div>
+                                        <div class="col-2">관리</div>
+                                    </div>
+                                    <div class="row align-items-center text-center mt-1" th:if="${eventEndDtoList} != null" th:each="eventEndBoardDto : ${eventEndDtoList}">
+                                        <div class="col-2">
+                                            <span th:text="${eventEndBoardDto.eventNumber}"></span>
+                                        </div>
+                                        <div class="col-3"><img style="height: 5em;"  class="img-fluid" th:src="|/images/${eventEndBoardDto.eventMainImage}|"></div>
+                                        <div class="col">
+                                            <span th:text="${eventEndBoardDto.eventTitle}"></span>
+                                        </div>
+                                        <div class="col-2">
+                                            <a class="btn btn-secondary btn-sm" th:href="@{updateEventPage(eventNumber=${eventEndBoardDto.eventNumber})}">수정</a>
+                                            <a class="btn btn-secondary btn-sm" th:href="@{deleteEventProcess(eventNumber=${eventEndBoardDto.eventNumber})}">삭제</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col">
+                                    <div class="row">
+                                        <div class="col-auto">이벤트 당첨안내</div>
+                                        <div class="col">
+                                            <span>Total</span><span th:text="${selectWinnerEventCount}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row bg-secondary text-center">
+                                        <div class="col-2">이벤트 당첨안내 번호</div>
+                                        <div class="col">이벤트명</div>
+                                        <div class="col-2">관리</div>
+                                    </div>
+                                    <div class="row align-items-center text-center mt-1" th:if="${eventEndDtoList} != null" th:each="eventWinnerdDto : ${eventWinnerList}">
+                                        <div class="col-2">
+                                            <span th:text="${eventWinnerdDto.winnerNumber}"></span>
+                                        </div>
+                                        <div class="col">
+                                            <span th:text="${eventWinnerdDto.winnerTitle}"></span>
+                                        </div>
+                                        <div class="col-2">
+                                            <a class="btn btn-secondary btn-sm" th:href="@{updateWinnerPage(winnerNumber=${eventWinnerdDto.winnerNumber})}">수정</a>
+                                            <a class="btn btn-secondary btn-sm" th:href="@{deleteWinnerProcess(winnerNumber=${eventWinnerdDto.winnerNumber})}">삭제</a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -46,7 +166,6 @@
                 </div>
             </div>
         </div>
-        <div class="col-3"></div>
     </div>
 </div>
 

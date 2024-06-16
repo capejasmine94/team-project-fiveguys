@@ -2,18 +2,30 @@ package com.fiveguys.master.controller;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
-import com.fiveguys.dto.*;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import com.fiveguys.master.service.EventService;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.fiveguys.dto.CustomerDto;
+import com.fiveguys.dto.EventBoardDto;
+import com.fiveguys.dto.EventCommentDto;
+import com.fiveguys.dto.EventDetailImageDto;
+import com.fiveguys.dto.EventLikeDto;
+import com.fiveguys.dto.MasterDto;
+import com.fiveguys.dto.WinnerDto;
+import com.fiveguys.master.service.EventService;
+
+import jakarta.servlet.http.HttpSession;
+
 
 
 @Controller
@@ -25,11 +37,24 @@ public class EventController {
     
     @RequestMapping("eventlistPage")
     public String listPage(Model model, HttpSession session){
+        //진행중 이벤트
         List<EventBoardDto> eventDtoList = eventService.selectEventList();
         int selectRunningEvent = eventService.selectRunningEvent();
         model.addAttribute("eventDtoList", eventDtoList);
         model.addAttribute("selectRunningEvent",selectRunningEvent);
+        
+        // 종료된 이벤트
+        List<EventBoardDto> eventEndDtoList = eventService.selectEndEventList();
+        int selectEndEvent = eventService.selectEndEvent();
+        model.addAttribute("eventEndDtoList", eventEndDtoList);
+        model.addAttribute("selectEndEvent",selectEndEvent);
         MasterDto masterDto = (MasterDto) session.getAttribute("masterDto");
+
+        //이벤트 당첨자
+        List<WinnerDto> eventWinnerList = eventService.selectWinnerList();
+        int selectWinnerEventCount = eventService.selectWinnerEventCount();
+        model.addAttribute("eventWinnerList", eventWinnerList);
+        model.addAttribute("selectWinnerEventCount",selectWinnerEventCount);
 
         if(masterDto != null){
             return "master/eventlistPage";
@@ -40,11 +65,9 @@ public class EventController {
 
     @RequestMapping("endEventlistPage")
     public String endEventlistPage(Model model, HttpSession session){
-        List<EventBoardDto> eventDtoList = eventService.selectEndEventList();
-        int selectRunningEvent = eventService.selectRunningEvent();
+        List<EventBoardDto> eventEndDtoList = eventService.selectEndEventList();
         int selectEndEvent = eventService.selectEndEvent();
-        model.addAttribute("eventDtoList", eventDtoList);
-        model.addAttribute("selectRunningEvent",selectRunningEvent);
+        model.addAttribute("eventEndDtoList", eventEndDtoList);
         model.addAttribute("selectEndEvent",selectEndEvent);
         MasterDto masterDto = (MasterDto) session.getAttribute("masterDto");
 
@@ -66,6 +89,14 @@ public class EventController {
         String mainImage = mainImageRemake(uploadFile);
         eventBoardDto.setEventMainImage(mainImage);
 
+        List<EventDetailImageDto> eventDetailImageList = detailImageReName(uploadFiles);
+        
+        eventService.insertEventProcess(eventBoardDto,eventDetailImageList);
+
+        return "redirect:./eventlistPage";
+    }
+
+    public List<EventDetailImageDto> detailImageReName(MultipartFile[] uploadFiles){
         List<EventDetailImageDto> eventDetailImageList = new ArrayList<>();
         //파일 처리 시작
         if(uploadFiles != null){
@@ -113,9 +144,7 @@ public class EventController {
             }
         }
         //파일 처리 끝
-        eventService.insertEventProcess(eventBoardDto,eventDetailImageList);
-
-        return "redirect:./eventlistPage";
+        return eventDetailImageList;
     }
 
     public String mainImageRemake(MultipartFile pp_mainImgLink){
@@ -151,16 +180,20 @@ public class EventController {
         String reLocation = todaypath + filename;
         return reLocation;
     }
-
+    //게시글 상세 내용
     @RequestMapping("eventDetailPage")
     public String detailPage(@RequestParam("eventNumber") int eventNumber,Model model, HttpSession session){
+        //조회수 증가
+        eventService.updateEventBoardVisitCount(eventNumber);
+        
+        //게시글 정보
         Map<String,Object> eventBoardDtoAndDetail =  eventService.eventBoardDtoAndDetail(eventNumber);
         model.addAttribute("eventBoardDtoAndDetail",eventBoardDtoAndDetail);
         List<Map<String,Object>> eventBoardCommentList = eventService.selectEventBoardComet(eventNumber);
 
         int eventBoardLikeCount = eventService.selectEventBoardLikeCount(eventNumber);
         model.addAttribute("eventBoardLikeCount",eventBoardLikeCount);
-        eventService.updateEventBoardVisitCount(eventNumber);
+        
 
         MasterDto masterDto = (MasterDto) session.getAttribute("masterDto");
         model.addAttribute("eventBoardCommentList",eventBoardCommentList);
@@ -181,7 +214,8 @@ public class EventController {
         }
         return  "customer/eventDetailPage";
     }
-
+    
+    // 댓글 기능
     @RequestMapping("insertEventComment")
     public String insertEventComment(HttpSession session,EventCommentDto eventCommentDto){
         int eventBoardNumber = eventCommentDto.getEventNumber();
@@ -191,6 +225,7 @@ public class EventController {
         return  "redirect:./eventDetailPage?eventNumber="+eventBoardNumber;
     }
 
+    //게시글 좋아요 기능
     @RequestMapping("insertDeleteLikeProcess")
     public String insertDeleteLikeProcess(HttpSession session,@RequestParam("eventNumber")int eventNumber){
 
@@ -212,8 +247,70 @@ public class EventController {
     }
 
 
+    @RequestMapping("updateMasterReply")
+    public String updateMasterReply(EventCommentDto eventCommentDto, @RequestParam("eventNumber") int eventNumber) {
+        eventService.updateEventCommentMasterReply(eventCommentDto);
+        return "redirect:./eventDetailPage?eventNumber="+eventNumber;
 
+    }
+    
+    @RequestMapping("winnerInsertPage")
+    public String winnerInsertPage(){
+        return "master/winnerInsertPage";
+    }
 
+    @RequestMapping("insertWinnerProcess")
+    public String insertWinnerProcess(WinnerDto winnerDto,HttpSession session){
+        MasterDto masterDto = (MasterDto) session.getAttribute("masterDto");
+        winnerDto.setMasterNumber(masterDto.getMasterNumber());
+        eventService.insertWinnerProcess(winnerDto);
+        return "redirect:./eventlistPage";
+    }
+
+    @RequestMapping("deleteEventProcess")
+    public String deleteEventProcess(@RequestParam("eventNumber")int eventNumber){
+        eventService.deleteEventProcess(eventNumber);
+        return "redirect:./eventlistPage";
+    }
+
+    @RequestMapping("updateEventPage")
+    public String updateEventPage(@RequestParam("eventNumber")int eventNumber, Model model){
+        Map<String,Object> eventBoardDtoAndDetail =  eventService.eventBoardDtoAndDetail(eventNumber);
+        model.addAttribute("eventBoardDtoAndDetail",eventBoardDtoAndDetail);
+        
+        return "master/updateEventPage";
+    }
+    @RequestMapping("updateEventProcess")
+    public String updateEventProcess(EventBoardDto eventBoardDto, @RequestParam("uploadFile")MultipartFile uploadFile , @RequestParam("uploadFiles")MultipartFile[] uploadFiles){
+        String mainImage = mainImageRemake(uploadFile);
+        eventBoardDto.setEventMainImage(mainImage);
+
+        List<EventDetailImageDto> eventDetailImageList = detailImageReName(uploadFiles);
+        
+        eventService.updateEventProcess(eventBoardDto,eventDetailImageList);
+
+        return "redirect:./eventDetailPage?eventNumber="+eventBoardDto.getEventNumber();
+    }
+
+    @RequestMapping("updateWinnerPage")
+    public String updateWinnerPage(@RequestParam("winnerNumber")int winnerNumber, Model model){
+        WinnerDto winnerDto = eventService.selectWinnerDto(winnerNumber);
+        model.addAttribute("winnerDto", winnerDto);
+        
+        return "master/updateWinnerPage";
+    }
+
+    @RequestMapping("updateWinnerProcess")
+    public String updateWinnerProcess(WinnerDto winnerDto){
+        eventService.updateWinnerProcess(winnerDto);
+        return"redirect:./eventlistPage";
+    }
+
+    @RequestMapping("deleteWinnerProcess")
+    public String deleteWinnerProcess(@RequestParam("winnerNumber")int winnerNumber){
+        eventService.deleteWinner(winnerNumber);
+        return"redirect:./eventlistPage";
+    }
 
 
     

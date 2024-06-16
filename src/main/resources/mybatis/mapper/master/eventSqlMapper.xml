@@ -104,6 +104,58 @@
         ]]>
     </select>
 
+    <update id="updateEventCommentMasterReply">
+        update fc_eventComment
+        set masterReply = #{masterReply}, masterReplyCreatedAt = now()
+        where eventCommentNumber = #{eventCommentNumber}
+    </update>
 
+    <insert id="insertWinnerProcess">
+        insert into fc_winner(
+            masterNumber,winnerTitle,winnerContent
+        )values(
+            #{masterNumber},#{winnerTitle},#{winnerContent}
+        )
+    </insert>
+
+    <delete id="deleteEventProcess">
+        delete from fc_eventBoard
+        where eventNumber = #{eventNumber}
+    </delete>
+
+    <update id="updateEventProcess">
+        update fc_eventBoard
+        set eventMainImage =#{eventMainImage}, eventTitle=#{eventTitle}, eventStartDay=#{eventStartDay}, eventEndDay=#{eventEndDay}
+        where eventNumber = #{eventNumber}
+    </update>
+
+    <delete id="deleteEventDetailImage">
+        delete from fc_eventDetailImage
+        where eventNumber = #{eventNumber}
+    </delete>
+
+    <select id="selectWinnerList" resultType="WinnerDto">
+        select * from fc_winner
+    </select>
+    
+    <select id="selectWinnerEventCount" resultType="int">
+        select count(*) from fc_winner
+    </select>
+
+    <select id="selectWinnerDto" resultType="WinnerDto">
+        select * from fc_winner
+        where winnerNumber = #{winnerNumber}
+    </select>
+    
+    <update id="updateWinnerProcess">
+        update fc_winner
+        set winnerTitle = #{winnerTitle}, winnerContent = #{winnerContent}
+        where winnerNumber = #{winnerNumber}
+    </update>
+
+    <delete id="deleteWinner">
+        delete from fc_winner
+        where winnerNumber = #{winnerNumber}
+    </delete>
 
 </mapper>

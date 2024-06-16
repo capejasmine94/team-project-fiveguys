@@ -91,4 +91,45 @@ public class EventService {
     public int selectEndEvent() {
         return eventSqlMapper.selectEndEvent();
     }
+
+    public void updateEventCommentMasterReply(EventCommentDto eventCommentDto) {
+        eventSqlMapper.updateEventCommentMasterReply(eventCommentDto);
+    }
+
+    public void insertWinnerProcess(WinnerDto winnerDto) {
+        eventSqlMapper.insertWinnerProcess(winnerDto);
+    }
+
+    public void deleteEventProcess(int eventNumber) {
+        eventSqlMapper.deleteEventProcess(eventNumber);
+    }
+
+    public void updateEventProcess(EventBoardDto eventBoardDto, List<EventDetailImageDto> eventDetailImageList) {
+        eventSqlMapper.updateEventProcess(eventBoardDto);
+        eventSqlMapper.deleteEventDetailImage(eventBoardDto.getEventNumber());
+        for(EventDetailImageDto eventDetailImageDto : eventDetailImageList){
+            eventDetailImageDto.setEventNumber(eventBoardDto.getEventNumber());
+            eventSqlMapper.insertDetailImageProcess(eventDetailImageDto);
+        }
+    }
+
+    public List<WinnerDto> selectWinnerList() {
+        return eventSqlMapper.selectWinnerList();
+    }
+
+    public int selectWinnerEventCount() {
+        return eventSqlMapper.selectWinnerEventCount();
+    }
+
+    public WinnerDto selectWinnerDto(int winnerNumber) {
+        return eventSqlMapper.selectWinnerDto(winnerNumber);
+    }
+
+    public void updateWinnerProcess(WinnerDto winnerDto) {
+        eventSqlMapper.updateWinnerProcess(winnerDto);
+    }
+
+    public void deleteWinner(int winnerNumber) {
+        eventSqlMapper.deleteWinner(winnerNumber);
+    }
 }

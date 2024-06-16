@@ -28,8 +28,36 @@ public class SellerCommunityController {
     SellerCommunityService sellerCommunityService;
 
     @RequestMapping("sellerCommunity")
-    public String sellerCommunity(Model model){
-        model.addAttribute("sellerCommunity", sellerCommunityService.selectSellerCommunityList());
+    public String sellerCommunity(Model model,SellerCommunityPaginationDto sellerCommunityPaginationDto){
+
+        //페이지네이션 처리
+        int totalPage = sellerCommunityService.selectSellerCommunityCount();
+        System.out.println(totalPage);
+
+        int lastPageNumber=0;
+
+        if(totalPage % sellerCommunityPaginationDto.getItemsPerPage()==0){
+            lastPageNumber = (int)Math.ceil((double)totalPage/sellerCommunityPaginationDto.getItemsPerPage())-1;
+        }else{
+            lastPageNumber = (int)Math.ceil((double)totalPage/sellerCommunityPaginationDto.getItemsPerPage());
+        }
+
+        int startPage =((sellerCommunityPaginationDto.getCurrentPage()-1)/5)*5+1;
+        int endPage =((sellerCommunityPaginationDto.getCurrentPage()-1)/5+1)*5;
+
+        if(endPage>lastPageNumber){
+            endPage = lastPageNumber;
+        }
+
+        System.out.println(startPage);
+        System.out.println(endPage);
+
+        sellerCommunityPaginationDto.setStartPage(startPage);
+        sellerCommunityPaginationDto.setEndPage(endPage);
+        sellerCommunityPaginationDto.setPaginationPage(lastPageNumber);
+
+        model.addAttribute("sellerCommunityPaginationDto", sellerCommunityPaginationDto);
+        model.addAttribute("sellerCommunity", sellerCommunityService.selectSellerCommunityList(sellerCommunityPaginationDto));
         return "seller/sellerCommunity";
     }
 
@@ -106,6 +134,8 @@ public class SellerCommunityController {
             int sellerCommunityNumber,
             HttpSession session
     ){
+
+        //잠주 커뮤니티는 점주만 봐야 하므로 나중에 세션없는 부분 없애야 함
         SellerDto sellerDto = (SellerDto) session.getAttribute("sellerDto");
         if(sellerDto!=null){
             SellerCommunityLikeDto sellerCommunityLikeDto = new SellerCommunityLikeDto();

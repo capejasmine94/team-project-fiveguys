@@ -147,7 +147,7 @@
                                     </div>
                                     <div class="row">
                                         <div class="col">
-                                            <span  th:text="${#dates.format(sellerComment.sellerCommunityCommentDto.sellerCommunityCommentCreatedAt,'yyyy.MM.dd HH:mm')}"></span>
+                                            <span  th:text="${sellerComment.sellerCommunityCommentDto.sellerCommunityCommentCreatedAt}"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -159,9 +159,9 @@
                             </div>
                             <div class="row py-2">
                                 <div class="col">
-                                    <span th:if="${session.sellerDto!=null}">
+                                    <span th:if="${session.sellerDto!=null}" onclick="addReply(this)" style="cursor:pointer;">
                                         <span>답글</span>
-                                         <span th:if="${session.sellerDto!=null}" class="fw-bold" th:text="${sellerComment.selectEachSellerCommentReplyCount}"  onclick="addReply(this)" style="cursor:pointer;" ></span>
+                                         <span th:if="${session.sellerDto!=null}" class="fw-bold" th:text="${sellerComment.selectEachSellerCommentReplyCount}"   ></span>
                                     </span>
                                     <a href="/login/sellerLogin" th:if="${session.sellerDto==null}">
                                         <span>답글</span>
@@ -206,7 +206,7 @@
 
                                 </div>
                                 <div class="col">
-                                    <input class="form-control btn btn-primary py-3" type="submit" value="작성">
+                                    <input class="form-control btn btn-danger py-3" type="submit" value="작성">
                                 </div>
                             </form>
                             <div th:each="sellerReply : ${sellerComment.sellerCommunityReplyContainer}" class="row border-top">
@@ -223,7 +223,7 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col">
-                                                    <span th:text="${#dates.format(sellerReply.selectSellerCommunityReply.sellerCommunityReplyCreatedAt,'yyyy.MM.dd HH:ss')}">2024.05.13 15:48</span>
+                                                    <span th:text="${sellerReply.selectSellerCommunityReply.sellerCommunityReplyCreatedAt}">2024.05.13 15:48</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -275,7 +275,7 @@
                             <textarea class="form-control py-1" name="sellerCommunityCommentContent" placeholder="댓글쓰기"></textarea>
                         </div>
                         <div class="col">
-                            <input class=" form-control btn btn-primary py-3" type="submit" value="작성">
+                            <input class=" form-control btn btn-danger py-3" type="submit" value="작성">
                         </div>
                     </form>
                 </div>

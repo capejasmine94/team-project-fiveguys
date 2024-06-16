@@ -30,11 +30,14 @@ public class SellerCommunityService {
         }
     }
 
-    public List<Map<String,Object>> selectSellerCommunityList(){
+    public List<Map<String,Object>> selectSellerCommunityList(SellerCommunityPaginationDto sellerCommunityPaginationDto){
         List<Map<String,Object>> result = new ArrayList<>();
-        List<SellerCommunityDto> sellerCommunityDtoList = sellerCommunitySqlMapper.selectSellerCommunityList();
+        List<SellerCommunityDto> sellerCommunityDtoList = sellerCommunitySqlMapper.selectSellerCommunityList(sellerCommunityPaginationDto);
         for (SellerCommunityDto sellerCommunityDto : sellerCommunityDtoList) {
             Map<String,Object> map = new HashMap<>();
+
+            int textLength = sellerCommunityDto.getSellerCommunityContent().length();
+            map.put("textLength", textLength);
             map.put("sellerCommunityDto", sellerCommunityDto);
             map.put("selectTotalCommentReplyCount",sellerCommunitySqlMapper.selectTotalCommentCount(sellerCommunityDto.getSellerCommunityNumber())+sellerCommunitySqlMapper.selectTotalReplyCount(sellerCommunityDto.getSellerCommunityNumber()));
             map.put("selectSellerCommunityLikeCount",sellerCommunitySqlMapper.selectSellerCommunityLikeCount(sellerCommunityDto.getSellerCommunityNumber()));
@@ -62,7 +65,6 @@ public class SellerCommunityService {
         List<Map<String,Object>> result = new ArrayList<>();
         for(Map<String,Object> sellerCommunityCommentDto: sellerCommunityCommentDtoList){
             Map<String,Object> smallMap = new HashMap<>();
-            System.out.println(sellerCommunityCommentDto);
 
 
             List<Map<String,Object>> result2 = new ArrayList<>();
@@ -173,6 +175,10 @@ public class SellerCommunityService {
 
     public List<SellerCommunityImageDetailDto> selectImageListById(int sellerCommunityNumber){
         return sellerCommunitySqlMapper.selectImageListById(sellerCommunityNumber);
+    }
+
+    public int selectSellerCommunityCount(){
+        return sellerCommunitySqlMapper.selectSellerCommunityCount();
     }
 
     //댓글삽입

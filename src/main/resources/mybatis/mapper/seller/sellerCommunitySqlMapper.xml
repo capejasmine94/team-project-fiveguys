@@ -36,6 +36,7 @@
         where fsc.sellerCommunityNumber=#{sellerCommunityNumber}
     </select>
     <select id="selectSellerCommunityList">
+        <bind name="offset" value="(currentPage - 1) * itemsPerPage"/>
         select
             sellerCommunityNumber,
             sellerNumber,
@@ -51,6 +52,7 @@
                 ELSE CONCAT(TIMESTAMPDIFF(MINUTE, sellerCommunityCreatedAt, NOW()), '분전')
                 end as sellerCommunityCreatedAt
         from fc_sellerCommunity
+        limit #{offset},#{itemsPerPage}
     </select>
     <select id="selectSellerCommunityById">
         select
@@ -70,6 +72,11 @@
         from fc_sellerCommunity
         where sellerCommunityNumber=#{sellerCommunityNumber}
     </select>
+
+    <select id="selectSellerCommunityCount">
+        select coalesce(count(*),0) from fc_sellerCommunity
+    </select>
+
     <select id="selectImageListById">
         select * from fc_sellerCommunityImageDetail where sellerCommunityNumber=#{sellerCommunityNumber}
     </select>
@@ -86,7 +93,20 @@
         )
     </insert>
     <select id="selectSellerCommunityComment" resultType="map">
-        select * from fc_sellerCommunityComment scc
+        select
+            scc.sellerCommunityCommentNumber,
+            scc.sellerCommunityNumber,
+            scc.sellerNumber,
+            scc.sellerCommunityCommentContent,
+            CASE
+                WHEN FLOOR(TIMESTAMPDIFF(MONTH,  scc.sellerCommunityCommentCreatedAt, NOW()) / 12) >= 1 THEN CONCAT(FLOOR(TIMESTAMPDIFF(MONTH,  scc.sellerCommunityCommentCreatedAt, NOW()) / 12), '년전')
+                WHEN TIMESTAMPDIFF(MONTH,  scc.sellerCommunityCommentCreatedAt, NOW()) >= 1 THEN CONCAT(TIMESTAMPDIFF(MONTH,  scc.sellerCommunityCommentCreatedAt, NOW()), '달전')
+                WHEN DATEDIFF(CURRENT_DATE,  scc.sellerCommunityCommentCreatedAt) >= 1 THEN CONCAT(DATEDIFF(CURRENT_DATE,  scc.sellerCommunityCommentCreatedAt), '일전')
+                WHEN TIMESTAMPDIFF(HOUR,  scc.sellerCommunityCommentCreatedAt, NOW()) >= 1 THEN CONCAT(TIMESTAMPDIFF(HOUR,  scc.sellerCommunityCommentCreatedAt, NOW()), '시간전')
+                ELSE CONCAT(TIMESTAMPDIFF(MINUTE,  scc.sellerCommunityCommentCreatedAt, NOW()), '분전')
+                end as sellerCommunityCommentCreatedAt,
+            fs.*
+            from fc_sellerCommunityComment scc
         inner join fc_seller fs
         on scc.sellerNumber  =fs.sellerNumber
         where sellerCommunityNumber=#{sellerCommunityNumber}
@@ -105,7 +125,20 @@
         )
     </insert>
     <select id="selectSellerCommunityReply" resultType="map">
-        select * from fc_sellerCommunityReply fsc
+        select
+            fsc.sellerCommunityReplyNumber,
+            fsc.sellerCommunityCommentNumber,
+            fsc.sellerNumber,
+            fsc.sellerCommunityReplyContent,
+            CASE
+                WHEN FLOOR(TIMESTAMPDIFF(MONTH,  fsc.sellerCommunityReplyCreatedAt, NOW()) / 12) >= 1 THEN CONCAT(FLOOR(TIMESTAMPDIFF(MONTH,  fsc.sellerCommunityReplyCreatedAt, NOW()) / 12), '년전')
+                WHEN TIMESTAMPDIFF(MONTH,  fsc.sellerCommunityReplyCreatedAt, NOW()) >= 1 THEN CONCAT(TIMESTAMPDIFF(MONTH,  fsc.sellerCommunityReplyCreatedAt, NOW()), '달전')
+                WHEN DATEDIFF(CURRENT_DATE,  fsc.sellerCommunityReplyCreatedAt) >= 1 THEN CONCAT(DATEDIFF(CURRENT_DATE,  fsc.sellerCommunityReplyCreatedAt), '일전')
+                WHEN TIMESTAMPDIFF(HOUR,  fsc.sellerCommunityReplyCreatedAt, NOW()) >= 1 THEN CONCAT(TIMESTAMPDIFF(HOUR,  fsc.sellerCommunityReplyCreatedAt, NOW()), '시간전')
+                ELSE CONCAT(TIMESTAMPDIFF(MINUTE,  fsc.sellerCommunityReplyCreatedAt, NOW()), '분전')
+                end as sellerCommunityReplyCreatedAt,
+            fs.*
+        from fc_sellerCommunityReply fsc
         inner join fc_seller fs
         on fsc.sellerNumber  =fs.sellerNumber
         where sellerCommunityCommentNumber=#{sellerCommunityCommentNumber}

@@ -14,9 +14,12 @@ public interface SellerCommunitySqlMapper {
     public void insertSellerCommunityWrite(SellerCommunityDto sellerCommunityDto);
     public void insertSellerCommunityImageDetail(SellerCommunityImageDetailDto sellerCommunityImageDetailDto);
 
-    public List<SellerCommunityDto> selectSellerCommunityList();
+    public List<SellerCommunityDto> selectSellerCommunityList(SellerCommunityPaginationDto sellerCommunityPaginationDto);
     public SellerCommunityDto selectSellerCommunityById(int sellerCommunityNumber);
     public List<SellerCommunityImageDetailDto> selectImageListById(int sellerCommunityNumber);
+
+    //전체 게시물 개수 가져오기, 검색된 후의 게시물도 포함
+    public Integer selectSellerCommunityCount();
 
     //댓글삽입
     public void insertSellerCommunityComment(SellerCommunityCommentDto sellerCommunityCommentDto);

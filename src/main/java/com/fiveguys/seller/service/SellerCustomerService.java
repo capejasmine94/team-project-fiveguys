@@ -1,12 +1,14 @@
 package com.fiveguys.seller.service;
 
 import com.fiveguys.dto.CategoryDto;
+import com.fiveguys.dto.ProductAndCategoryDto;
 import com.fiveguys.dto.ProductDto;
 import com.fiveguys.dto.SellerDto;
 import com.fiveguys.seller.mapper.SellerCustomerSqlMapper;
 import com.fiveguys.seller.mapper.SellerSqlMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,5 +53,16 @@ public class SellerCustomerService {
         }
         return result;
     }
+
+    public ProductDto selectProductDetail(ProductDto productDto) {
+
+        return sellerCustomerSqlMapper.selectProductDetail(productDto);
+    }
+
+    public List<ProductAndCategoryDto> selectProductAndCategoryByNumber(List<Integer> categoryNumbers) {
+
+        return sellerCustomerSqlMapper.selectProductsByCategoryNumbers(categoryNumbers);
+    }
+
 
 }

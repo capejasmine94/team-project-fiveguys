@@ -17,8 +17,8 @@
         <div class="col">
             <div class="row">
                 <div class="col">
-<!--                    닉네임 null값 오류-->
-<!--                    닉네임: <span th:text="${communityData.customerDto.customerName}"></span> -->
+
+                    닉네임: <span th:text="${communityData.customerDto.customerName}"></span>
                 </div>
             </div>
             <div class="row">
@@ -50,6 +50,43 @@
         </div>
     </div>
 
+<!--    좋아요-->
+    <div class="row">
+        <div class="col">
+
+<!--            사용자가 로그인했고, 내가 쓴 글이 아닐때 -->
+            <div class="row">
+                <div class="col">
+                    <div th:if="${session.customerDto != null and communityData.communityDto.customerNumber != session.customerDto.customerNumber}">
+                        <a th:if="${communityLikeDto1} == null" th:href="@{./communityLikeProcess(communityNumber=${communityData.communityDto.communityNumber}, customerNumber=${session.customerDto.customerNumber})}"><i class="bi bi-hand-thumbs-up"></i></a>
+                        <a th:if="${communityLikeDto1} != null" th:href="@{./deleteLikeNumber(communityNumber=${communityData.communityDto.communityNumber}, customerNumber=${session.customerDto.customerNumber})}"><i class="bi bi-hand-thumbs-up-fill"></i></a>
+                    </div>
+                </div>
+            </div>
+
+<!--            사용자가 로그인했고, 내가 쓴 글일때-->
+<!--            <div class="row">-->
+<!--                <div class="col">-->
+<!--                    <div th:if="${session.customerDto} != null and ">-->
+
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            사용자가 로그인하지 않았을 때-->
+<!--            <div class="row">-->
+<!--                <div class="col">-->
+<!--                    <div th:if="${session.customerDto} == null and ">-->
+
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            <i class="bi bi-hand-thumbs-up"></i>-->
+<!--            <i class="bi bi-hand-thumbs-up-fill"></i>-->
+        </div>
+    </div>
+
     <div class="row">
         <div class="col">
             <a href="./communityPage">목록으로</a>
@@ -60,12 +97,12 @@
     <div th:if="${session.customerDto != null and session.customerDto.customerNumber == communityData.communityDto.customerNumber}">
         <div class="row">
             <div class="col">
-                <a href="@{./updateCommunityPage(communityNumber=${communityData.communityDto.communityNumber})}">수정</a>
+                <a th:href="@{./updateCommunityPage(communityNumber=${communityData.communityDto.communityNumber})}">수정</a>
             </div>
         </div>
         <div class="row">
             <div class="col">
-                <a href="@{./deleteCommunityPageProcess(communityNumber=${communityData.communityDto.communityNumber})}">삭제</a>
+                <a th:href="@{./deleteCommunityPageProcess(communityNumber=${communityData.communityDto.communityNumber})}">삭제</a>
             </div>
         </div>
     </div>
@@ -77,11 +114,25 @@
                 <textarea name="commentText"></textarea>
                 <div class="row">
                     <div class="col">
+                        <input type="hidden" name="communityNumber" th:value="${communityData.communityDto.communityNumber}">
                         <button>댓글</button>
                     </div>
                 </div>
+
             </div>
         </form>
+
+<!--        댓글출력-->
+        <div class="row">
+            <div class="col">
+                <input type="hidden" name="communityNumber" th:value="${communityData.communityDto.communityNumber}">
+                <div class="row" th:each="communityCommentDto :${communityCommentDtoList}">
+                    <div th:text="${communityCommentDto.customerDto.customerName}"></div>
+                    <div th:text="${communityCommentDto.communityCommentDto.commentCreatedAt}"></div>
+                    <div th:text="${communityCommentDto.communityCommentDto.commentText}"></div>
+                </div>
+            </div>
+        </div>
     </div>
 
 </div>

@@ -77,6 +77,53 @@ function getSellerCommunityList(){
                 sellerCommunityBox.appendChild(newSellerCommentWrapper);
 
             }
+
+            const previousPage = document.querySelector("#previousPage");
+            const getUrl = previousPage.getAttribute("href");
+            const newUrl = getUrl + (response.sellerCommunityPaginationDto.startPage - 1);
+            previousPage.setAttribute("href",newUrl);
+
+            if(response.sellerCommunityPaginationDto.startPage !==1){
+                previousPage.classList.add("bi-arrow-left");
+                previousPage.classList.remove("bi-arrow-right");
+            }else{
+                previousPage.classList.add("bi-arrow-right");
+                previousPage.classList.remove("bi-arrow-left");
+            }
+
+            const firstPage = document.querySelector("#firstPage");
+            const getUrlFirstPage = firstPage.getAttribute("href");
+            const newUrlFirstPage = getUrlFirstPage + "?currentPage=1";
+            firstPage.setAttribute("href",newUrlFirstPage);
+
+            if(response.sellerCommunityPaginationDto.currentPage !==1 || response.sellerCommunityPaginationDto.startPage !==1){
+                firstPage.classList.remove("d-none");
+            }else{
+                firstPage.classList.add("d-none");
+            }
+
+            const pageNumbers = document.querySelector(".pageNumbers");
+            for(let e of response.sellerCommunityPaginationDto.endPage){
+
+                const newPageNumbers = sellerCommentWrapper.cloneNode(true);
+
+                const pageHref= newPageNumbers.getAttribute("href");
+                const newPageHref = pageHref + "?currentPage="+e;
+                newPageNumbers.setAttribute("href",newPageHref);
+
+                const numberSequence = newPageNumbers.querySelector(".numberSequence");
+                numberSequence.innerText=e;
+
+                if(response.sellerCommunityPaginationDto.currentPage ===e){
+                    newPageNumbers.classList.add("border-top border-3 border-primary");
+                    numberSequence.classList.add("text-primary");
+                }else{
+                    newPageNumbers.classList.remove("border-top border-3 border-primary");
+                    numberSequence.classList.remove("text-primary");
+                }
+
+            }
+
         });
 }
 function sellerCommunityLike(){

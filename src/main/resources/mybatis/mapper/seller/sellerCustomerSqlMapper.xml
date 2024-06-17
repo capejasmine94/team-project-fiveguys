@@ -23,4 +23,20 @@
         SELECT * FROM fc_product WHERE categoryNumber = #{categoryNumber} ORDER BY productNumber ASC
     </select>
 
+    <select id="selectProductDetail" resultType="ProductDto">
+        SELECT * FROM fc_product
+        WHERE productNumber = #{productNumber}
+    </select>
+
+    <select id="selectProductsByCategoryNumbers" parameterType="list" resultType="ProductAndCategoryDto">
+        SELECT p.*, c.categoryName
+        FROM fc_product p
+        JOIN fc_category c ON p.categoryNumber = c.categoryNumber
+        WHERE p.categoryNumber IN
+        <foreach item="categoryNumber" collection="list" open="(" separator="," close=")">
+            #{categoryNumber}
+        </foreach>
+        ORDER BY p.categoryNumber ASC
+    </select>
+
 </mapper>

@@ -7,8 +7,20 @@
         SELECT * FROM fc_seller ORDER BY sellerNumber
     </select>
 
-    <select id="selectSellersByNumber" resultType="sellerDto">
-        SELECT sellerName, sellerAddress,sellerPhoneNumber FROM fc_seller WHERE sellerNumber = #{sellerNumber}
+    <select id="selectSellersByNumber" resultType="SellerDto">
+        SELECT * FROM fc_seller WHERE sellerNumber = #{sellerNumber}
+    </select>
+
+    <select id="selectCategoryList" resultType="CategoryDto">
+        SELECT * FROM fc_category ORDER BY categoryNumber ASC
+    </select>
+
+    <select id="selectCategoryByNumber" resultType="CategoryDto">
+        SELECT * FROM fc_category WHERE categoryNumber = #{categoryNumber};
+    </select>
+
+    <select id="selectProductList" parameterType="int" resultType="ProductDto">
+        SELECT * FROM fc_product WHERE categoryNumber = #{categoryNumber} ORDER BY productNumber ASC
     </select>
 
 </mapper>

@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -22,7 +23,15 @@ public class SellerController {
 
 
     @RequestMapping("mainPage")
-    public String mainPage() {
+    public String mainPage(HttpSession session, Model model) {
+
+        SellerDto sellerDto = (SellerDto)session.getAttribute("sellerDto");
+        int sellerNumber = sellerDto.getSellerNumber();
+
+        List<Map<String, Object>> sellerOrderList = sellerService.selectRecentSellerOrder(sellerNumber);
+
+        model.addAttribute("sellerOrderList", sellerOrderList);
+
         return "seller/mainPage";
 
     }
@@ -60,12 +69,13 @@ public class SellerController {
 
 
     @RequestMapping("updateMaterialQuantity")
-    public String updateMaterialQuantity(SellerOrderDto sellerOrderDto) {
+    public String updateMaterialQuantity(int[] sellerOrderQuantity, int[] sellerOrderNumber) {
 
-        sellerService.updateMaterialQuantity(sellerOrderDto);
+        sellerService.updateMaterialQuantity(sellerOrderQuantity, sellerOrderNumber);
 
         return "redirect:/seller/orderSuccessPage";
     }
+
 
 
     @RequestMapping("orderSuccessPage")

@@ -21,7 +21,7 @@ public class SellerService {
 
     public void insertSellerOrder(SellerOrderDto sellerOrderDto, List<Integer> materialNumber) {
 
-        for(Integer materialNumberList : materialNumber) {
+        for (Integer materialNumberList : materialNumber) {
             sellerOrderDto.setMaterialNumber(materialNumberList);
 
             sellerSqlMapper.insertSellerOrder(sellerOrderDto);
@@ -35,7 +35,7 @@ public class SellerService {
 
         List<SellerOrderDto> sellerOrderDtos = sellerSqlMapper.selectOrderList(sellerNumber);
 
-        for(SellerOrderDto sellerOrderDto : sellerOrderDtos) {
+        for (SellerOrderDto sellerOrderDto : sellerOrderDtos) {
             Map<String, Object> map = new HashMap<>();
 
             int materialNumber = sellerOrderDto.getMaterialNumber();
@@ -50,9 +50,40 @@ public class SellerService {
         return sellerOrderList;
     }
 
-    public void updateMaterialQuantity(SellerOrderDto sellerOrderDto) {
-        sellerSqlMapper.updateMaterialQuantity(sellerOrderDto);
 
+    public void updateMaterialQuantity(int[] sellerOrderQuantity, int[] sellerOrderNumber) {
+
+        for (int i = 0; i < sellerOrderQuantity.length; i++) {
+            SellerOrderDto sellerOrderDto = new SellerOrderDto();
+
+            sellerOrderDto.setSellerOrderQuantity(sellerOrderQuantity[i]);
+            sellerOrderDto.setSellerOrderNumber(sellerOrderNumber[i]);
+
+            sellerSqlMapper.updateMaterialQuantity(sellerOrderDto);
+
+        }
+    }
+
+
+    public List<Map<String, Object>> selectRecentSellerOrder(int sellerNumber) {
+        List<Map<String, Object>> sellerOrderList = new ArrayList<>();
+
+        List<SellerOrderDto> sellerOrderDtoList = sellerSqlMapper.selectRecentSellerOrder(sellerNumber);
+
+        for (SellerOrderDto sellerOrderDto : sellerOrderDtoList) {
+         int number = sellerOrderDto.getSellerNumber();
+         SellerDto sellerDto =  sellerSqlMapper.selectSellerInform(number);
+
+         Map<String, Object> map = new HashMap<>();
+
+         map.put("sellerDto", sellerDto);
+         map.put("sellerOrderDto", sellerOrderDto);
+
+         sellerOrderList.add(map);
+
+        }
+
+        return sellerOrderList;
     }
 
 

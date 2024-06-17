@@ -24,11 +24,26 @@
         where materialNumber = #{materialNumber}
     </select>
 
+
+    <select id="selectSellerInform">
+        select * from fc_seller
+        where sellerNumber = #{sellerNumber};
+    </select>
+
     <update id="updateMaterialQuantity">
         update fc_sellerOrder
         set sellerOrderQuantity = #{sellerOrderQuantity}
         where sellerOrderNumber = #{sellerOrderNumber}
     </update>
+
+    <select id="selectRecentSellerOrder">
+        SELECT *
+        FROM fc_sellerOrder
+        WHERE sellerNumber = #{sellerNumber}
+        GROUP BY sellerOrderCreatedAt
+        ORDER BY sellerOrderCreatedAt DESC
+        LIMIT 3;
+    </select>
 
 
 

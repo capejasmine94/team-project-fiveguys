@@ -16,8 +16,8 @@
         <div class="col-8">
 
             <div class="row pt-3">
-                
-                <a class="col-2 fw-bold fs-1 text-danger">F.Guys</a>
+
+                <a href="/seller/mainPage" class="col-2 fw-bold fs-1 text-danger text-decoration-none">F.Guys</a>
 
             </div>
 
@@ -103,33 +103,21 @@
                         <div class="col text-end text-secondary" style="font-size: 0.9rem">+더보기</div>
                     </div>
                     <div class="row">
-                        <table class="table">
+                        <table class="table table table-danger">
                             <thead>
                             <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">배송처</th>
+                                <th scope="col">주문번호</th>
+                                <th scope="col">배송지</th>
                                 <th scope="col">주문일</th>
                                 <th scope="col">주문상태</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>00지점</td>
-                                <td>2024-06-10</td>
-                                <td>배송중</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                <td>00지점</td>
-                                <td>2024-06-08</td>
-                                <td>배송완료</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3</th>
-                                <td>00지점</td>
-                                <td>2024-06-01</td>
-                                <td>배송완료</td>
+                            <tr th:each="sellerOrderList : ${sellerOrderList}">
+                                <td th:text="${sellerOrderList.sellerOrderDto.sellerOrderNumber}"></td>
+                                <td th:text="${sellerOrderList.sellerDto.sellerName}"></td>
+                                <td th:text="${#dates.format(sellerOrderList.sellerOrderDto.sellerOrderCreatedAt, 'yyyy-MM-dd')}"></td>
+                                <td th:text="${sellerOrderList.sellerOrderDto.sellerOrderStatus}"></td>
                             </tr>
                             </tbody>
                         </table>

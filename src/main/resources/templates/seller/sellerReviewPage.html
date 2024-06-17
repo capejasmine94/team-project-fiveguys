@@ -17,7 +17,7 @@
 
             <div class="row pt-3">
 
-                <a href="/seller/mainPage" class="col-2 fw-bold fs-1 text-danger">F.Guys</a>
+                <a href="/seller/mainPage" class="col-2 fw-bold fs-1 text-danger text-decoration-none">F.Guys</a>
 
             </div>
 
@@ -41,7 +41,7 @@
                                     <a class="nav-link active text-white fw-bold text-start" href="/seller/orderPage">주문하기</a>
                                 </li>
                                 <li class="nav-item col-2">
-                                    <a class="nav-link active text-white fw-bold text-start" href="/seller/sellerReviewPage">리뷰하기</a>
+                                    <a class="nav-link active text-white fw-bold text-start" href="/seller/sellerReviewPage">리뷰</a>
                                 </li>
                                 <li class="nav-item col-2">
                                     <a class="nav-link active text-white fw-bold text-start" href="/seller/sellerCommunity">커뮤니티</a>
@@ -63,6 +63,35 @@
                             <span class="fs-5 text-white fw-bold" th:text="${session.sellerDto.sellerName}"></span>
                         </div>
                     </div>
+
+                    <div class="row pt-3">
+                        <div class="col border border-5 border-bottom border-danger"></div>
+                    </div>
+
+                    <div class="row pt-2">
+                        <a href="/seller/myInformPage" class="col text-center fw-bold text-dark text-decoration-none">마이페이지</a>
+                    </div>
+
+                    <div class="row pt-2">
+                        <div class="col  border-bottom border-danger"></div>
+                    </div>
+
+                    <div class="row pt-2">
+                        <a href="/seller/orderCheckPage" class="col text-center fw-bold text-dark text-decoration-none">주문조회</a>
+                    </div>
+
+                    <div class="row pt-2">
+                        <div class="col  border-bottom border-danger"></div>
+                    </div>
+
+                    <div class="row pt-2">
+                        <a class="col text-center fw-bold text-dark text-decoration-none">리뷰하기</a>
+                    </div>
+
+                    <div class="row pt-2">
+                        <div class="col border border-5 border-bottom border-danger"></div>
+                    </div>
+
                 </div>
 
 

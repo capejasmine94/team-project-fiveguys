@@ -35,7 +35,7 @@
                         <div class="collapse navbar-collapse" id="navbarNav">
                             <ul class="navbar-nav row w-100">
                                 <li class="nav-item col-2">
-                                    <a class="nav-link active text-white fw-bold text-start" href="/seller/materialMenuPage">재료메뉴</a>
+                                    <a class="nav-link active text-white fw-bold text-start" href="/seller/materialMenuPage1">재료메뉴</a>
                                 </li>
                                 <li class="nav-item col-2">
                                     <a class="nav-link active text-white fw-bold text-start" href="/seller/orderPage">주문하기</a>
@@ -97,47 +97,23 @@
 
                 <div class="col-10">
 
-                    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-                        <div class="container-fluid">
-                            <a class="navbar-brand fw-bold">카테고리</a>
-                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                                <span class="navbar-toggler-icon"></span>
-                            </button>
-                            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                                <div class="navbar-nav">
-                                    <a class="nav-link active" href="/seller/materialMenuPage1">생닭</a>
-                                    <a class="nav-link active" href="/seller/materialMenuPage2">소스</a>
-                                    <a class="nav-link active" href="/seller/materialMenuPage3">사이드</a>
-                                    <a class="nav-link active" href="/seller/materialMenuPage4">음료</a>
-                                    <a class="nav-link active" href="/seller/materialMenuPage5">치킨박스</a>
-                                    <a class="nav-link active" href="/seller/materialMenuPage6">봉지</a>
-                                </div>
-                            </div>
-                        </div>
-                    </nav>
-
-
                     <div class="row pt-2">
-                        <img src="/img/cocacola.jpeg" class="col-4 img-fluid" alt="코카콜라">
-                        <img src="/img/pepsi.jpeg" class="col-4 img-fluid" alt="펩시콜라">
-                        <img src="/img/zeropepsi.jpg" class="col-4 img-fluid" alt="펩시제로">
+                        <div class="col fs-1 fw-bold">내 정보</div>
                     </div>
 
-                    <div class="row">
-                        <span class="col-4 text-center fw-bold">코카콜라 1.25L<span class="text-secondary" style="font-size: 0.9rem">(1Box)</span></span>
-                        <span class="col-4 text-center fw-bold">펩시콜라 1.25L<span class="text-secondary" style="font-size: 0.9rem">(1Box)</span></span>
-                        <span class="col-4 text-center fw-bold">펩시제로 1.25L<span class="text-secondary" style="font-size: 0.9rem">(1Box)</span></span>
+                    <div class="row border-bottom border-secondary pt-2"></div>
+
+                    <div class="row pt-2">
+                        <span class="col-4 fs-5 fw-bold">아이디 : <span class="fs-6 text-secondary" th:text="${session.sellerDto.sellerId}"></span></span>
+                        <span class="col-4 fs-5 fw-bold">이름 : <span class="fs-6 text-secondary" th:text="${session.sellerDto.sellerName}"></span></span>
                     </div>
 
                     <div class="row pt-2">
-                        <img src="/img/cocacolasm.jpeg" class="col-4 img-fluid" alt="코카콜라 500ML">
-                        <img src="/img/zeropepsi500.jpeg" class="col-4 img-fluid" alt="펩시제로 500ML">
+                        <span class="col-4 fs-5 fw-bold">전화번호 : <span class="fs-6 text-secondary" th:text="${session.sellerDto.sellerPhoneNumber}"></span></span>
+                        <span class="col-4 fs-5 fw-bold">주소 : <span class="fs-6 text-secondary" th:text="${session.sellerDto.sellerAddress}"></span></span>
+                        <span class="col-4 fs-5 fw-bold">생성일 : <span class="fs-6 text-secondary" th:text="${#dates.format(session.sellerDto.sellerCreatedAt, 'yyyy-MM-dd')}"></span></span>
                     </div>
 
-                    <div class="row">
-                        <span class="col-4 text-center fw-bold">코카콜라 500ML<span class="text-secondary" style="font-size: 0.9rem">(1Box)</span></span>
-                        <span class="col-4 text-center fw-bold">펩시제로 500ML<span class="text-secondary" style="font-size: 0.9rem">(1Box)</span></span>
-                    </div>
 
 
                 </div>

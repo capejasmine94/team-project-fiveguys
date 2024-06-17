@@ -41,7 +41,7 @@
                                     <a class="nav-link active text-white fw-bold text-start" href="/seller/orderPage">주문하기</a>
                                 </li>
                                 <li class="nav-item col-2">
-                                    <a class="nav-link active text-white fw-bold text-start" href="/seller/sellerReviewPage">리뷰하기</a>
+                                    <a class="nav-link active text-white fw-bold text-start" href="/seller/sellerReviewPage">리뷰</a>
                                 </li>
                                 <li class="nav-item col-2">
                                     <a class="nav-link active text-white fw-bold text-start" href="/seller/sellerCommunity">커뮤니티</a>
@@ -57,13 +57,47 @@
             <div class="row pt-3">
 
                 <div class="col-2">
+
+
                     <div class="card border-danger h-60 bg-danger">
                         <img src="/img/userIcon.jpg" class="card-img-top" alt="...">
                         <div class="card-body text-center">
                             <span class="fs-5 text-white fw-bold" th:text="${session.sellerDto.sellerName}"></span>
                         </div>
                     </div>
+
+
+                    <div class="row pt-3">
+                        <div class="col border border-5 border-bottom border-danger"></div>
+                    </div>
+
+                    <div class="row pt-2">
+                        <a href="/seller/myInformPage" class="col text-center fw-bold text-dark text-decoration-none">마이페이지</a>
+                    </div>
+
+                    <div class="row pt-2">
+                        <div class="col  border-bottom border-danger"></div>
+                    </div>
+
+                    <div class="row pt-2">
+                        <a href="/seller/orderCheckPage" class="col text-center fw-bold text-dark text-decoration-none">주문조회</a>
+                    </div>
+
+                    <div class="row pt-2">
+                        <div class="col  border-bottom border-danger"></div>
+                    </div>
+
+                    <div class="row pt-2">
+                        <a class="col text-center fw-bold text-dark text-decoration-none">리뷰하기</a>
+                    </div>
+
+                    <div class="row pt-2">
+                        <div class="col border border-5 border-bottom border-danger"></div>
+                    </div>
+
+
                 </div>
+
 
                 <div class="col-10">
 
@@ -94,13 +128,13 @@
             </div>
 
 
-            <div class="row pt-4">
+            <div class="row">
                 <div class="col-2"></div>
 
                 <div class="col-10">
-                    <div class="row">
+                    <div class="row pt-3">
                         <div class="col text-danger fw-bold">&lt;최근 주문 내역&gt;</div>
-                        <div class="col text-end text-secondary" style="font-size: 0.9rem">+더보기</div>
+                        <a href="/seller/orderCheckPage" class="col text-end text-secondary text-decoration-none" style="font-size: 0.9rem">+더보기</a>
                     </div>
                     <div class="row">
                         <table class="table table table-danger">
@@ -116,7 +150,13 @@
                             <tr th:each="sellerOrderList : ${sellerOrderList}">
                                 <td th:text="${sellerOrderList.sellerOrderDto.sellerOrderNumber}"></td>
                                 <td th:text="${sellerOrderList.sellerDto.sellerName}"></td>
-                                <td th:text="${#dates.format(sellerOrderList.sellerOrderDto.sellerOrderCreatedAt, 'yyyy-MM-dd')}"></td>
+
+                                <td>
+                                    <a th:href="@{/seller/orderDetailCheckPage(id=${sellerOrderList.sellerOrderDto. sellerOrderNumber})}"
+                                       th:text="${#dates.format(sellerOrderList.sellerOrderDto.sellerOrderCreatedAt, 'yyyy-MM-dd')}"
+                                       class="text-decoration-none fw-bold text-black">
+                                    </a>
+                                </td>
                                 <td th:text="${sellerOrderList.sellerOrderDto.sellerOrderStatus}"></td>
                             </tr>
                             </tbody>

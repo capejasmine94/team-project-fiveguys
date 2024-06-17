@@ -1,12 +1,17 @@
 package com.fiveguys.seller.service;
 
 
+import com.fiveguys.dto.MaterialDto;
 import com.fiveguys.dto.SellerDto;
+import com.fiveguys.dto.SellerOrderDto;
 import com.fiveguys.seller.mapper.SellerSqlMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class SellerService {
@@ -14,18 +19,42 @@ public class SellerService {
     @Autowired
     private SellerSqlMapper sellerSqlMapper;
 
-    public List<SellerDto> getAllSellers() {
+    public void insertSellerOrder(SellerOrderDto sellerOrderDto, List<Integer> materialNumber) {
 
-         return sellerSqlMapper.selectAllSellers();
+        for(Integer materialNumberList : materialNumber) {
+            sellerOrderDto.setMaterialNumber(materialNumberList);
+
+            sellerSqlMapper.insertSellerOrder(sellerOrderDto);
+        }
     }
 
 
+    public List<Map<String, Object>> selectSellerOrder(int sellerNumber) {
 
-    public SellerDto sellerLoginProcess(SellerDto sellerDto) {
-        SellerDto sellerInform = sellerSqlMapper.sellerLoginProcess(sellerDto);
+        List<Map<String, Object>> sellerOrderList = new ArrayList<>();
 
-        return sellerInform;
+        List<SellerOrderDto> sellerOrderDtos = sellerSqlMapper.selectOrderList(sellerNumber);
+
+        for(SellerOrderDto sellerOrderDto : sellerOrderDtos) {
+            Map<String, Object> map = new HashMap<>();
+
+            int materialNumber = sellerOrderDto.getMaterialNumber();
+            MaterialDto materialDto = sellerSqlMapper.selectMaterialInform(materialNumber);
+
+            map.put("materialDto", materialDto);
+            map.put("sellerOrderDto", sellerOrderDto);
+
+            sellerOrderList.add(map);
+        }
+
+        return sellerOrderList;
+    }
+
+    public void updateMaterialQuantity(SellerOrderDto sellerOrderDto) {
+        sellerSqlMapper.updateMaterialQuantity(sellerOrderDto);
 
     }
+
+
 
 }

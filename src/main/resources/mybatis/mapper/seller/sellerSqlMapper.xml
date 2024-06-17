@@ -3,15 +3,35 @@
 
 <mapper namespace="com.fiveguys.seller.mapper.SellerSqlMapper">
 
-    <select id="selectAllSellers" resultType="SellerDto">
-        SELECT * FROM fc_seller ORDER BY sellerNumber
+
+    <insert id="insertSellerOrder">
+        insert into fc_sellerOrder
+            (sellerNumber, materialNumber, sellerOrderQuantity, sellerOrderStatus)
+        values(#{sellerNumber}, #{materialNumber}, 1, '주문완료')
+    </insert>
+
+
+    <select id="selectOrderList">
+        select * from fc_sellerOrder
+        where sellerOrderCreatedAt = (
+        select max(sellerOrderCreatedAt) from fc_sellerOrder
+        where sellerNumber = #{sellerNumber})
     </select>
 
 
-
-    <select id="sellerLoginProcess" resultType="SellerDto">
-        select * from fc_seller
-        where sellerId=#{sellerId} and sellerpassword=#{sellerpassword}
+    <select id="selectMaterialInform">
+        select * from fc_material
+        where materialNumber = #{materialNumber}
     </select>
+
+    <update id="updateMaterialQuantity">
+        update fc_sellerOrder
+        set sellerOrderQuantity = #{sellerOrderQuantity}
+        where sellerOrderNumber = #{sellerOrderNumber}
+    </update>
+
+
+
+
 
 </mapper>

@@ -1,6 +1,7 @@
 package com.fiveguys.seller.mapper;
 
-import com.fiveguys.dto.SellerDto;
+import com.fiveguys.dto.MaterialDto;
+import com.fiveguys.dto.SellerOrderDto;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -9,8 +10,16 @@ import java.util.List;
 @Mapper
 public interface SellerSqlMapper {
 
-    public List<SellerDto> selectAllSellers();
+    public void insertSellerOrder(SellerOrderDto sellerOrderDto);
 
-    public SellerDto sellerLoginProcess(SellerDto sellerDto);
+    public List<SellerOrderDto> selectOrderList(int sellerNumber);
+
+    public MaterialDto selectMaterialInform(int materialNumber);
+
+    public void updateMaterialQuantity(SellerOrderDto sellerOrderDto);
+
+
+
+
 
 }

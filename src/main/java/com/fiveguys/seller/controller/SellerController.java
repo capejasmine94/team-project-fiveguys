@@ -1,11 +1,17 @@
 package com.fiveguys.seller.controller;
 
 import com.fiveguys.dto.SellerDto;
+import com.fiveguys.dto.SellerOrderDto;
 import com.fiveguys.seller.service.SellerService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("seller")
@@ -13,8 +19,6 @@ public class SellerController {
 
     @Autowired
     SellerService sellerService;
-
-
 
 
     @RequestMapping("mainPage")
@@ -28,6 +32,55 @@ public class SellerController {
 
         return "seller/orderPage";
     }
+
+    @RequestMapping("sellerOrderProcess")
+    public String sellerOrderProcess(HttpSession session, SellerOrderDto sellerOrderDto, @RequestParam("materialNumber") List<Integer> materialNumber) {
+        SellerDto sellerDto = (SellerDto)session.getAttribute("sellerDto");
+        sellerOrderDto.setSellerNumber(sellerDto.getSellerNumber());
+        sellerService.insertSellerOrder(sellerOrderDto, materialNumber);
+
+
+        return "redirect:/seller/orderDetailPage";
+    }
+
+
+    @RequestMapping("orderDetailPage")
+    public String orderDetailPage(HttpSession session, Model model) {
+
+        SellerDto sellerDto = (SellerDto)session.getAttribute("sellerDto");
+        int sellerNumber = sellerDto.getSellerNumber();
+
+        List<Map<String, Object>> sellerOrderList = sellerService.selectSellerOrder(sellerNumber);
+
+        model.addAttribute("sellerOrderList", sellerOrderList);
+
+
+        return "seller/orderDetailPage";
+    }
+
+
+    @RequestMapping("updateMaterialQuantity")
+    public String updateMaterialQuantity(SellerOrderDto sellerOrderDto) {
+
+        sellerService.updateMaterialQuantity(sellerOrderDto);
+
+        return "redirect:/seller/orderSuccessPage";
+    }
+
+
+    @RequestMapping("orderSuccessPage")
+    public String orderSuccessPage(HttpSession session, Model model) {
+
+        SellerDto sellerDto = (SellerDto)session.getAttribute("sellerDto");
+        int sellerNumber = sellerDto.getSellerNumber();
+
+        List<Map<String, Object>> sellerOrderList = sellerService.selectSellerOrder(sellerNumber);
+
+        model.addAttribute("sellerOrderList", sellerOrderList);
+
+        return "seller/orderSuccessPage";
+    }
+
 
     @RequestMapping("materialMenuPage1")
     public String materialMenuPage1() {
@@ -64,7 +117,6 @@ public class SellerController {
     @RequestMapping("sellerReviewPage")
     public String sellerReviewPage() {
         return "/seller/sellerReviewPage";
-
     }
 
 }

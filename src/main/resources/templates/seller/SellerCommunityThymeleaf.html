@@ -84,7 +84,7 @@
                     <div class="row">
                         <div class="col">
                             <div class="row mt-3">
-                                <div class="col">
+                                <div class="col ">
                                     <span class="fw-bold fs-3">점주 커뮤니티 게시판</span>
                                 </div>
                             </div>
@@ -138,27 +138,63 @@
                                     </span>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col" id="sellerCommunityBox">
-
+                            <a th:each="seller : ${sellerCommunity}" class="row border shadow-sm py-2 mt-1 rounded " th:href="@{/seller/sellerCommunityDetail(sellerCommunityNumber=${seller.sellerCommunityDto.sellerCommunityNumber})}">
+                                <div class="col">
+                                    <div class="row mt-2">
+                                        <div class="col">
+                                            <span class="fw-bold" th:text="${seller.sellerCommunityDto.sellerCommunityTitle}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col line-limit">
+                                            <span th:text="${seller.sellerCommunityDto.sellerCommunityContent}" class="font"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row" th:classappend="${seller.textLength<=100 ? 'mt-5':'mt-4'}">
+                                        <div class="col font">
+                                            <span th:text="${seller.sellerName.sellerName}"></span>
+                                            <span><i class="bi bi-dot"></i></span>
+                                            <span th:text="${seller.sellerCommunityDto.sellerCommunityCreatedAt}"></span>
+                                            <span class="ms-2"><i class="bi bi-eye"></i></span>
+                                            <span th:text="${seller.sellerCommunityDto.sellerCommunityVisitCount}"></span>
+                                            <span class="ms-2"><i class="bi-heart"></i></span>
+                                            <span th:text="${seller.selectSellerCommunityLikeCount}"></span>
+                                            <span class="ms-2"><i class="bi bi-chat-dots"></i></span>
+                                            <span th:text="${seller.selectTotalCommentReplyCount}"></span>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                                <div class="col-2">
+                                    <div class="row">
+                                        <div class="col-1">
+
+                                        </div>
+                                        <div class="col">
+                                            <img class="img-thumbnail" th:src="@{|/images/${seller.sellerCommunityDto.sellerCommunityImage}|}" alt="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
                             <div class="row">
                                 <div class="col pt-3">
                                     <div class="row">
                                         <div class="col-3 text-start ps-0">
-                                            <a id="previousPage" href="/sellerCommunity">
-                                                <i class="bi me-2"></i>
+                                            <a th:if="${sellerCommunityPaginationDto.startPage !=1}" th:href="@{./sellerCommunity(currentPage=${sellerCommunityPaginationDto.startPage -1})}">
+                                                <i class="bi bi-arrow-left me-2"></i>
                                                 <span>Previous</span>
                                             </a>
+                                            <span class="text-black-50" th:if="${sellerCommunityPaginationDto.startPage ==1}">
+                                                <i class="bi bi-arrow-left me-2"></i>
+                                                <span>Previous</span>
+                                            </span>
                                         </div>
-                                        <div class="col text-center" id="numberContainer">
-                                            <a id="firstPage" href="/sellerCommunity" class="px-3 pt-3">
+                                        <div class="col text-center">
+                                            <a th:href="@{./sellerCommunity(currentPage=${1})}" th:if="${sellerCommunityPaginationDto.currentPage!=1 || sellerCommunityPaginationDto.startPage !=1}"  class="px-3 pt-3">
                                                 <span>1</span>
                                                 <span>...</span>
                                             </a>
-                                            <a href="/sellerCommunity" class="px-3 pt-3 pageNumbers">
-                                                <span class="numberSequence"></span>
+                                            <a th:each="i : ${#numbers.sequence(sellerCommunityPaginationDto.startPage,sellerCommunityPaginationDto.endPage)}" th:href="@{./sellerCommunity(currentPage=${i})}"  th:classappend="${sellerCommunityPaginationDto.currentPage == i ? 'border-top border-2 border-primary':''}"  class="px-3 pt-3">
+                                                <span th:classappend="${sellerCommunityPaginationDto.currentPage == i ? 'text-primary':''}" th:text="${i}"></span>
                                             </a>
                                             <a th:if="${sellerCommunityPaginationDto.currentPage != sellerCommunityPaginationDto.paginationPage}" th:href="@{./sellerCommunity(currentPage=${sellerCommunityPaginationDto.paginationPage})}" class="px-3 pt-3">
                                                 <span>...</span>
@@ -187,91 +223,6 @@
         <div class="col-2"></div>
     </div>
 </div>
-<!--탬플릿-->
-<div class="row border shadow-sm py-2 mt-1 rounded sellerCommentWrapper d-none">
-    <div class="col">
-        <input class="sellerCommunityNumber" type="hidden">
-        <a href="/seller/sellerCommunityDetail"  class="row sellerCommentMain">
-            <div class="col">
-                <div class="row mt-2">
-                    <div class="col">
-                        <span class="fw-bold sellerCommentTitle"></span>
-                    </div>
-                </div>
-                <div class="row mt-2">
-                    <div class="col line-limit">
-                        <span class="font sellerCommentContent"></span>
-                    </div>
-                </div>
-            </div>
-        </a>
-        <div class="row sellerCommentInfo">
-            <div class="col font">
-                <span class="sellerCommentSellerName"></span>
-                <span><i class="bi bi-dot"></i></span>
-                <span class="sellerCommentSellerCreatedAt"></span>
-                <span class="ms-2"><i class="bi bi-eye"></i></span>
-                <span class="sellerCommentSellerVisitCount"></span>
-                <span class="ms-2" onclick="sellerCommunityLike();">
-                    <i class="likeDislikeStatus bi-heart text-danger"></i>
-                </span>
-
-                <span class="sellerCommentSellerNameLikeCount"></span>
-                <span class="ms-2"><i class="bi bi-chat-dots"></i></span>
-                <span class="sellerCommentSellerNameReplyCount"></span>
-            </div>
-        </div>
-    </div>
-    <a href="/seller/sellerCommunityDetail" class="col-2 sellerCommunityImageContainer">
-        <div class="row">
-            <div class="col-1">
-            </div>
-            <div class="col">
-                <img class="img-thumbnail sellerCommunityImage" alt="">
-            </div>
-        </div>
-    </a>
-</div>
-<div class="row">
-    <div class="col pt-3">
-        <div class="row">
-            <div class="col-3 text-start ps-0">
-                <a th:if="${sellerCommunityPaginationDto.startPage !=1}" th:href="@{./sellerCommunity(currentPage=${sellerCommunityPaginationDto.startPage -1})}">
-                    <i class="bi bi-arrow-left me-2"></i>
-                    <span>Previous</span>
-                </a>
-                <span class="text-black-50" th:if="${sellerCommunityPaginationDto.startPage ==1}">
-                    <i class="bi bi-arrow-left me-2"></i>
-                    <span>Previous</span>
-                </span>
-            </div>
-            <div class="col text-center">
-                <a th:href="@{./sellerCommunity(currentPage=${1})}" th:if="${sellerCommunityPaginationDto.currentPage!=1 || sellerCommunityPaginationDto.startPage !=1}"  class="px-3 pt-3">
-                    <span>1</span>
-                    <span>...</span>
-                </a>
-                <a th:each="i : ${#numbers.sequence(sellerCommunityPaginationDto.startPage,sellerCommunityPaginationDto.endPage)}" th:href="@{./sellerCommunity(currentPage=${i})}"  th:classappend="${sellerCommunityPaginationDto.currentPage == i ? 'border-top border-3 border-primary':''}"  class="px-3 pt-3">
-                    <span th:classappend="${sellerCommunityPaginationDto.currentPage == i ? 'text-primary':''}" th:text="${i}"></span>
-                </a>
-                <a th:if="${sellerCommunityPaginationDto.currentPage != sellerCommunityPaginationDto.paginationPage}" th:href="@{./sellerCommunity(currentPage=${sellerCommunityPaginationDto.paginationPage})}" class="px-3 pt-3">
-                    <span>...</span>
-                    <span th:text="${sellerCommunityPaginationDto.paginationPage}"></span>
-                </a>
-            </div>
-            <div class="col-3 text-end pe-0">
-                <a th:if="${sellerCommunityPaginationDto.endPage < sellerCommunityPaginationDto.paginationPage}" th:href="@{./sellerCommunity(currentPage=${sellerCommunityPaginationDto.endPage +1})}">
-                    <span >Next</span>
-                    <i class="bi bi-arrow-right ms-2"></i>
-                </a>
-                <span class="text-black-50" th:if="${sellerCommunityPaginationDto.endPage ==sellerCommunityPaginationDto.paginationPage}">
-                    <span>Next</span>
-                     <i class="bi bi-arrow-right ms-2"></i>
-                </span>
-            </div>
-        </div>
-    </div>
-</div>
-<script src="/js/sellerCommunity.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -13,6 +13,6 @@ public class CustomerDto {
     private String customerName;
     private String customerPhoneNumber;
     private String customerGender;
-    private Date customerAddress;
+    private Date customerBirth;
     private String customerCreatedAt;
 }

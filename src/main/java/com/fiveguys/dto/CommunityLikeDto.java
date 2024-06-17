@@ -6,7 +6,7 @@ import lombok.Data;
 public class CommunityLikeDto {
 
     private int likeNumber;
-    private int communityId;
+    private int communityNumber;
     private int customerNumber;
 
 }

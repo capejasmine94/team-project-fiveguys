@@ -13,7 +13,21 @@
 
 <!--    게시글 전체리스트 역순으로 정렬-->
     <select id="selectCommunityList" resultType="CommunityDto">
-        select *
+        select
+             communityNumber,
+             customerNumber,
+             communityTitle,
+             communityContent,
+             communityVisitCount,
+
+        CASE
+            WHEN FLOOR(TIMESTAMPDIFF(MONTH, communityCreatedAt, NOW()) / 12) >= 1 THEN CONCAT(FLOOR(TIMESTAMPDIFF(MONTH, communityCreatedAt, NOW()) / 12), '년전')
+            WHEN TIMESTAMPDIFF(MONTH, communityCreatedAt, NOW()) >= 1 THEN CONCAT(TIMESTAMPDIFF(MONTH, communityCreatedAt, NOW()), '달전')
+            WHEN DATEDIFF(CURRENT_DATE, communityCreatedAt) >= 1 THEN CONCAT(DATEDIFF(CURRENT_DATE, communityCreatedAt), '일전')
+            WHEN TIMESTAMPDIFF(HOUR, communityCreatedAt, NOW()) >= 1 THEN CONCAT(TIMESTAMPDIFF(HOUR, communityCreatedAt, NOW()), '시간전')
+            ELSE CONCAT(TIMESTAMPDIFF(MINUTE, communityCreatedAt, NOW()), '분전')
+        end as communityCreatedAt
+
         from fc_community
         order by communityNumber desc
     </select>
@@ -44,7 +58,7 @@
     <update id="updateCommunityPage">
         update fc_community
         set
-            communityTitle = #{communityTitle}
+            communityTitle = #{communityTitle},
             communityContent = #{communityContent}
         where communityNumber = #{communityNumber}
     </update>
@@ -57,6 +71,41 @@
             #{customerNumber}, #{communityNumber}, #{commentText}
         )
     </insert>
+
+<!--    댓글 리스트-->
+    <select id="selectCommunityCommentList" resultType="communityCommentDto">
+        select * from fc_communityComment
+        where communityNumber = #{communityNumber}
+        order by commentNumber desc
+    </select>
+
+<!--    좋아요-->
+    <insert id="insertCommunityLike">
+        insert into fc_communityLike(
+            communityNumber, customerNumber
+        ) values (
+            #{communityNumber}, #{customerNumber}
+        )
+    </insert>
+
+<!--    좋아요 삭제-->
+    <delete id="deleteLikeNumber">
+        delete from fc_communityLike
+        where likeNumber = #{likeNumber}
+    </delete>
+
+    <select id="selectCommunityLike" resultType="CommunityLikeDto">
+        select * from fc_communityLike
+        where communityNumber = #{communityNumber}
+        and customerNumber = #{customerNumber}
+    </select>
+
+
+
+
+
+
+
 
 
 </mapper>

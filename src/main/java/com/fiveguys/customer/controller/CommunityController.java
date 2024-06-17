@@ -3,6 +3,7 @@ package com.fiveguys.customer.controller;
 import com.fiveguys.customer.service.CommunityService;
 import com.fiveguys.dto.CommunityCommentDto;
 import com.fiveguys.dto.CommunityDto;
+import com.fiveguys.dto.CommunityLikeDto;
 import com.fiveguys.dto.CustomerDto;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class CommunityController {
     public String communityPage(Model model){
         List<Map<String, Object>> selectCommunityList = communityService.selectCommunityList();
 
-        System.out.println(selectCommunityList + "리스트출력");
+        // System.out.println(selectCommunityList + "리스트출력");
 
         model.addAttribute("selectCommunityList", selectCommunityList);
 
@@ -54,12 +55,25 @@ public class CommunityController {
 
     //자유게시판 상세글보기 페이지
     @RequestMapping("communityReadPage")
-    public String communityReadPage(Model model,@RequestParam("communityNumber") int communityNumber){
+    public String communityReadPage(HttpSession session, Model model, @RequestParam("communityNumber") int communityNumber){
 
         communityService.updateVisitCount(communityNumber);
 
         Map<String, Object> communityData = communityService.selectCommunityNumber(communityNumber);
         model.addAttribute("communityData", communityData);
+
+        List<Map<String, Object>> communityCommentDtoList = communityService.selectCommunityCommentList(communityNumber);
+        model.addAttribute("communityCommentDtoList", communityCommentDtoList);
+
+        CommunityLikeDto communityLikeDto = new CommunityLikeDto();
+
+        CustomerDto customerDto = (CustomerDto)session.getAttribute("customerDto");
+
+        communityLikeDto.setCustomerNumber(customerDto.getCustomerNumber());
+        communityLikeDto.setCommunityNumber(communityNumber);
+
+        CommunityLikeDto communityLikeDto1 = communityService.selectCommunityLike(communityLikeDto);
+        model.addAttribute("communityLikeDto1", communityLikeDto1);
 
         return "customer/communityReadPage";
     }
@@ -92,13 +106,31 @@ public class CommunityController {
 
     //댓글쓰기
     @RequestMapping("communityCommentProcess")
-    public String communityCommentProcess(CommunityCommentDto communityCommentDto){
+    public String communityCommentProcess(HttpSession session, CommunityCommentDto communityCommentDto){
+
+        CustomerDto customerDto = (CustomerDto)session.getAttribute("customerDto");
+        communityCommentDto.setCustomerNumber(customerDto.getCustomerNumber());
+
         communityService.insertCommunityComment(communityCommentDto);
 
-        return "redirect:./communityReadPage?communityNumber" + communityCommentDto.getCommunityNumber();
+        return "redirect:./communityReadPage?communityNumber=" + communityCommentDto.getCommunityNumber();
     }
 
+    @RequestMapping("communityLikeProcess")
+    public String communityLikeProcess(CommunityLikeDto communityLikeDto){
+        communityService.insertCommunityLike(communityLikeDto);
 
+        return "redirect:./communityReadPage?communityNumber=" + communityLikeDto.getCommunityNumber();
+    }
+
+    @RequestMapping("deleteLikeNumber")
+    public String deleteLikeNumber(CommunityLikeDto communityLikeDto){
+
+        CommunityLikeDto communityLikeDto1 = communityService.selectCommunityLike(communityLikeDto);
+        communityService.deleteLikeNumber(communityLikeDto1.getLikeNumber());
+
+        return "redirect:./communityReadPage?communityNumber=" + communityLikeDto.getCommunityNumber();
+    }
 
 
 

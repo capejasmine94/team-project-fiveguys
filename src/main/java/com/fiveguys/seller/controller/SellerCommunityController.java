@@ -28,11 +28,13 @@ public class SellerCommunityController {
     SellerCommunityService sellerCommunityService;
 
     @RequestMapping("sellerCommunity")
-    public String sellerCommunity(Model model,SellerCommunityPaginationDto sellerCommunityPaginationDto){
-
+    public String sellerCommunity(Model model, HttpSession session,SellerCommunityPaginationDto sellerCommunityPaginationDto){
+        SellerDto sellerDto = (SellerDto) session.getAttribute("sellerDto");
+        if(sellerDto==null){
+            return "redirect:/login/sellerLogin";
+        }
         //페이지네이션 처리
         int totalPage = sellerCommunityService.selectSellerCommunityCount();
-        System.out.println(totalPage);
 
         int lastPageNumber=0;
 
@@ -49,24 +51,21 @@ public class SellerCommunityController {
             endPage = lastPageNumber;
         }
 
-        System.out.println(startPage);
-        System.out.println(endPage);
 
         sellerCommunityPaginationDto.setStartPage(startPage);
         sellerCommunityPaginationDto.setEndPage(endPage);
         sellerCommunityPaginationDto.setPaginationPage(lastPageNumber);
 
         model.addAttribute("sellerCommunityPaginationDto", sellerCommunityPaginationDto);
-        model.addAttribute("sellerCommunity", sellerCommunityService.selectSellerCommunityList(sellerCommunityPaginationDto));
         return "seller/sellerCommunity";
     }
 
     @RequestMapping("sellerCommunityWritePage")
     public String sellerCommunityWritePage(HttpSession session){
-        SellerDto sellerDto = (SellerDto) session.getAttribute("sellerDto");
-        if(sellerDto==null){
-            return "redirect:/login/sellerLogin";
-        }
+//        SellerDto sellerDto = (SellerDto) session.getAttribute("sellerDto");
+//        if(sellerDto==null){
+//            return "redirect:/login/sellerLogin";
+//        }
         return "seller/sellerCommunityWritePage";
     }
 

@@ -28,65 +28,114 @@
     </style>
 </head>
 <body>
-<div class="container">
-    <div class="row ㅡㅅ">
-        <div class="col">
-            <span>게시글 쓰기</span>
-        </div>
-    </div>
-    <div class="row mt-3">
-        <div class="col">
-            <form action="./sellerCommunityWriteProcess" method="post" enctype="multipart/form-data">
-                <input type="hidden" name="sellerNumber" th:value="${session.sellerDto.sellerNumber}">
-                <div class="row">
-                    <div class="col">
-                        <span class="font">게시글제목</span>
+<div style="width:1920px;">
+    <div class="row">
+        <div class="col-2"></div>
+        <div class="col-8">
+            <div class="row pt-3">
+                <div class="col-2 fw-bold fs-1 text-danger">F.Guys</div>
+            </div>
+            <div class="row pt-3">
+                <nav class="navbar navbar-expand-lg bg-danger">
+                    <div class="container-fluid">
+                        <div class="col-2 d-flex justify-content-center align-items-center">
+                            <a class="navbar-brand bi bi-house-door-fill text-white text-center"
+                               href="/seller/mainPage"></a>
+                        </div>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+                                aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarNav">
+                            <ul class="navbar-nav row w-100">
+                                <li class="nav-item col-2">
+                                    <a class="nav-link active text-white fw-bold text-start"
+                                       href="/seller/materialMenuPage1">재료메뉴</a>
+                                </li>
+                                <li class="nav-item col-2">
+                                    <a class="nav-link active text-white fw-bold text-start" href="/seller/orderPage">주문하기</a>
+                                </li>
+                                <li class="nav-item col-2">
+                                    <a class="nav-link active text-white fw-bold text-start"
+                                       href="/seller/sellerReviewPage">리뷰하기</a>
+                                </li>
+                                <li class="nav-item col-2">
+                                    <a class="nav-link active text-white fw-bold text-start"
+                                       href="/seller/sellerCommunity">커뮤니티</a>
+                                </li>
+                                <li class="nav-item col-2">
+                                    <a class="nav-link active text-white fw-bold text-start" href="/login/sellerLogin">로그인</a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
+                </nav>
+
+            </div>
+            <div class="row mt-2">
+                <div class="col">
+                    <span class="fw-bold fs-3">게시글 쓰기</span>
                 </div>
-                <div class="row mt-1">
-                    <div class="col">
-                        <input class="form-control font" type="text" name="sellerCommunityTitle" placeholder="제목입력하세요">
-                    </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col">
+                    <form action="./sellerCommunityWriteProcess" method="post" enctype="multipart/form-data">
+<!--                        <input type="hidden" name="sellerNumber" th:value="${session.sellerDto.sellerNumber}">-->
+                        <div class="row">
+                            <div class="col">
+                                <span class="font">게시글제목</span>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col">
+                                <input class="form-control font" type="text" name="sellerCommunityTitle" placeholder="제목입력하세요">
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col">
+                                <span class="font">게시글 대표 이미지 등록</span>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col">
+                                <input name="oneSellerCommunityImage" class="form-control font" type="file">
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col">
+                                <span class="font">게시글 상세 이미지 등록</span>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col">
+                                <input name="multipleSellerCommunityImageList" class="form-control font" type="file" multiple>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col">
+                                <span class="font">게시글 내용</span>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col">
+                                <textarea rows="10" style="padding-bottom: 1%;"  class="form-control font" type="text" name="sellerCommunityContent" placeholder="내용을 입력해주세요"></textarea>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col"></div>
+                            <div class="col-2 text-end">
+                                <a class="btn btn-outline-danger" href="/seller/sellerCommunity">취소</a>
+                                <input class="btn btn-danger" type="submit" value="등록">
+                            </div>
+                        </div>
+                    </form>
                 </div>
-                <div class="row">
-                    <div class="col">
-                        <span class="font">게시글 내용</span>
-                    </div>
-                </div>
-                <div class="row mt-1">
-                    <div class="col">
-                        <textarea  class="form-control font" type="text" name="sellerCommunityContent" placeholder="내용입력"></textarea>
-                    </div>
-                </div>
-                <div class="row mt-2">
-                    <div class="col">
-                        <span class="font">게시글 대표 이미지 등록</span>
-                    </div>
-                </div>
-                <div class="row mt-1">
-                    <div class="col">
-                        <input name="oneSellerCommunityImage" class="form-control font" type="file">
-                    </div>
-                </div>
-                <div class="row mt-2">
-                    <div class="col">
-                        <span class="font">게시글 상세 이미지 등록</span>
-                    </div>
-                </div>
-                <div class="row mt-1">
-                    <div class="col">
-                        <input name="multipleSellerCommunityImageList" class="form-control font" type="file" multiple>
-                    </div>
-                </div>
-                <div class="row mt-4">
-                    <div class="col">
-                        <input class="form-control btn btn-primary" type="submit" value="게시글등록">
-                    </div>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

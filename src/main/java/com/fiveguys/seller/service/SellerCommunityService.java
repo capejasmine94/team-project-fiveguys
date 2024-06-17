@@ -30,13 +30,18 @@ public class SellerCommunityService {
         }
     }
 
-    public List<Map<String,Object>> selectSellerCommunityList(SellerCommunityPaginationDto sellerCommunityPaginationDto){
+    public List<Map<String,Object>> selectSellerCommunityList(SellerCommunityPaginationDto sellerCommunityPaginationDto,int sellerNumber){
         List<Map<String,Object>> result = new ArrayList<>();
         List<SellerCommunityDto> sellerCommunityDtoList = sellerCommunitySqlMapper.selectSellerCommunityList(sellerCommunityPaginationDto);
         for (SellerCommunityDto sellerCommunityDto : sellerCommunityDtoList) {
             Map<String,Object> map = new HashMap<>();
 
+            SellerCommunityLikeDto sellerCommunityLikeDto = new SellerCommunityLikeDto();
+            sellerCommunityLikeDto.setSellerNumber(sellerNumber);
+            sellerCommunityLikeDto.setSellerCommunityNumber(sellerCommunityDto.getSellerCommunityNumber());
+
             int textLength = sellerCommunityDto.getSellerCommunityContent().length();
+            map.put("checkIfSellerCommunityLikeExists",sellerCommunitySqlMapper.checkIfSellerCommunityLikeExists(sellerCommunityLikeDto));
             map.put("textLength", textLength);
             map.put("sellerCommunityDto", sellerCommunityDto);
             map.put("selectTotalCommentReplyCount",sellerCommunitySqlMapper.selectTotalCommentCount(sellerCommunityDto.getSellerCommunityNumber())+sellerCommunitySqlMapper.selectTotalReplyCount(sellerCommunityDto.getSellerCommunityNumber()));

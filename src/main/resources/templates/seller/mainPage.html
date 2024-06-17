@@ -148,11 +148,10 @@
                             </thead>
                             <tbody>
                             <tr th:each="sellerOrderList : ${sellerOrderList}">
-                                <td th:text="${sellerOrderList.sellerOrderDto.sellerOrderNumber}"></td>
-                                <td th:text="${sellerOrderList.sellerDto.sellerName}"></td>
 
+                                <td th:text="${sellerOrderList.sellerDto.sellerName}"></td>
                                 <td>
-                                    <a th:href="@{/seller/orderDetailCheckPage(id=${sellerOrderList.sellerOrderDto. sellerOrderNumber})}"
+                                    <a th:href="@{/seller/orderDetailCheckPage(id=${sellerOrderList.sellerOrderDto.sellerOrderNumber})}"
                                        th:text="${#dates.format(sellerOrderList.sellerOrderDto.sellerOrderCreatedAt, 'yyyy-MM-dd')}"
                                        class="text-decoration-none fw-bold text-black">
                                     </a>

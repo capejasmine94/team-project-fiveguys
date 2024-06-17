@@ -3,7 +3,7 @@
 
 <mapper namespace="com.fiveguys.customer.mapper.CommunitySqlMapper">
 
-    <insert id="insertCommunity">
+    <insert id="insertCommunityWrite">
         insert into fc_community(
             customerNumber, communityTitle, communityContent, communityVisitCount
         ) values(
@@ -11,28 +11,52 @@
         )
     </insert>
 
+<!--    게시글 전체리스트 역순으로 정렬-->
     <select id="selectCommunityList" resultType="CommunityDto">
-        select * from fc_community
+        select *
+        from fc_community
         order by communityNumber desc
     </select>
 
-    <select id="selectCommunityNumber" resultType="CommunityDto">
-        select * from fc_community where customerNumber = #{customerNumber}
-    </select>
-
-    <select id="selectCustomerNumber" resultType="int">
+<!--    CustomerDto에서 정보찾기-->
+    <select id="selectCustomerNumber" resultType="CustomerDto">
         select * from fc_customer where customerNumber = #{customerNumber}
     </select>
 
-    <select id="selectCommunityDetail" resultType="int">
-        select * from fc_community
+
+    <select id="selectCommunityNumber" resultType="CommunityDto">
+        select * from fc_community where communityNumber = #{communityNumber}
     </select>
 
+<!--    조회수 증가-->
+    <update id="updateVisitCount">
+        update fc_community
+        set communityVisitCount = communityVisitCount + 1
+        where communityNumber = #{communityNumber}
+    </update>
 
+<!--    게시글 삭제-->
+    <delete id="deleteCommunityPage">
+        delete from fc_community where communityNumber = #{communityNumber}
+    </delete>
 
+<!--    게시글 수정-->
+    <update id="updateCommunityPage">
+        update fc_community
+        set
+            communityTitle = #{communityTitle}
+            communityContent = #{communityContent}
+        where communityNumber = #{communityNumber}
+    </update>
 
-
-
+<!--    댓글-->
+    <insert id="insertCommunityComment">
+        insert into fc_communityComment(
+            customerNumber, communityNumber, commentText
+        ) values(
+            #{customerNumber}, #{communityNumber}, #{commentText}
+        )
+    </insert>
 
 
 </mapper>

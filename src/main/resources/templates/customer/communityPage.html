@@ -12,28 +12,36 @@
 <body>
     <!--자유게시판 메인-->
     <div class="container">
-        <div class="row">
-            <div class="col">
-                닉네임: <input th:text="session.customerDto.customerName">
-                작성시간:
-                <script>
-                    setInterval(() => document.getElementById('time-display').innerText = `${new Date().getHours()}시간 전`, 1000);
-                </script>
+        <div>
+        <div th:each = "communityData : ${selectCommunityList}">
+            <div class="row">
+                <div class="col">
+                    <input name="communityNumber" type="hidden" th:value="${communityData.communityDto.communityNumber}">
+          <!--          닉네임: <div th:text="${communityData.customerDto.customerName}"></div> -->
+                    작성시간: <div th:text="${communityData.communityDto.communityCreatedAt}"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    글제목: 
+                    <div>
+                        <a th:href="@{./communityReadPage(communityNumber=${communityData.communityDto.communityNumber})}" th:text="${communityData.communityDto.communityTitle}"></a>
+                    </div>
+                </div>
+            </div>
+            <div class="row border-bottom">
+                <div class="col">
+                    조회수: <div th:text="${communityData.communityDto.communityVisitCount}"></div>
+                    댓글카운트:
+                    좋아요카운트:
+                </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col">
-                글제목: <input name="communityTitle" th:text="session.customerDto.communityTitle">
-            </div>
+
+  <!--          <th:block th:if="$[session.customerDto != null}">
+                <a href="./communityWritePage">글쓰기</a>
+            </th:block> -->
         </div>
-        <div class="row border-bottom">
-            <div class="col">
-                조회수:
-                댓글카운트:
-                좋아요카운트:
-            </div>
-        </div>
-        <a href="./communityWritePage.html">글쓰기</a>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

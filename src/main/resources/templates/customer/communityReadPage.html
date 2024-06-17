@@ -17,7 +17,8 @@
         <div class="col">
             <div class="row">
                 <div class="col">
-                    닉네임: <input th:text="session.customerDto.customerName";
+<!--                    닉네임 null값 오류-->
+<!--                    닉네임: <span th:text="${communityData.customerDto.customerName}"></span> -->
                 </div>
             </div>
             <div class="row">
@@ -27,6 +28,7 @@
                         setInterval(() => document.getElementById('time-display').innerText = `${new Date().getHours()}시간 전`, 1000);
                     </script>
                     조회수:
+                    <span th:text="${communityData.communityDto.communityVisitCount}"></span>
                 </div>
             </div>
         </div>
@@ -38,17 +40,54 @@
 
     <div class="row">
         <div class="col">
-            제목:
+            제목: <span th:text="${communityData.communityDto.communityTitle}"></span>
         </div>
     </div>
 
     <div class="row">
         <div class="col">
-            내용:
+            내용: <div th:text="${communityData.communityDto.communityContent}"></div>
         </div>
     </div>
 
+    <div class="row">
+        <div class="col">
+            <a href="./communityPage">목록으로</a>
+        </div>
+    </div>
+
+<!--    게시글 수정삭제-->
+    <div th:if="${session.customerDto != null and session.customerDto.customerNumber == communityData.communityDto.customerNumber}">
+        <div class="row">
+            <div class="col">
+                <a href="@{./updateCommunityPage(communityNumber=${communityData.communityDto.communityNumber})}">수정</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <a href="@{./deleteCommunityPageProcess(communityNumber=${communityData.communityDto.communityNumber})}">삭제</a>
+            </div>
+        </div>
+    </div>
+
+<!--    댓글-->
+    <div class="row">
+        <form action="./communityCommentProcess" method="post">
+            <div class="col">
+
+                <textarea name="commentText"></textarea>
+
+                <div class="row">
+                    <div class="col">
+                        <button>글쓰기</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
 </div>
+
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

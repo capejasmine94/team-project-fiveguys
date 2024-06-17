@@ -25,6 +25,8 @@ public class CommunityController {
     public String communityPage(Model model){
         List<Map<String, Object>> selectCommunityList = communityService.selectCommunityList();
 
+        System.out.println(selectCommunityList + "리스트출력");
+
         model.addAttribute("selectCommunityList", selectCommunityList);
 
         return "customer/communityPage";
@@ -39,8 +41,7 @@ public class CommunityController {
     //자유게시판 글쓰기프로세스
     @RequestMapping("communityWriteProcess")
     public String communityWriteProcess(HttpSession session, CommunityDto params){
-//        customerNumber를 가져오는 로직인데 일단 계속 에러떠서 주석처리.
-//        현재 customerNumber는 모두 0인 상태로 글쓰기 DB는 들어감.
+
         CustomerDto customerDto = (CustomerDto)session.getAttribute("customerDto");
         int userPk = customerDto.getCustomerNumber();
 

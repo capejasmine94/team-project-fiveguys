@@ -73,13 +73,11 @@
 <!--    댓글-->
     <div class="row">
         <form action="./communityCommentProcess" method="post">
-            <div class="col">
-
+            <div class="col" th:if="${session.customerDto} != null">
                 <textarea name="commentText"></textarea>
-
                 <div class="row">
                     <div class="col">
-                        <button>글쓰기</button>
+                        <button>댓글</button>
                     </div>
                 </div>
             </div>

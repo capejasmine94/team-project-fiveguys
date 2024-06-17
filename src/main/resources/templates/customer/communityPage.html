@@ -17,7 +17,7 @@
             <div class="row">
                 <div class="col">
                     <input name="communityNumber" type="hidden" th:value="${communityData.communityDto.communityNumber}">
-          <!--          닉네임: <div th:text="${communityData.customerDto.customerName}"></div> -->
+                    닉네임: <div th:text="${communityData.customerDto.customerName}"></div>
                     작성시간: <div th:text="${communityData.communityDto.communityCreatedAt}"></div>
                 </div>
             </div>
@@ -38,9 +38,9 @@
             </div>
         </div>
 
-  <!--          <th:block th:if="$[session.customerDto != null}">
+            <th:block th:if="${session.customerDto} != null">
                 <a href="./communityWritePage">글쓰기</a>
-            </th:block> -->
+            </th:block>
         </div>
     </div>
 

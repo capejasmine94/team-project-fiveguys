@@ -2,6 +2,7 @@ package com.fiveguys.customer.mapper;
 
 import com.fiveguys.dto.CommunityCommentDto;
 import com.fiveguys.dto.CommunityDto;
+import com.fiveguys.dto.CommunityLikeDto;
 import com.fiveguys.dto.CustomerDto;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -23,4 +24,12 @@ public interface CommunitySqlMapper {
 
     //댓글
     public void insertCommunityComment(CommunityCommentDto communityCommentDto);
+    public List<CommunityCommentDto> selectCommunityCommentList(int communityNumber);
+
+    //좋아요
+    public void insertCommunityLike(CommunityLikeDto communityLikeDto);
+    public void deleteLikeNumber(int LikeNumber);
+    public CommunityLikeDto selectCommunityLike(CommunityLikeDto communityLikeDto);
+
+
 }

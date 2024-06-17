@@ -12,5 +12,5 @@ public class CommunityDto {
     private String communityTitle;
     private String communityContent;
     private int communityVisitCount;
-    private Date communityCreatedAt;
+    private String communityCreatedAt;
 }

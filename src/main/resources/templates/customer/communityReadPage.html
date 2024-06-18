@@ -64,8 +64,8 @@
             <div class="row">
                 <div class="col">
                     <div th:if="${session.customerDto != null and communityData.communityDto.customerNumber != session.customerDto.customerNumber}">
-                        <a th:if="${communityLikeDto1} == null" th:href="@{./communityLikeProcess(communityNumber=${communityData.communityDto.communityNumber}, customerNumber=${session.customerDto.customerNumber})}"><i class="bi bi-hand-thumbs-up"></i></a>
-                        <a th:if="${communityLikeDto1} != null" th:href="@{./deleteLikeNumber(communityNumber=${communityData.communityDto.communityNumber}, customerNumber=${session.customerDto.customerNumber})}"><i class="bi bi-hand-thumbs-up-fill"></i></a>
+                        <a th:if="${communityLikeDto1} == null" th:href="@{./communityLikeProcess(communityNumber=${communityData.communityDto.communityNumber}, customerNumber=${session.customerDto.customerNumber})}" class="text-danger"><i class="bi bi-heart"></i></a>
+                        <a th:if="${communityLikeDto1} != null" th:href="@{./deleteLikeNumber(communityNumber=${communityData.communityDto.communityNumber}, customerNumber=${session.customerDto.customerNumber})}" class="text-danger"><i class="bi bi-heart-fill"></i></a>
                     </div>
                 </div>
             </div>

@@ -85,7 +85,7 @@
                     </div>
 
                     <div class="row pt-2">
-                        <a class="col text-center fw-bold text-dark text-decoration-none">리뷰하기</a>
+                        <a href="/seller/reviewChoicePage" class="col text-center fw-bold text-dark text-decoration-none">리뷰하기</a>
                     </div>
 
                     <div class="row pt-2">
@@ -112,7 +112,7 @@
                             <td th:text="${sellerOrderList.sellerOrderDto.sellerOrderNumber}"></td>
                             <td th:text="${sellerOrderList.sellerDto.sellerName}"></td>
                             <td>
-                                <a th:href="@{/seller/orderDetailCheckPage(id=${sellerOrderList.sellerOrderDto. sellerOrderNumber})}"
+                                <a th:href="@{/seller/orderDetailCheckPage(id=${sellerOrderList.sellerOrderDto.sellerOrderNumber})}"
                                    th:text="${#dates.format(sellerOrderList.sellerOrderDto.sellerOrderCreatedAt, 'yyyy-MM-dd')}"
                                    class="text-decoration-none fw-bold text-black">
                                 </a>

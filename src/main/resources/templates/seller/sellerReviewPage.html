@@ -85,7 +85,7 @@
                     </div>
 
                     <div class="row pt-2">
-                        <a class="col text-center fw-bold text-dark text-decoration-none">리뷰하기</a>
+                        <a href="/seller/reviewChoicePage" class="col text-center fw-bold text-dark text-decoration-none">리뷰하기</a>
                     </div>
 
                     <div class="row pt-2">
@@ -101,6 +101,32 @@
                     <div class="row pt-2">
                         <div class="col fs-3 fw-bold text-center">사장님 리뷰</div>
                     </div>
+
+                    <table class="table row-12">
+                        <thead>
+                        <tr>
+                            <th class="text-center" scope="col">번호</th>
+                            <th scope="col">지점명</th>
+                            <th scope="col">내용</th>
+                            <th scope="col">리뷰작성일</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr th:each="reviewInform : ${reviewInform}">
+                            <td class="text-center" th:text="${reviewInform.sellerReviewDto.sellerReviewNumber}"></td>
+                            <td th:text="${reviewInform.sellerDto.sellerName}"></td>
+                            <td>
+                                <a th:href="@{/seller/reviewDetailPage(id=${reviewInform.sellerReviewDto.sellerReviewNumber})}"
+                                   th:text="${#strings.length(reviewInform.sellerReviewDto.sellerReviewContent) > 7 ? #strings.substring(reviewInform.sellerReviewDto.sellerReviewContent, 0, 7) + '...' : reviewInform.sellerReviewDto.sellerReviewContent}"
+                                    class="text-decoration-none fw-bold text-black">
+                                </a>
+                            </td>
+                            <td th:text="${#dates.format(reviewInform.sellerReviewDto.sellerReviewCreatedAt, 'yyyy-MM-dd')}"></td>
+
+                        </tr>
+                        </tbody>
+                    </table>
 
 
                 </div>

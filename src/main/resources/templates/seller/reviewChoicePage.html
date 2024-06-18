@@ -35,14 +35,17 @@
                         <div class="collapse navbar-collapse" id="navbarNav">
                             <ul class="navbar-nav row w-100">
                                 <li class="nav-item col-2">
-                                    <a class="nav-link active text-white fw-bold text-start" href="/seller/materialMenuPage">재료메뉴</a>
+                                    <a class="nav-link active text-white fw-bold text-start" href="/seller/materialMenuPage1">재료메뉴</a>
                                 </li>
                                 <li class="nav-item col-2">
                                     <a class="nav-link active text-white fw-bold text-start" href="/seller/orderPage">주문하기</a>
                                 </li>
+
                                 <li class="nav-item col-2">
                                     <a class="nav-link active text-white fw-bold text-start" href="/seller/sellerReviewPage">리뷰</a>
                                 </li>
+
+
                                 <li class="nav-item col-2">
                                     <a class="nav-link active text-white fw-bold text-start" href="/seller/sellerCommunity">커뮤니티</a>
                                 </li>
@@ -97,53 +100,44 @@
 
                 <div class="col-10">
 
-                    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-                        <div class="container-fluid">
-                            <a class="navbar-brand fw-bold">카테고리</a>
-                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                                <span class="navbar-toggler-icon"></span>
-                            </button>
-                            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                                <div class="navbar-nav">
-                                    <a class="nav-link active" href="/seller/materialMenuPage1">생닭</a>
-                                    <a class="nav-link active" href="/seller/materialMenuPage2">소스</a>
-                                    <a class="nav-link active" href="/seller/materialMenuPage3">사이드</a>
-                                    <a class="nav-link active" href="/seller/materialMenuPage4">음료</a>
-                                    <a class="nav-link active" href="/seller/materialMenuPage5">치킨박스</a>
-                                    <a class="nav-link active" href="/seller/materialMenuPage6">봉지</a>
-                                </div>
-                            </div>
-                        </div>
-                    </nav>
+                    <table class="row-12 table table-danger">
+                        <thead>
+                        <tr>
+                            <th scope="col" class="text-center">주문일</th>
+                            <th scope="col">배송지</th>
+                            <th scope="col">주문상태</th>
+                            <th scope="col" class="text-center">리뷰</th>
 
+                        </tr>
+                        </thead>
 
-                    <div class="row pt-2">
-                        <img src="/img/Frenchfries.jpeg" class="col-4 img-fluid" alt="감자튀김">
-                        <img src="/img/cheesestick.jpg" class="col-4 img-fluid" alt="치즈스틱">
-                        <img src="/img/spicytpk.jpeg" class="col-4 img-fluid" alt="떡볶이">
-                    </div>
+                        <tbody>
+                        <tr th:each="sellerOrderList : ${sellerOrderList}">
+                            <td class="text-center">
+                                <a th:href="@{/seller/orderDetailCheckPage(id=${sellerOrderList.sellerOrderDto. sellerOrderNumber})}"
+                                   th:text="${#dates.format(sellerOrderList.sellerOrderDto.sellerOrderCreatedAt, 'yyyy-MM-dd')}"
+                                   class="text-decoration-none fw-bold text-black">
+                                </a>
+                            </td>
+                            <td th:text="${sellerOrderList.sellerDto.sellerName}"></td>
+                            <td th:text="${sellerOrderList.sellerOrderDto.sellerOrderStatus}"></td>
 
-                    <div class="row">
-                        <span class="col-4 text-center fw-bold">감자튀김</span>
-                        <span class="col-4 text-center fw-bold">치즈스틱</span>
-                        <span class="col-4 text-center fw-bold">떡볶이</span>
-                    </div>
+                            <td class="text-center" th:if="${sellerOrderList.sellerOrderDto.sellerOrderStatus=='배송완료'}">
+                                <a th:href="@{/seller/reviewWritePage(id=${sellerOrderList.sellerOrderDto.sellerOrderNumber})}" class="btn btn-warning btn-sm">리뷰쓰기</a>
+                            </td>
 
-                    <div class="row pt-3">
-                        <img src="/img/cheeseball.jpg" class="col-4 img-fluid" alt="치즈볼">
-                    </div>
-
-                    <div class="row">
-                        <span class="col-4 text-center fw-bold">치즈볼</span>
-                    </div>
+                            <td th:if="${sellerOrderList.sellerOrderDto.sellerOrderStatus!='배송완료'}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
 
 
                 </div>
 
             </div>
 
-
         </div>
+
 
         <div class="col-2"></div>
 

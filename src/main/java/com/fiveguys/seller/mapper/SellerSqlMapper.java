@@ -3,6 +3,7 @@ package com.fiveguys.seller.mapper;
 import com.fiveguys.dto.MaterialDto;
 import com.fiveguys.dto.SellerDto;
 import com.fiveguys.dto.SellerOrderDto;
+import com.fiveguys.dto.SellerReviewDto;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -28,6 +29,12 @@ public interface SellerSqlMapper {
     public List<SellerOrderDto> selectSameSellerOrder(SellerOrderDto sellerOrderDto);
 
     public SellerOrderDto selectSellerOrderInform(int sellerOrderNumber);
+
+    public void insertSellerReview(SellerReviewDto sellerReviewDto);
+
+    public List<SellerReviewDto> selectAllSellerReview();
+
+    public SellerReviewDto selectSellerReview(int id);
 
 
 

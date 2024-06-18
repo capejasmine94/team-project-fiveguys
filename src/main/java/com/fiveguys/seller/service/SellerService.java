@@ -4,6 +4,7 @@ package com.fiveguys.seller.service;
 import com.fiveguys.dto.MaterialDto;
 import com.fiveguys.dto.SellerDto;
 import com.fiveguys.dto.SellerOrderDto;
+import com.fiveguys.dto.SellerReviewDto;
 import com.fiveguys.seller.mapper.SellerSqlMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -106,6 +107,12 @@ public class SellerService {
 
     }
 
+    public SellerOrderDto selectSellerOrderInform(int sellerOrderNumber) {
+        SellerOrderDto sellerOrderDto = sellerSqlMapper.selectSellerOrderInform(sellerOrderNumber);
+
+        return sellerOrderDto;
+    }
+
 
     public List<Map<String, Object>> selectSameSellerOrder(SellerOrderDto sellerOrderDtos, int id) {
 
@@ -132,6 +139,62 @@ public class SellerService {
         return sellerOrderList;
 
     }
+
+
+    public void insertSellerReview(SellerReviewDto sellerReviewDto) {
+        sellerSqlMapper.insertSellerReview(sellerReviewDto);
+    }
+
+
+    public List<Map<String, Object>> selectAllSellerReview() {
+        List<Map<String, Object>> sellerReviewList = new ArrayList<>();
+        List<SellerReviewDto> sellerReviewDtoList = sellerSqlMapper.selectAllSellerReview();
+
+
+        for (SellerReviewDto sellerReviewDto : sellerReviewDtoList) {
+
+            SellerOrderDto sellerOrderDto = sellerSqlMapper.selectSellerOrderInform(sellerReviewDto.getSellerOrderNumber());
+            SellerDto sellerDto = sellerSqlMapper.selectSellerInform(sellerOrderDto.getSellerNumber());
+
+            Map<String, Object> map = new HashMap<>();
+            map.put("sellerDto", sellerDto);
+            map.put("sellerOrderDto", sellerOrderDto);
+            map.put("sellerReviewDto", sellerReviewDto);
+
+            sellerReviewList.add(map);
+
+        }
+        return sellerReviewList;
+    }
+
+
+
+
+
+    public Map<String, Object> selectSellerReview(int id) {
+        
+        SellerReviewDto sellerReviewDto = sellerSqlMapper.selectSellerReview(id);
+
+        SellerOrderDto sellerOrderDto = sellerSqlMapper.selectSellerOrderInform(sellerReviewDto.getSellerOrderNumber());
+        SellerDto sellerDto = sellerSqlMapper.selectSellerInform(sellerOrderDto.getSellerNumber());
+
+        System.out.println(sellerDto.getSellerNumber());
+        System.out.println(sellerOrderDto.getSellerNumber());
+        System.out.println(sellerDto.getSellerName());
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("sellerDto", sellerDto);
+        map.put("sellerOrderDto", sellerOrderDto);
+        map.put("sellerReviewDto", sellerReviewDto);
+
+        return map;
+    }
+
+
+
+
+
+
 
 
 

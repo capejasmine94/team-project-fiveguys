@@ -2,6 +2,7 @@ package com.fiveguys.seller.controller;
 
 import com.fiveguys.dto.SellerDto;
 import com.fiveguys.dto.SellerOrderDto;
+import com.fiveguys.dto.SellerReviewDto;
 import com.fiveguys.seller.service.SellerService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +20,7 @@ public class SellerController {
 
     @Autowired
     SellerService sellerService;
+
 
 
     @RequestMapping("mainPage")
@@ -33,8 +34,9 @@ public class SellerController {
         model.addAttribute("sellerOrderList", sellerOrderList);
 
         return "seller/mainPage";
-
     }
+
+
 
     @RequestMapping("orderPage")
     public String orderPage() {
@@ -125,7 +127,11 @@ public class SellerController {
 
 
     @RequestMapping("sellerReviewPage")
-    public String sellerReviewPage() {
+    public String sellerReviewPage(Model model) {
+
+        List<Map<String, Object>> reviewInform = sellerService.selectAllSellerReview();
+        model.addAttribute("reviewInform", reviewInform);
+
         return "/seller/sellerReviewPage";
     }
 
@@ -155,5 +161,53 @@ public class SellerController {
 
         return "/seller/orderDetailCheckPage";
     }
+
+
+    @RequestMapping("reviewChoicePage")
+    public String reviewChoicePage(HttpSession session, Model model) {
+
+        SellerDto sellerDto = (SellerDto)session.getAttribute("sellerDto");
+        int sellerNumber = sellerDto.getSellerNumber();
+        List<Map<String, Object>> sellerOrderList = sellerService.selectAllSellerOrder(sellerNumber);
+        model.addAttribute("sellerOrderList", sellerOrderList);
+
+        return "/seller/reviewChoicePage";
+    }
+
+
+    @RequestMapping("reviewWritePage")
+    public String reviewWritePage(Model model, SellerOrderDto sellerOrderDto, int id) {
+
+        SellerOrderDto sellerOrderInform = sellerService.selectSellerOrderInform(id);
+        List<Map<String, Object>> sellerOrderList = sellerService.selectSameSellerOrder(sellerOrderDto, id);
+        model.addAttribute("sellerOrderList", sellerOrderList);
+        model.addAttribute("sellerOrderInform", sellerOrderInform);
+
+        return "/seller/reviewWritePage";
+    }
+
+
+    @RequestMapping("insertSellerReview")
+    public String insertSellerReview(SellerReviewDto sellerReviewDto) {
+
+        sellerService.insertSellerReview(sellerReviewDto);
+
+        return "/seller/mainPage";
+    }
+
+
+    @RequestMapping("reviewDetailPage")
+    public String reviewDetailPage(Model model, int id) {
+
+        System.out.println(id);
+        Map<String, Object> reviewInform = sellerService.selectSellerReview(id);
+        model.addAttribute("reviewInform", reviewInform);
+
+        return "/seller/reviewDetailPage";
+    }
+
+
+
+
 
 }

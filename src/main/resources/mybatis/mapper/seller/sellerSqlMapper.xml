@@ -66,6 +66,23 @@
     </select>
 
 
+    <insert id="insertSellerReview">
+        insert into fc_sellerReview
+            (sellerOrderNumber, sellerReviewContent, masterReply)
+        values(#{sellerOrderNumber}, #{sellerReviewContent}, '');
+    </insert>
+
+    <select id="selectAllSellerReview">
+        select * from fc_sellerReview
+        order by sellerReviewNumber desc;
+    </select>
+
+
+    <select id="selectSellerReview">
+        select * from fc_sellerReview
+        where sellerReviewNumber = #{sellerReviewNumber}
+    </select>
+
 
 
 

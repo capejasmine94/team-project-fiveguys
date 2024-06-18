@@ -10,6 +10,15 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="/css/style.css">
 </head>
+<style>
+    .quantity-input {
+        width: 60px; /* Adjust the width as needed */
+    }
+    .quantity-input:focus {
+        outline: none;
+        box-shadow: none; /* Removes the box shadow as well */
+    }
+</style>
 
 <body>
 <!--매장 주문 네비 상단-->
@@ -26,7 +35,7 @@
         </form>
         <div class="col text-center"></div>
         <div class="col text-end">
-            <a href="/customer/shoppingCartPage" class="customer_navi_link">
+            <a href="/customer/shoppingBasketPage" class="customer_navi_link">
                 <span class="fs-3"><i class="bi bi-bag"></i></span>
             </a>
         </div>
@@ -59,7 +68,7 @@
 </div>
 <!-- 메뉴정보 -->
 <!-- 치킨 선택메뉴 -->
-<div class="container">
+<div class="container mt-2">
     <div class="row">
         <div class="col">
             <div class="row py-2 px-2 my-1" style="background-color: #F9F9F9;">
@@ -122,15 +131,25 @@
 <div class="container-fluid" style="margin-top: 5rem"></div>
 <!---->
 <div  class="container-fluid py-2 fixed-bottom border bg-light">
+    <div class="row mx-1 mb-3 justify-content-center">
+        <div class="col fs-3">
+            <span th:text="|${#numbers.formatInteger(productDto.productPrice, 0, 'COMMA')}원|">가격</span>
+        </div>
+        <div class="col input-group text-end" style="max-width: 100px;">
+            <input type="number" class="form-control quantity-input text-center" id="quantity" name="quantity" value="1" min="1">
+        </div>
+    </div>
     <div class="row mx-1">
         <div class="col border rounded-3 text-center py-1" style="background-color: #D72239">
-            <a href="/customer/shoppingCartPage" class="fs-2" style="text-decoration: none; color: white">
+            <a href="/customer/shoppingBasketPage" class="fs-2" style="text-decoration: none; color: white">
                 <span><i class="bi bi-bag"></i></span>
                 <span>장바구니 담기</span>
             </a>
         </div>
     </div>
 </div>
+
+<div class="container-fluid" style="margin-top: 8rem"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.mn.js"></script>
 <script src="https://kit.fontawesome.com/7b271bba58.js" crossorigin="anonymous"></script>

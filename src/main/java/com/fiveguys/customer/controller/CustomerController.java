@@ -5,7 +5,6 @@ import com.fiveguys.dto.ProductAndCategoryDto;
 import com.fiveguys.dto.ProductDto;
 import com.fiveguys.dto.SellerDto;
 import com.fiveguys.seller.service.SellerCustomerService;
-import org.springframework.beans.NotReadablePropertyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -92,14 +90,13 @@ public class CustomerController {
             System.out.println(e.getMessage());
         }
 
-
         return "customer/menuDetailPage";
     }
 
-    @RequestMapping("shoppingCartPage")
+    @RequestMapping("shoppingBasketPage")
     public String customerShoppingCartPage() {
 
 
-        return "customer/shoppingCartPage";
+        return "customer/shoppingBasketPage";
     }
 }

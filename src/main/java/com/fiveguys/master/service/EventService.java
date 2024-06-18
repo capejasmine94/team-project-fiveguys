@@ -132,4 +132,59 @@ public class EventService {
     public void deleteWinner(int winnerNumber) {
         eventSqlMapper.deleteWinner(winnerNumber);
     }
+
+    public List<Map<String, Object>> selectRunningEventInfoList(CustomerDto customerDto) {
+        List<Map<String, Object>> eventBoardInfoList = new ArrayList<>();
+        List<EventBoardDto> eventBoardDtoList = eventSqlMapper.selectEventList();
+
+        for(EventBoardDto eventBoardDto : eventBoardDtoList){
+            Map<String,Object> map = new HashMap<>();
+            int eventBoardLikeCount = eventSqlMapper.selectEventBoardLikeCount(eventBoardDto.getEventNumber());
+            int eventLikeCustomerCheck = 0;
+            map.put("eventLikeCustomerCheck",eventLikeCustomerCheck);
+            if(customerDto != null){
+                EventLikeDto eventLikeDto = new EventLikeDto();
+                eventLikeDto.setEventNumber(eventBoardDto.getEventNumber());
+                eventLikeDto.setCustomerNumber(customerDto.getCustomerNumber());
+                eventLikeCustomerCheck = eventSqlMapper.selectEventBoardLikeCheck(eventLikeDto);
+                map.put("eventLikeCustomerCheck",eventLikeCustomerCheck);
+            }
+
+            map.put("eventBoardLikeCount",eventBoardLikeCount);
+
+            map.put("eventBoardDto",eventBoardDto);
+            eventBoardInfoList.add(map);
+        }
+
+
+        return eventBoardInfoList;
+
+    }
+
+    public List<Map<String, Object>> selectEndEventInfoList(CustomerDto customerDto) {
+        List<Map<String, Object>> eventBoardInfoList = new ArrayList<>();
+        List<EventBoardDto> eventBoardDtoList = eventSqlMapper.selectEndEventList();
+
+        for(EventBoardDto eventBoardDto : eventBoardDtoList){
+            Map<String,Object> map = new HashMap<>();
+            int eventBoardLikeCount = eventSqlMapper.selectEventBoardLikeCount(eventBoardDto.getEventNumber());
+            int eventLikeCustomerCheck = 0;
+            map.put("eventLikeCustomerCheck",eventLikeCustomerCheck);
+            if(customerDto != null){
+                EventLikeDto eventLikeDto = new EventLikeDto();
+                eventLikeDto.setEventNumber(eventBoardDto.getEventNumber());
+                eventLikeDto.setCustomerNumber(customerDto.getCustomerNumber());
+                eventLikeCustomerCheck = eventSqlMapper.selectEventBoardLikeCheck(eventLikeDto);
+                map.put("eventLikeCustomerCheck",eventLikeCustomerCheck);
+            }
+
+            map.put("eventBoardLikeCount",eventBoardLikeCount);
+
+            map.put("eventBoardDto",eventBoardDto);
+            eventBoardInfoList.add(map);
+        }
+
+
+        return eventBoardInfoList;
+    }
 }

@@ -69,33 +69,33 @@ public class SellerCommunityController {
         return "seller/sellerCommunityWritePage";
     }
 
-    @RequestMapping("sellerCommunityWriteProcess")
-    public String sellerCommunityWriteProcess(SellerCommunityDto sellerCommunityDto, MultipartFile oneSellerCommunityImage, MultipartFile[] multipleSellerCommunityImageList){
-
-        List<SellerCommunityImageDetailDto> sellerCommunityImageDetailDtoList = new ArrayList<>();
-
-        // 대표 이미지 저장 및 경로 설정
-        if (!oneSellerCommunityImage.isEmpty()) {
-            String mainImagePath = saveFile(oneSellerCommunityImage);
-            sellerCommunityDto.setSellerCommunityImage(mainImagePath);
-        }
-
-        // 상세 이미지 저장 및 경로 설정
-        if (multipleSellerCommunityImageList != null) {
-            for (MultipartFile file : multipleSellerCommunityImageList) {
-                if (!file.isEmpty()) {
-                    String imagePath = saveFile(file);
-
-                    // 상품 상세 이미지 DB에 저장
-                    SellerCommunityImageDetailDto sellerCommunityImageDetailDto = new SellerCommunityImageDetailDto();
-                    sellerCommunityImageDetailDto.setSellerCommunityImageList(imagePath);
-                    sellerCommunityImageDetailDtoList.add(sellerCommunityImageDetailDto);
-                }
-            }
-        }
-        sellerCommunityService.insertSellerCommunityWrite(sellerCommunityDto,sellerCommunityImageDetailDtoList);
-        return "redirect:./sellerCommunity";
-    }
+//    @RequestMapping("sellerCommunityWriteProcess")
+//    public String sellerCommunityWriteProcess(SellerCommunityDto sellerCommunityDto, MultipartFile oneSellerCommunityImage, MultipartFile[] multipleSellerCommunityImageList){
+//
+//        List<SellerCommunityImageDetailDto> sellerCommunityImageDetailDtoList = new ArrayList<>();
+//
+//        // 대표 이미지 저장 및 경로 설정
+//        if (!oneSellerCommunityImage.isEmpty()) {
+//            String mainImagePath = saveFile(oneSellerCommunityImage);
+//            sellerCommunityDto.setSellerCommunityImage(mainImagePath);
+//        }
+//
+//        // 상세 이미지 저장 및 경로 설정
+//        if (multipleSellerCommunityImageList != null) {
+//            for (MultipartFile file : multipleSellerCommunityImageList) {
+//                if (!file.isEmpty()) {
+//                    String imagePath = saveFile(file);
+//
+//                    // 상품 상세 이미지 DB에 저장
+//                    SellerCommunityImageDetailDto sellerCommunityImageDetailDto = new SellerCommunityImageDetailDto();
+//                    sellerCommunityImageDetailDto.setSellerCommunityImageList(imagePath);
+//                    sellerCommunityImageDetailDtoList.add(sellerCommunityImageDetailDto);
+//                }
+//            }
+//        }
+//        sellerCommunityService.insertSellerCommunityWrite(sellerCommunityDto,sellerCommunityImageDetailDtoList);
+//        return "redirect:./sellerCommunity";
+//    }
 
     private String saveFile(MultipartFile file) {
         // 경로 설정, 폴더 위치
@@ -171,6 +171,9 @@ public class SellerCommunityController {
     @RequestMapping("sellerCommunityLikeProcess")
     public String sellerCommunityLikeProcess(HttpSession session, SellerCommunityLikeDto sellerCommunityLikeDto,int sellerCommunityNumber){
         int checkIfSellerCommunityLikeExists = sellerCommunityService.checkIfSellerCommunityLikeExists(sellerCommunityLikeDto);
+        SellerDto sellerDto = (SellerDto) session.getAttribute("sellerDto");
+        sellerCommunityLikeDto.setSellerNumber(sellerDto.getSellerNumber());
+
         if(checkIfSellerCommunityLikeExists==0){
             sellerCommunityService.insertSellerCommunityLike(sellerCommunityLikeDto);
         }else{
@@ -180,7 +183,10 @@ public class SellerCommunityController {
     }
 
     @RequestMapping("sellerCommentLikeProcess")
-    public String sellerCommentLikeProcess(SellerCommunityCommentLikeStatusDto sellerCommunityCommentLikeStatusDto,int sellerCommunityNumber){
+    public String sellerCommentLikeProcess(HttpSession session, SellerCommunityCommentLikeStatusDto sellerCommunityCommentLikeStatusDto,int sellerCommunityNumber){
+        SellerDto sellerDto = (SellerDto) session.getAttribute("sellerDto");
+        sellerCommunityCommentLikeStatusDto.setSellerNumber(sellerDto.getSellerNumber());
+
         if(sellerCommunityCommentLikeStatusDto.getSellerCommentLikeStatus().isEmpty()){
             sellerCommunityCommentLikeStatusDto.setSellerCommentLikeStatus("like");
         }else if(sellerCommunityCommentLikeStatusDto.getSellerCommentLikeStatus().equals("dislike")){
@@ -193,7 +199,10 @@ public class SellerCommunityController {
     }
 
     @RequestMapping("sellerCommentDisLikeProcess")
-    public String sellerCommentDisLikeProcess(SellerCommunityCommentLikeStatusDto sellerCommunityCommentLikeStatusDto,int sellerCommunityNumber){
+    public String sellerCommentDisLikeProcess(HttpSession session, SellerCommunityCommentLikeStatusDto sellerCommunityCommentLikeStatusDto,int sellerCommunityNumber){
+        SellerDto sellerDto = (SellerDto) session.getAttribute("sellerDto");
+        sellerCommunityCommentLikeStatusDto.setSellerNumber(sellerDto.getSellerNumber());
+
         if(sellerCommunityCommentLikeStatusDto.getSellerCommentLikeStatus().isEmpty()){
             sellerCommunityCommentLikeStatusDto.setSellerCommentLikeStatus("dislike");
         }else if(sellerCommunityCommentLikeStatusDto.getSellerCommentLikeStatus().equals("like")){
@@ -206,7 +215,10 @@ public class SellerCommunityController {
     }
 
     @RequestMapping("sellerReplyLikeProcess")
-    public String sellerReplyLikeProcess(SellerCommunityReplyLikeStatusDto sellerCommunityReplyLikeStatusDto,int sellerCommunityNumber){
+    public String sellerReplyLikeProcess(HttpSession session, SellerCommunityReplyLikeStatusDto sellerCommunityReplyLikeStatusDto,int sellerCommunityNumber){
+        SellerDto sellerDto = (SellerDto) session.getAttribute("sellerDto");
+        sellerCommunityReplyLikeStatusDto.setSellerNumber(sellerDto.getSellerNumber());
+
         if(sellerCommunityReplyLikeStatusDto.getSellerCommunityReplyLikeStatus().isEmpty()){
             sellerCommunityReplyLikeStatusDto.setSellerCommunityReplyLikeStatus("like");
         }else if(sellerCommunityReplyLikeStatusDto.getSellerCommunityReplyLikeStatus().equals("dislike")){
@@ -218,7 +230,10 @@ public class SellerCommunityController {
         return "redirect:./sellerCommunityDetail?sellerCommunityNumber="+sellerCommunityNumber;
     }
     @RequestMapping("sellerReplyDisLikeProcess")
-    public String sellerReplyDisLikeProcess(SellerCommunityReplyLikeStatusDto sellerCommunityReplyLikeStatusDto,int sellerCommunityNumber){
+    public String sellerReplyDisLikeProcess(HttpSession session, SellerCommunityReplyLikeStatusDto sellerCommunityReplyLikeStatusDto,int sellerCommunityNumber){
+        SellerDto sellerDto = (SellerDto) session.getAttribute("sellerDto");
+        sellerCommunityReplyLikeStatusDto.setSellerNumber(sellerDto.getSellerNumber());
+
         if(sellerCommunityReplyLikeStatusDto.getSellerCommunityReplyLikeStatus().isEmpty()){
             sellerCommunityReplyLikeStatusDto.setSellerCommunityReplyLikeStatus("dislike");
         }else if(sellerCommunityReplyLikeStatusDto.getSellerCommunityReplyLikeStatus().equals("like")){

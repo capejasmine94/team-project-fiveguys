@@ -20,9 +20,9 @@
                 F.Guys
             </span>
         </div>
-        <div class="col-3 text-center border rounded-pill bg-light d-flex justify-content-center align-items-center">
+        <div class="col text-center border rounded-pill bg-light d-flex justify-content-center align-items-center">
             <span class="fw-bold" style="color: #B41E30;">
-                FG 주문
+                FG 게시판
             </span>
         </div>
         <div class="col text-end">
@@ -80,7 +80,7 @@
                 </div>
             </div>
         </div>
-        <!-- 지효 게시판 페이지 -->
+        <!-- 자유 게시판 페이지 -->
         <div class="col-auto rounded-circle">
             <div class="row-auto text-center">
                 <div class="col">
@@ -113,94 +113,6 @@
     </div>
 </div>
 
-
-<!--마이페이지 네비 상단-->
-<div th:fragment="myPageTopNavi" class="container-fluid fixed-top py-2 bg-light">
-    <div class="row">
-        <div class="col"></div>
-        <div class="col text-center">
-            <span class="fs-3">
-                마이페이지
-            </span>
-        </div>
-        <div class="col text-end">
-            <span class="fs-3 p-0">
-                <i class="bi bi-bag"></i>
-            </span>
-        </div>
-    </div>
-</div>
-
-<!--매장선택 네비 상단-->
-<div th:fragment="orderTopNavi" class="container-fluid fixed-top py-2 bg-light">
-    <div class="row">
-        <div class="col">
-            <a href="/customer/mainPage">
-                <span class="fs-3" style="color: black">
-                    <i class="bi bi-chevron-left"></i>
-                </span>
-            </a>
-        </div>
-        <div class="col text-center">
-            <span class="fs-3">
-                전체 매장
-            </span>
-        </div>
-        <div class="col text-end">
-            <a href="/customer/mainPage" class="customer_navi_link">
-                <span class="fs-3"><i class="bi bi-house"></i></span>
-            </a>
-        </div>
-    </div>
-</div>
-
-<!--메뉴 상세 네비 상단-->
-<div th:fragment="" class="container-fluid fixed-top py-2 bg-light">
-    <div class="row">
-        <div class="col">
-            <a href="/customer/mainPage">
-                <span class="fs-3" style="color: black">
-                    <i class="bi bi-chevron-left"></i>
-                </span>
-            </a>
-        </div>
-        <div class="col text-end">
-            <a href="/customer/mainPage" class="customer_navi_link">
-                <span class="fs-3"><i class="bi bi-house"></i></span>
-            </a>
-        </div>
-    </div>
-</div>
-
-<!--장바구니  네비 상단-->
-<div th:fragment="cartTopNavi" class="container-fluid fixed-top py-2 bg-light">
-    <div class="row">
-        <div class="col">
-            <a href="/customer/mainPage">
-                <span class="fs-3" style="color: black">
-                    <i class="bi bi-chevron-left"></i>
-                </span>
-            </a>
-        </div>
-        <div class="col text-center">
-            <span class="fs-3">
-                장바 구니
-            </span>
-        </div>
-        <div class="col"></div>
-    </div>
-</div>
-<!--장바구니 네비 하단 -->
-<div th:fragment="cartBottomNavi" class="container-fluid py-2 fixed-bottom border bg-light">
-    <div class="row mx-1">
-        <div class="col border rounded-3 text-center py-1" style="background-color: #D72239">
-            <a href="/customer/shoppingBasketPage" class="fs-2" style="text-decoration: none; color: white">
-                <span><i class="fa-regular fa-credit-card"></i></span>
-                <span>결제 하기</span>
-            </a>
-        </div>
-    </div>
-</div>
 
 
 

@@ -94,7 +94,9 @@
                                         <div class="col-2">
                                             <span th:text="${eventBoardDto.eventNumber}"></span>
                                         </div>
-                                        <div class="col-3"><img style="height: 5em;" class="img-fluid" th:src="|/images/${eventBoardDto.eventMainImage}|"></div>
+                                        <div class="col-3">
+                                            <a th:href="@{./eventDetailPage(eventNumber=${eventBoardDto.eventNumber})}"><img style="height: 5em;" class="img-fluid" th:src="|/images/${eventBoardDto.eventMainImage}|"></a>
+                                        </div>
                                         <div class="col">
                                             <span th:text="${eventBoardDto.eventTitle}"></span>
                                         </div>
@@ -123,7 +125,9 @@
                                         <div class="col-2">
                                             <span th:text="${eventEndBoardDto.eventNumber}"></span>
                                         </div>
-                                        <div class="col-3"><img style="height: 5em;"  class="img-fluid" th:src="|/images/${eventEndBoardDto.eventMainImage}|"></div>
+                                        <div class="col-3">
+                                            <a th:href="@{./eventDetailPage(eventNumber=${eventEndBoardDto.eventNumber})}"><img style="height: 5em;"  class="img-fluid" th:src="|/images/${eventEndBoardDto.eventMainImage}|"></a>
+                                        </div>
                                         <div class="col">
                                             <span th:text="${eventEndBoardDto.eventTitle}"></span>
                                         </div>

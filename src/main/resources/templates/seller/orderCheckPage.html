@@ -35,7 +35,7 @@
                         <div class="collapse navbar-collapse" id="navbarNav">
                             <ul class="navbar-nav row w-100">
                                 <li class="nav-item col-2">
-                                    <a class="nav-link active text-white fw-bold text-start" href="/seller/materialMenuPage">재료메뉴</a>
+                                    <a class="nav-link active text-white fw-bold text-start" href="/seller/materialMenuPage1">재료메뉴</a>
                                 </li>
                                 <li class="nav-item col-2">
                                     <a class="nav-link active text-white fw-bold text-start" href="/seller/orderPage">주문하기</a>
@@ -97,55 +97,38 @@
 
                 <div class="col-10">
 
-                    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-                        <div class="container-fluid">
-                            <a class="navbar-brand fw-bold">카테고리</a>
-                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                                <span class="navbar-toggler-icon"></span>
-                            </button>
-                            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                                <div class="navbar-nav">
-                                    <a class="nav-link active" href="/seller/materialMenuPage1">생닭</a>
-                                    <a class="nav-link active" href="/seller/materialMenuPage2">소스</a>
-                                    <a class="nav-link active" href="/seller/materialMenuPage3">사이드</a>
-                                    <a class="nav-link active" href="/seller/materialMenuPage4">음료</a>
-                                    <a class="nav-link active" href="/seller/materialMenuPage5">치킨박스</a>
-                                    <a class="nav-link active" href="/seller/materialMenuPage6">봉지</a>
-                                </div>
-                            </div>
-                        </div>
-                    </nav>
+                    <table class="row-12 table table-danger">
+                        <thead>
+                        <tr>
+                            <th scope="col">주문번호</th>
+                            <th scope="col">배송지</th>
+                            <th scope="col">주문일</th>
+                            <th scope="col">주문상태</th>
+                        </tr>
+                        </thead>
 
-
-                    <div class="row pt-2">
-                        <img src="/img/cocacola.jpeg" class="col-4 img-fluid" alt="코카콜라">
-                        <img src="/img/pepsi.jpeg" class="col-4 img-fluid" alt="펩시콜라">
-                        <img src="/img/zeropepsi.jpg" class="col-4 img-fluid" alt="펩시제로">
-                    </div>
-
-                    <div class="row">
-                        <span class="col-4 text-center fw-bold">코카콜라 1.25L<span class="text-secondary" style="font-size: 0.9rem">(1Box)</span></span>
-                        <span class="col-4 text-center fw-bold">펩시콜라 1.25L<span class="text-secondary" style="font-size: 0.9rem">(1Box)</span></span>
-                        <span class="col-4 text-center fw-bold">펩시제로 1.25L<span class="text-secondary" style="font-size: 0.9rem">(1Box)</span></span>
-                    </div>
-
-                    <div class="row pt-2">
-                        <img src="/img/cocacolasm.jpeg" class="col-4 img-fluid" alt="코카콜라 500ML">
-                        <img src="/img/zeropepsi500.jpeg" class="col-4 img-fluid" alt="펩시제로 500ML">
-                    </div>
-
-                    <div class="row">
-                        <span class="col-4 text-center fw-bold">코카콜라 500ML<span class="text-secondary" style="font-size: 0.9rem">(1Box)</span></span>
-                        <span class="col-4 text-center fw-bold">펩시제로 500ML<span class="text-secondary" style="font-size: 0.9rem">(1Box)</span></span>
-                    </div>
+                        <tbody>
+                        <tr th:each="sellerOrderList : ${sellerOrderList}">
+                            <td th:text="${sellerOrderList.sellerOrderDto.sellerOrderNumber}"></td>
+                            <td th:text="${sellerOrderList.sellerDto.sellerName}"></td>
+                            <td>
+                                <a th:href="@{/seller/orderDetailCheckPage(id=${sellerOrderList.sellerOrderDto. sellerOrderNumber})}"
+                                   th:text="${#dates.format(sellerOrderList.sellerOrderDto.sellerOrderCreatedAt, 'yyyy-MM-dd')}"
+                                   class="text-decoration-none fw-bold text-black">
+                                </a>
+                            </td>
+                            <td th:text="${sellerOrderList.sellerOrderDto.sellerOrderStatus}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
 
 
                 </div>
 
             </div>
 
-
         </div>
+
 
         <div class="col-2"></div>
 

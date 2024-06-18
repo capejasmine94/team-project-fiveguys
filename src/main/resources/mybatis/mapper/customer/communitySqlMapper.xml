@@ -74,7 +74,21 @@
 
 <!--    댓글 리스트-->
     <select id="selectCommunityCommentList" resultType="communityCommentDto">
-        select * from fc_communityComment
+        select
+            commentNumber,
+            customerNumber,
+            communityNumber,
+            commentText,
+            commentCreatedAt,
+        CASE
+            WHEN FLOOR(TIMESTAMPDIFF(MONTH, commentCreatedAt, NOW()) / 12) >= 1 THEN CONCAT(FLOOR(TIMESTAMPDIFF(MONTH, commentCreatedAt, NOW()) / 12), '년전')
+            WHEN TIMESTAMPDIFF(MONTH, commentCreatedAt, NOW()) >= 1 THEN CONCAT(TIMESTAMPDIFF(MONTH, commentCreatedAt, NOW()), '달전')
+            WHEN DATEDIFF(CURRENT_DATE, commentCreatedAt) >= 1 THEN CONCAT(DATEDIFF(CURRENT_DATE, commentCreatedAt), '일전')
+            WHEN TIMESTAMPDIFF(HOUR, commentCreatedAt, NOW()) >= 1 THEN CONCAT(TIMESTAMPDIFF(HOUR, commentCreatedAt, NOW()), '시간전')
+            ELSE CONCAT(TIMESTAMPDIFF(MINUTE, commentCreatedAt, NOW()), '분전')
+            end as commentCreatedAt
+
+        from fc_communityComment
         where communityNumber = #{communityNumber}
         order by commentNumber desc
     </select>

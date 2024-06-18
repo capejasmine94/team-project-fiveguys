@@ -11,6 +11,6 @@ public class CommunityCommentDto {
     private int customerNumber;
     private int communityNumber;
     private String commentText;
-    private Date commentCreatedAt;
+    private String commentCreatedAt;
 
 }

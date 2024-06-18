@@ -129,4 +129,31 @@ public class SellerController {
         return "/seller/sellerReviewPage";
     }
 
+
+    @RequestMapping("myInformPage")
+    public String myInformPage() {
+        return "/seller/myInformPage";
+    }
+
+
+    @RequestMapping("orderCheckPage")
+    public String orderCheckPage(HttpSession session, Model model) {
+        SellerDto sellerDto = (SellerDto)session.getAttribute("sellerDto");
+        int sellerNumber = sellerDto.getSellerNumber();
+        List<Map<String, Object>> sellerOrderList = sellerService.selectAllSellerOrder(sellerNumber);
+        model.addAttribute("sellerOrderList", sellerOrderList);
+
+        return "/seller/orderCheckPage";
+    }
+
+
+    @RequestMapping("orderDetailCheckPage")
+    public String orderDetailCheckPage(Model model, SellerOrderDto sellerOrderDto, int id) {
+
+        List<Map<String, Object>> sellerOrderList = sellerService.selectSameSellerOrder(sellerOrderDto, id);
+        model.addAttribute("sellerOrderList", sellerOrderList);
+
+        return "/seller/orderDetailCheckPage";
+    }
+
 }

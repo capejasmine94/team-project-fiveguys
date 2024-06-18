@@ -1,10 +1,10 @@
 package com.fiveguys.customer.controller;
 
 import com.fiveguys.dto.CategoryDto;
+import com.fiveguys.dto.ProductAndCategoryDto;
 import com.fiveguys.dto.ProductDto;
 import com.fiveguys.dto.SellerDto;
 import com.fiveguys.seller.service.SellerCustomerService;
-import com.fiveguys.seller.service.SellerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("customer")
@@ -67,9 +68,35 @@ public class CustomerController {
     }
 
 
-    @RequestMapping("customerMenuDetailPage")
-    public String customerMenuDetailPage() {
+    @RequestMapping("menuDetailPage")
+    public String customerMenuDetailPage(Model model,
+                                         @ModelAttribute ProductDto productDto) {
+        try {
+            ProductDto productDto1 = sellerCustomerService.selectProductDetail(productDto);
+            model.addAttribute("productDto", productDto1);
 
-        return "customer/customerMenuDetailPage";
+            List<Integer> categoryNumbers = List.of(5,6,7);
+
+            List<ProductAndCategoryDto> sideMenuList = sellerCustomerService.selectProductAndCategoryByNumber(categoryNumbers);
+
+            // 걸러주는거임
+            sideMenuList = sideMenuList.stream()
+                    .filter(f -> f.getProductNumber() != productDto.getProductNumber())
+                    .collect(Collectors.toList());
+
+            model.addAttribute("sideMenuList", sideMenuList);
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        return "customer/menuDetailPage";
+    }
+
+    @RequestMapping("shoppingBasketPage")
+    public String customerShoppingCartPage() {
+
+
+        return "customer/shoppingBasketPage";
     }
 }

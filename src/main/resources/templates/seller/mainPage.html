@@ -88,7 +88,7 @@
                     </div>
 
                     <div class="row pt-2">
-                        <a class="col text-center fw-bold text-dark text-decoration-none">리뷰하기</a>
+                        <a href="/seller/reviewChoicePage" class="col text-center fw-bold text-dark text-decoration-none">리뷰하기</a>
                     </div>
 
                     <div class="row pt-2">
@@ -140,17 +140,16 @@
                         <table class="table table table-danger">
                             <thead>
                             <tr>
-                                <th scope="col">주문번호</th>
-                                <th scope="col">배송지</th>
-                                <th scope="col">주문일</th>
+                                <th class="text-center" scope="col">배송지</th>
+                                <th class="text-center" scope="col">주문일</th>
                                 <th scope="col">주문상태</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr th:each="sellerOrderList : ${sellerOrderList}">
 
-                                <td th:text="${sellerOrderList.sellerDto.sellerName}"></td>
-                                <td>
+                                <td class="text-center" th:text="${sellerOrderList.sellerDto.sellerName}"></td>
+                                <td class="text-center">
                                     <a th:href="@{/seller/orderDetailCheckPage(id=${sellerOrderList.sellerOrderDto.sellerOrderNumber})}"
                                        th:text="${#dates.format(sellerOrderList.sellerOrderDto.sellerOrderCreatedAt, 'yyyy-MM-dd')}"
                                        class="text-decoration-none fw-bold text-black">

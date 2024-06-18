@@ -85,6 +85,11 @@ public class SellerService {
     }
 
 
+    public void deleteSellerRecentOrder() {
+        sellerSqlMapper.deleteSellerRecentOrder();
+    }
+
+
 
     public List<Map<String, Object>> selectAllSellerOrder(int sellerNumber) {
         List<Map<String, Object>> sellerOrderList = new ArrayList<>();
@@ -93,11 +98,13 @@ public class SellerService {
         for (SellerOrderDto sellerOrderDto : sellerOrderDtoList) {
             int number = sellerOrderDto.getSellerNumber();
             SellerDto sellerDto =  sellerSqlMapper.selectSellerInform(number);
+            int checkCount = sellerSqlMapper.selectSellerReviewCheck(sellerOrderDto.getSellerOrderNumber());
 
             Map<String, Object> map = new HashMap<>();
 
             map.put("sellerDto", sellerDto);
             map.put("sellerOrderDto", sellerOrderDto);
+            map.put("checkCount", checkCount);
 
             sellerOrderList.add(map);
 
@@ -172,15 +179,12 @@ public class SellerService {
 
 
     public Map<String, Object> selectSellerReview(int id) {
-        
+
         SellerReviewDto sellerReviewDto = sellerSqlMapper.selectSellerReview(id);
 
         SellerOrderDto sellerOrderDto = sellerSqlMapper.selectSellerOrderInform(sellerReviewDto.getSellerOrderNumber());
         SellerDto sellerDto = sellerSqlMapper.selectSellerInform(sellerOrderDto.getSellerNumber());
 
-        System.out.println(sellerDto.getSellerNumber());
-        System.out.println(sellerOrderDto.getSellerNumber());
-        System.out.println(sellerDto.getSellerName());
 
         Map<String, Object> map = new HashMap<>();
         map.put("sellerDto", sellerDto);

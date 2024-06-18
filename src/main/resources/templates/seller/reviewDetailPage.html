@@ -28,14 +28,17 @@
 
 
             <div class="row pt-3">
-                <span class="col-3">지점 : </span><span th:text="${reviewInform.sellerDto.sellerName}"></span>
-                <span class="col-3">게시일 :</span> <span th:text="${reviewInform.sellerReviewDto.sellerReviewCreatedAt}"></span>
+                <span class="col-3 fs-4 fw-bolder">지점 : <span class="fs-5 fw-bold" th:text="${reviewInform.sellerDto.sellerName}"></span></span>
+                <span class="col-3 fs-4 fw-bolder">게시일 : <span class="fs-5 fw-bold" th:text="${#dates.format(reviewInform.sellerReviewDto.sellerReviewCreatedAt, 'yyyy-MM-dd')}"></span></span>
             </div>
 
             <div class="row pt-3">
-                <div class="col border border-bottom border-secondary"></div>
+                <div class="fs-3 fw-bold" th:text="${reviewInform.sellerReviewDto.sellerReviewContent}"></div>
             </div>
 
+            <div class="row pt-5 mt-3">
+                <div class="col border border-bottom border-secondary"></div>
+            </div>
 
 
             <div class="row pt-3">
@@ -44,9 +47,7 @@
 
 
 
-            <div class="row pt-3">
-                <div class="col border border-bottom border-secondary"></div>
-            </div>
+
 
 
 

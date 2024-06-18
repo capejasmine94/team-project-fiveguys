@@ -66,6 +66,13 @@
     </select>
 
 
+    <delete id="deleteSellerRecentOrder">
+        DELETE FROM fc_sellerOrder
+        WHERE sellerOrderCreatedAt =
+        (SELECT MAX(sellerOrderCreatedAt) FROM fc_sellerOrder);
+    </delete>
+
+
     <insert id="insertSellerReview">
         insert into fc_sellerReview
             (sellerOrderNumber, sellerReviewContent, masterReply)
@@ -81,6 +88,11 @@
     <select id="selectSellerReview">
         select * from fc_sellerReview
         where sellerReviewNumber = #{sellerReviewNumber}
+    </select>
+
+    <select id="selectSellerReviewCheck">
+        select count(*) from fc_sellerReview
+        where sellerOrderNumber = #{sellerOrderNumber}
     </select>
 
 

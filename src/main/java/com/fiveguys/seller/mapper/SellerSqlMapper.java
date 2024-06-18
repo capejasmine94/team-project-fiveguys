@@ -28,6 +28,8 @@ public interface SellerSqlMapper {
 
     public List<SellerOrderDto> selectSameSellerOrder(SellerOrderDto sellerOrderDto);
 
+    public void deleteSellerRecentOrder();
+
     public SellerOrderDto selectSellerOrderInform(int sellerOrderNumber);
 
     public void insertSellerReview(SellerReviewDto sellerReviewDto);
@@ -35,6 +37,8 @@ public interface SellerSqlMapper {
     public List<SellerReviewDto> selectAllSellerReview();
 
     public SellerReviewDto selectSellerReview(int id);
+
+    public int selectSellerReviewCheck(int sellerOrderNumber);
 
 
 

@@ -70,6 +70,14 @@ public class SellerController {
     }
 
 
+    @RequestMapping("deleteSellerRecentOrder")
+    public String deleteSellerRecentOrder() {
+        sellerService.deleteSellerRecentOrder();
+
+        return "redirect:/seller/orderPage";
+    }
+
+
     @RequestMapping("updateMaterialQuantity")
     public String updateMaterialQuantity(int[] sellerOrderQuantity, int[] sellerOrderNumber) {
 
@@ -166,6 +174,8 @@ public class SellerController {
     @RequestMapping("reviewChoicePage")
     public String reviewChoicePage(HttpSession session, Model model) {
 
+
+
         SellerDto sellerDto = (SellerDto)session.getAttribute("sellerDto");
         int sellerNumber = sellerDto.getSellerNumber();
         List<Map<String, Object>> sellerOrderList = sellerService.selectAllSellerOrder(sellerNumber);
@@ -199,7 +209,7 @@ public class SellerController {
     @RequestMapping("reviewDetailPage")
     public String reviewDetailPage(Model model, int id) {
 
-        System.out.println(id);
+
         Map<String, Object> reviewInform = sellerService.selectSellerReview(id);
         model.addAttribute("reviewInform", reviewInform);
 

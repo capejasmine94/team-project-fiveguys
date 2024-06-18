@@ -122,8 +122,12 @@
                             <td th:text="${sellerOrderList.sellerDto.sellerName}"></td>
                             <td th:text="${sellerOrderList.sellerOrderDto.sellerOrderStatus}"></td>
 
-                            <td class="text-center" th:if="${sellerOrderList.sellerOrderDto.sellerOrderStatus=='배송완료'}">
+                            <td class="text-center" th:if="${sellerOrderList.sellerOrderDto.sellerOrderStatus=='배송완료'} and ${sellerOrderList.checkCount==0}">
                                 <a th:href="@{/seller/reviewWritePage(id=${sellerOrderList.sellerOrderDto.sellerOrderNumber})}" class="btn btn-warning btn-sm">리뷰쓰기</a>
+                            </td>
+
+                            <td class="text-center" th:if="${sellerOrderList.sellerOrderDto.sellerOrderStatus=='배송완료'} and ${sellerOrderList.checkCount!=0}">
+                                <div class="btn btn-warning btn-sm">작성완료</div>
                             </td>
 
                             <td th:if="${sellerOrderList.sellerOrderDto.sellerOrderStatus!='배송완료'}"></td>

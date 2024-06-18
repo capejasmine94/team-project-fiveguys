@@ -23,6 +23,12 @@ public interface SellerSqlMapper {
 
     public List<SellerOrderDto> selectRecentSellerOrder(int sellerNumber);
 
+    public List<SellerOrderDto> selectAllSellerOrder(int sellerNumber);
+
+    public List<SellerOrderDto> selectSameSellerOrder(SellerOrderDto sellerOrderDto);
+
+    public SellerOrderDto selectSellerOrderInform(int sellerOrderNumber);
+
 
 
 

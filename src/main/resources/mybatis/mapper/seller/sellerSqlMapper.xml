@@ -30,6 +30,12 @@
         where sellerNumber = #{sellerNumber};
     </select>
 
+
+    <select id="selectSellerOrderInform">
+        select * from fc_sellerOrder
+        where sellerOrderNumber = #{sellerOrderNumber}
+    </select>
+
     <update id="updateMaterialQuantity">
         update fc_sellerOrder
         set sellerOrderQuantity = #{sellerOrderQuantity}
@@ -43,6 +49,20 @@
         GROUP BY sellerOrderCreatedAt
         ORDER BY sellerOrderCreatedAt DESC
         LIMIT 3;
+    </select>
+
+
+    <select id="selectAllSellerOrder">
+        SELECT *
+        FROM fc_sellerOrder
+        WHERE sellerNumber = #{sellerNumber}
+        GROUP BY sellerOrderCreatedAt
+        ORDER BY sellerOrderCreatedAt DESC
+    </select>
+
+    <select id="selectSameSellerOrder">
+        select * from fc_sellerOrder WHERE
+        sellerOrderCreatedAt = #{sellerOrderCreatedAt} and sellerNumber = #{sellerNumber}
     </select>
 
 

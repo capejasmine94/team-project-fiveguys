@@ -3,7 +3,7 @@ window.addEventListener("DOMContentLoaded",()=>{
 });
 
 function getSellerCommunityList(){
-    console.log("셀러 커뮤니티 리스트 실행됨");
+
     const url="/api/seller/getSellerCommunityList";
     fetch(url)
         .then(response=>response.json())
@@ -17,9 +17,7 @@ function getSellerCommunityList(){
                 const newSellerCommentWrapper = sellerCommentWrapper.cloneNode(true);
 
                 const sellerCommentMain =newSellerCommentWrapper.querySelector(".sellerCommentMain");
-                // const hrefValue = sellerCommentMain.getAttribute("href");
-                // const newHrefValue = hrefValue+"?sellerCommunityNumber="+e.sellerCommunityDto.sellerCommunityNumber;
-                // sellerCommentMain.setAttribute("href",newHrefValue);
+
                 sellerCommentMain.setAttribute("onclick",`sellerCommunityDetailPage(${e.sellerCommunityDto.sellerCommunityNumber})`);
 
                 const sellerCommentTitle = newSellerCommentWrapper.querySelector(".sellerCommentTitle");
@@ -81,42 +79,38 @@ function getSellerCommunityList(){
             }
             //페이징
             const previousPage = document.querySelector("#previousPage");
-            const getUrl = previousPage.getAttribute("href");
-            const newUrl = getUrl +"?currentPage="+ (response.sellerCommunityPaginationDto.startPage - 1);
-            previousPage.setAttribute("href",newUrl);
+            const previousPageContainer = document.querySelector("#previousPageContainer");
 
-            if(response.sellerCommunityPaginationDto.startPage !==1){
-                previousPage.classList.add("bi-arrow-left");
-            }else{
-                previousPage.classList.remove("bi-arrow-left");
+
+            if(response.sellerCommunityPaginationDto.startPage ===1){
+                previousPageContainer.classList.add("text-black-50");
+                previousPage.onclick=null;
             }
 
+            const firstPageContainer = document.querySelector("#firstPageContainer");
             const firstPage = document.querySelector("#firstPage");
-            const getUrlFirstPage = firstPage.getAttribute("href");
-            const newUrlFirstPage = getUrlFirstPage + "?currentPage=1";
-            firstPage.setAttribute("href",newUrlFirstPage);
+            firstPage.innerText=response.sellerCommunityPaginationDto.startPage;
 
             if(response.sellerCommunityPaginationDto.currentPage !==1 || response.sellerCommunityPaginationDto.startPage !==1){
-                firstPage.classList.remove("d-none");
+                firstPageContainer.classList.remove("d-none");
             }else{
-                firstPage.classList.add("d-none");
+                firstPageContainer.classList.add("d-none");
             }
 
-            const pageNumbers = document.querySelector("#numberContainer");
+
+            const pageNumbers = document.querySelector("#numberSequenceContainer");
             const pageList = document.querySelector(".pageList");
 
             pageList.innerHTML="";
+
 
             for(let e=1; e<=response.sellerCommunityPaginationDto.endPage; e++){
 
                 const newPageNumbers = pageList.cloneNode(true);
 
-                const pageHref= newPageNumbers.getAttribute("href");
-                const newPageHref = pageHref + "?currentPage="+e;
-                newPageNumbers.setAttribute("href",newPageHref);
 
-                const numberSequence = newPageNumbers.querySelector(".numberSequence");
-                numberSequence.innerText=e;
+                newPageNumbers.setAttribute("onclick",`numberSequence(${e})`)
+                newPageNumbers.innerText=e;
 
                 if(response.sellerCommunityPaginationDto.currentPage ===e){
                     newPageNumbers.classList.add("border-top", "border-3", "border-primary");
@@ -125,8 +119,32 @@ function getSellerCommunityList(){
                     newPageNumbers.classList.remove("border-top", "border-3", "border-primary");
                     newPageNumbers.classList.remove("text-primary");
                 }
+
+                newPageNumbers.classList.remove("d-none");
+
+
                 pageNumbers.appendChild(newPageNumbers);
 
+            }
+
+            const endPageContainer = document.querySelector("#endPageContainer");
+            const endPage = document.querySelector("#endPage");
+            endPage.innerText=response.sellerCommunityPaginationDto.paginationPage;
+
+            if(response.sellerCommunityPaginationDto.currentPage !== response.sellerCommunityPaginationDto.paginationPage){
+                endPageContainer.classList.remove("d-none");
+            }else{
+                endPageContainer.classList.add("d-none");
+            }
+
+            const nextPage = document.querySelector("#NextPage");
+            console.log(response.sellerCommunityPaginationDto.endPage);
+            console.log(response.sellerCommunityPaginationDto.paginationPage);
+            if(response.sellerCommunityPaginationDto.endPage < response.sellerCommunityPaginationDto.paginationPage){
+                nextPage.classList.remove("text-black-50");
+            }else{
+                nextPage.onclick=null;
+                nextPage.classList.add("text-black-50");
             }
 
         });
@@ -147,7 +165,7 @@ function sellerCommunityLike(){
 
 }
 
-function sellerCommunityDetailPage(sellerCommunityNumber){
+function sellerCommunityDetailPage(sellerCommunityNumber,sellerCommunityCommentNumberInputInput){
 
     const sellerCommunityDetailPage =bootstrap.Modal.getOrCreateInstance(document.getElementById("sellerCommunityDetail"));
     const url="/api/seller/sellerCommunityDetailPage?sellerCommunityNumber="+sellerCommunityNumber;
@@ -156,7 +174,6 @@ function sellerCommunityDetailPage(sellerCommunityNumber){
         .then(response=>{
             const sellerName = document.querySelector("#sellerName");
             sellerName.innerText=response.sellerCommunityDetail.sellerName.sellerName;
-            console.log(response.sellerCommunityDetail);
 
             const sellerCommunityCreatedAt = document.querySelector("#sellerCommunityCreatedAt");
             sellerCommunityCreatedAt.innerText=response.sellerCommunityDetail.selectSellerCommunityById.sellerCommunityCreatedAt;
@@ -180,14 +197,11 @@ function sellerCommunityDetailPage(sellerCommunityNumber){
                 const setImageUrl = "/images/"+e.sellerCommunityImageList;
                 images.setAttribute("src",setImageUrl);
 
+                newImageContainer.classList.remove("d-none");
+
                 imageContainer.appendChild(newImageContainer);
             }
 
-            const sellerCommunityDetailLike = document.querySelector("#sellerCommunityDetailLike");
-            const getSellerCommunityDetailLikeUrl = sellerCommunityDetailLike.getAttribute("href");
-            const newUDetailLikeUrl = getSellerCommunityDetailLikeUrl+"?sellerCommunityNumber="+response.sellerCommunityDetail.selectSellerCommunityById.sellerCommunityNumber
-                                        +"&sellerCommunityNumber="+response.sellerCommunityDetail.selectSellerCommunityById.sellerCommunityNumber;
-            sellerCommunityDetailLike.setAttribute("href",newUDetailLikeUrl);
 
             const heart = document.querySelector(".heart");
 
@@ -224,12 +238,8 @@ function sellerCommunityDetailPage(sellerCommunityNumber){
                 const commentReplyCount = newChatContainer.querySelector(".commentReplyCount");
                 commentReplyCount.innerText=e.selectEachSellerCommentReplyCount;
 
-                const commentLikeStatus = newChatContainer.querySelector(".commentLikeStatus");
-                const getCommentLikeStatusHref = commentLikeStatus.getAttribute("href");
-                const newCommentLikeStatusHref = getCommentLikeStatusHref+"?sellerCommunityNumber="+e.sellerCommunityCommentDto.sellerCommunityNumber
-                                                        +"&sellerCommunityCommentNumber="+e.selectSellerCommentLikeStatus.sellerCommunityCommentNumber
-                                                        +"&sellerCommentLikeStatus="+e.selectSellerCommentLikeStatus.sellerCommentLikeStatus;
-                commentLikeStatus.setAttribute("href",newCommentLikeStatusHref);
+                const sellerCommentLikeStatus = newChatContainer.querySelector(".sellerCommentLikeStatus");
+                sellerCommentLikeStatus.value=e.selectSellerCommentLikeStatus.sellerCommentLikeStatus;
 
                 const thumb = newChatContainer.querySelector(".thumb");
 
@@ -243,14 +253,8 @@ function sellerCommunityDetailPage(sellerCommunityNumber){
 
                 const commentLikeCount = newChatContainer.querySelector(".commentLikeCount");
                 commentLikeCount.innerText=e.selectSellerCommentLikeCount;
-                //아아앙아
-                const commentDislikeStatus = newChatContainer.querySelector(".commentDislikeStatus");
-                const getCommentDislikeStatusHref = commentDislikeStatus.getAttribute("href");
-                const newCommentDislikeStatusHref = getCommentDislikeStatusHref+"?sellerCommunityNumber="+e.sellerCommunityCommentDto.sellerCommunityNumber
-                    +"&sellerCommunityCommentNumber="+e.selectSellerCommentLikeStatus.sellerCommunityCommentNumber
-                    +"&sellerCommentLikeStatus="+e.selectSellerCommentLikeStatus.sellerCommentLikeStatus;
 
-                commentDislikeStatus.setAttribute("href",newCommentDislikeStatusHref);
+
 
                 const thumbDown = newChatContainer.querySelector(".thumbDown");
 
@@ -274,9 +278,21 @@ function sellerCommunityDetailPage(sellerCommunityNumber){
                 const sellerNumberInput = newChatContainer.querySelector(".sellerNumberInput");
                 sellerNumberInput.value=response.sellerDto.sellerNumber;
 
-                const replyContainer = document.querySelector("#replyContainer");
+                const replyContainer = newChatContainer.querySelector(".replyContainer");
                 const chatReplyContainer = document.querySelector(".chatReplyContainer");
                 replyContainer.innerHTML="";
+
+                const showBox = newChatContainer.querySelector(".addReply");
+                console.log(sellerCommunityCommentNumberInputInput);
+                if(sellerCommunityCommentNumberInputInput!==undefined){
+                    if(showBox.querySelector(".sellerCommunityCommentNumberInput").value===sellerCommunityCommentNumberInputInput){
+                        console.log(showBox);
+                        console.log("실행됨");
+                        showBox.classList.remove("d-none");
+                    }else{
+                        showBox.classList.add("d-none");
+                    }
+                }
 
                 for (let i of e.sellerCommunityReplyContainer){
                     const replyChatContainer = chatReplyContainer.cloneNode(true);
@@ -290,12 +306,12 @@ function sellerCommunityDetailPage(sellerCommunityNumber){
                     const replyContent = replyChatContainer.querySelector(".replyContent");
                     replyContent.innerText=i.selectSellerCommunityReply.sellerCommunityReplyContent;
 
-                    const replyLikeStatus = replyChatContainer.querySelector(".replyLikeStatus");
-                    const getReplyLikeStatusHref = replyLikeStatus.getAttribute("href");
-                    const newReplyLikeStatusHref = getReplyLikeStatusHref+"?sellerCommunityNumber="+e.sellerCommunityCommentDto.sellerCommunityNumber
-                        +"&sellerCommunityReplyNumber="+i.sellerCommunityReplyLikeStatusDto.sellerCommunityReplyNumber
-                        +"&sellerCommunityReplyLikeStatus="+i.sellerCommunityReplyLikeStatusDto.sellerCommunityReplyLikeStatus;
-                    replyLikeStatus.setAttribute("href",newReplyLikeStatusHref);
+                    const sellerCommunityReplyNumber = replyChatContainer.querySelector(".sellerCommunityReplyNumber");
+                    sellerCommunityReplyNumber.value=i.sellerCommunityReplyLikeStatusDto.sellerCommunityReplyNumber;
+
+                    const sellerCommunityReplyLikeStatus = replyChatContainer.querySelector(".sellerCommunityReplyLikeStatus");
+                    sellerCommunityReplyLikeStatus.value=i.sellerCommunityReplyLikeStatusDto.sellerCommunityReplyLikeStatus;
+
 
                     const replyThumb = replyChatContainer.querySelector(".replyThumb");
 
@@ -310,14 +326,6 @@ function sellerCommunityDetailPage(sellerCommunityNumber){
                     const replyThumbCount = replyChatContainer.querySelector(".replyThumbCount");
                     replyThumbCount.innerText=i.selectSellerReplyLikeCount;
 
-
-                    const replyDislikeStatus = replyChatContainer.querySelector(".replyDislikeStatus");
-                    const getReplyDislikeStatusHref = replyDislikeStatus.getAttribute("href");
-                    const newReplyDisLikeStatusHref = getReplyDislikeStatusHref+"?sellerCommunityNumber="+e.sellerCommunityCommentDto.sellerCommunityNumber
-                        +"&sellerCommunityReplyNumber="+i.sellerCommunityReplyLikeStatusDto.sellerCommunityReplyNumber
-                        +"&sellerCommunityReplyLikeStatus="+i.sellerCommunityReplyLikeStatusDto.sellerCommunityReplyLikeStatus;
-                    replyDislikeStatus.setAttribute("href",newReplyDisLikeStatusHref);
-
                     const replyThumbDown = replyChatContainer.querySelector(".replyThumbDown");
 
                     if(i.sellerCommunityReplyLikeStatusDto.sellerCommunityReplyLikeStatus==='dislike'){
@@ -331,27 +339,27 @@ function sellerCommunityDetailPage(sellerCommunityNumber){
                     const replyThumbDownCount = replyChatContainer.querySelector(".replyThumbDownCount");
                     replyThumbDownCount.innerText=i.selectSellerReplyDisLikeCount;
 
+
                     replyChatContainer.classList.remove("d-none");
 
                     replyContainer.appendChild(replyChatContainer);
                 }
 
-                const sellerCommunityNumber = document.querySelector("#sellerCommunityNumber");
-                console.log(sellerCommunityNumber);
-                sellerCommunityNumber.value = response.sellerCommunityDetail.selectSellerCommunityById.sellerCommunityNumber;
-
-                const sellerNumber = document.querySelector("#sellerNumber");
-                sellerNumber.value = response.sellerDto.sellerNumber;
-
                 newChatContainer.classList.remove("d-none");
-
                 commentContainer.appendChild(newChatContainer);
 
             }
+            const sellerCommunityNumber = document.querySelector("#sellerCommunityNumber");
+
+            sellerCommunityNumber.value = response.sellerCommunityDetail.selectSellerCommunityById.sellerCommunityNumber;
+
+            const sellerNumber = document.querySelector("#sellerNumber");
+            sellerNumber.value = response.sellerDto.sellerNumber;
 
             sellerCommunityDetailPage.show();
         });
 }
+
 
 function writeSellerCommunity(){
     const writeSellerCommunity  = bootstrap.Modal.getOrCreateInstance("#writeSellerCommunity");
@@ -359,11 +367,17 @@ function writeSellerCommunity(){
 
 }
 
-function submitSellerCommunity(){
+
+
+function submitSellerCommunity(event){
+    event.preventDefault()
+
     const sellerCommunityForm = document.querySelector("#sellerCommunityForm");
 
     const sellerCommunityTitleInput = document.querySelector("#sellerCommunityTitleInput").value;
+    //파일이 한개인 경우 file[0]으로 첫번째 배열만 받는다
     const oneSellerCommunityImage = document.querySelector("#oneSellerCommunityImage").files[0];
+    //여러개의 파일을 제출할 경우 files로 받는다
     const multipleSellerCommunityImageList = document.querySelector("#multipleSellerCommunityImageList").files;
     const sellerCommunityContentInput = document.querySelector("#sellerCommunityContentInput").value;
 
@@ -372,31 +386,301 @@ function submitSellerCommunity(){
     formData.append('sellerCommunityContent', sellerCommunityContentInput);
     formData.append('oneSellerCommunityImage', oneSellerCommunityImage);
 
-    // 여러 파일을 FormData에 추가
+    // 여러개의 파일은 반복문을 돌려서 FormData에 추가
     for (let i = 0; i < multipleSellerCommunityImageList.length; i++) {
         formData.append('multipleSellerCommunityImageList', multipleSellerCommunityImageList[i]);
     }
-    console.log(formData);
+
 
 
     const url="/api/seller/sellerCommunityWriteProcess";
 
     fetch(url,{
         method:"post",
-        body: formData,
+        body: formData //form데이터를 body에 추가시켜서 넘긴다 스프링에서 파라미터로 받을 곳
     })
         .then(response=>response.json())
         .then(response=>{
-            console.log(response);
             const inputSuccessMessage = document.querySelector("#inputSuccessMessage");
             if(response.inputSuccess===true){
                 inputSuccessMessage.innerText="게시글이 성공적으로 등록되었습니다";
                 inputSuccessMessage.classList.add("text-success");
+                sellerCommunityForm.reset();
             }else{
                 inputSuccessMessage.innerText="게시글 등록 실패입니다";
                 inputSuccessMessage.classList.add("text-danger");
+                sellerCommunityForm.reset();
             }
+            getSellerCommunityList();
         });
+}
+
+function sellerCommunityLikeProcess(){
+
+    const sellerCommunityNumber = document.querySelector("#sellerCommunityNumber").value;
+    const sellerNumber = document.querySelector("#sellerNumber").value;
+
+    const likeData ={
+        sellerNumber:sellerNumber,
+        sellerCommunityNumber:sellerCommunityNumber
+    };
+
+    const url="/api/seller/sellerCommunityLikeProcess";
+    fetch(url,{
+        method:"post",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(likeData)
+    })
+        .then(response=>response.json())
+        .then(response=>{
+            if(response.success===false){
+                window.location.href = "/login/sellerLogin";
+            }
+            sellerCommunityDetailPage(sellerCommunityNumber);
+        });
+
+}
+//댓글달기
+function sellerCommunityCommentInsertProcess(event){
+    event.preventDefault();
+
+    const sellerCommunityCommentForm = document.querySelector("#sellerCommunityCommentForm");
+
+    const sellerCommunityNumber = document.querySelector("#sellerCommunityNumber").value;
+    const sellerNumber = document.querySelector("#sellerNumber").value;
+    const sellerCommunityCommentContent = document.querySelector("#sellerCommunityCommentContent").value;
+
+    const data ={
+        sellerCommunityNumber:sellerCommunityNumber,
+        sellerNumber:sellerNumber,
+        sellerCommunityCommentContent:sellerCommunityCommentContent
+    };
+
+    const url="/api/seller/sellerCommunityCommentInsertProcess";
+
+    fetch(url,{
+        method:"post",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+        .then(response=>response.json())
+        .then(response=>{
+            if(response.success===true){
+
+                sellerCommunityCommentForm.reset();
+            }else{
+                window.location.href="/login/sellerLogin";
+                sellerCommunityCommentForm.reset();
+            }
+            sellerCommunityDetailPage(sellerCommunityNumber);
+
+        });
+
+}
+
+//대댓글달기
+function sellerCommunityReplyInsertProcess(event){
+    event.preventDefault();
+    const sellerCommunityReplyInsertForm = event.target;
+
+
+
+    const sellerCommunityNumberInput = sellerCommunityReplyInsertForm.querySelector(".sellerCommunityNumberInput").value;
+    const sellerCommunityCommentNumberInput = sellerCommunityReplyInsertForm.querySelector(".sellerCommunityCommentNumberInput").value;
+    const sellerNumberInput = sellerCommunityReplyInsertForm.querySelector(".sellerNumberInput").value;
+    const sellerCommunityReplyContent = sellerCommunityReplyInsertForm.querySelector(".sellerCommunityReplyContent").value;
+
+    const replyData ={
+        sellerCommunityCommentNumber:sellerCommunityCommentNumberInput,
+        sellerNumber:sellerNumberInput,
+        sellerCommunityReplyContent:sellerCommunityReplyContent
+    };
+
+    const url="/api/seller/sellerCommunityReplyInsertProcess";
+
+    fetch(url,{
+        method:"post",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(replyData)
+    })
+        .then(response=>response.json())
+        .then(response=>{
+            if(response.success===true){
+
+                sellerCommunityReplyInsertForm.reset();
+            }else{
+                window.location.href="/login/sellerLogin";
+                sellerCommunityReplyInsertForm.reset();
+            }
+            sellerCommunityDetailPage(sellerCommunityNumberInput,sellerCommunityCommentNumberInput);
+
+        });
+
+
+
+}
+
+//댓글 좋아요
+function commentLikeStatus(target){
+    const clickedElementParent = target.closest(".chatContainer");
+    const clickedElement = clickedElementParent.querySelector(".likeStatusContainer");
+
+
+    const sellerCommunityNumberInput = clickedElementParent.querySelector(".sellerCommunityNumberInput").value;
+    const sellerCommunityCommentNumberInput = clickedElementParent.querySelector(".sellerCommunityCommentNumberInput").value;
+    const sellerNumberInput = clickedElementParent.querySelector(".sellerNumberInput").value;
+    const sellerCommentLikeStatus = clickedElement.querySelector(".sellerCommentLikeStatus").value;
+
+    const thumb = clickedElement.querySelector(".thumb");
+
+    const likeStatus ={
+        sellerCommunityCommentNumber:sellerCommunityCommentNumberInput,
+        sellerNumber:sellerNumberInput,
+        sellerCommentLikeStatus:sellerCommentLikeStatus
+    };
+
+    const url="/api/seller/sellerCommentLikeProcess";
+
+    fetch(url,{
+        method:"post",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(likeStatus)
+    })
+        .then(response=>response.json())
+        .then(response=>{
+            if(response.success===false){
+                window.location.href="/login/sellerLogin";
+            }
+            sellerCommunityDetailPage(sellerCommunityNumberInput,sellerCommunityCommentNumberInput);
+
+        });
+
+}
+//댓글 싫어요
+function commentDislikeStatus(target){
+    const clickedElementParent = target.closest(".chatContainer");
+    const clickedElement = clickedElementParent.querySelector(".likeStatusContainer");
+
+
+    const sellerCommunityNumberInput = clickedElementParent.querySelector(".sellerCommunityNumberInput").value;
+    const sellerCommunityCommentNumberInput = clickedElementParent.querySelector(".sellerCommunityCommentNumberInput").value;
+    const sellerNumberInput = clickedElementParent.querySelector(".sellerNumberInput").value;
+    const sellerCommentLikeStatus = clickedElement.querySelector(".sellerCommentLikeStatus").value;
+
+    const thumbDown = clickedElement.querySelector(".thumbDown");
+
+    const disLikeStatus ={
+        sellerCommunityCommentNumber:sellerCommunityCommentNumberInput,
+        sellerNumber:sellerNumberInput,
+        sellerCommentLikeStatus:sellerCommentLikeStatus
+    };
+
+    const url="/api/seller/sellerCommentDisLikeProcess";
+
+    fetch(url,{
+        method:"post",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(disLikeStatus)
+    })
+        .then(response=>response.json())
+        .then(response=>{
+            if(response.success===false){
+                window.location.href="/login/sellerLogin";
+            }
+            sellerCommunityDetailPage(sellerCommunityNumberInput,sellerCommunityCommentNumberInput);
+
+        });
+
+}
+
+//대댓글 좋아요
+function replyLikeStatus(target){
+    const clickedElement = target.closest(".chatReplyContainer");
+    const addReply1 = target.closest(".addReply");
+
+    const sellerCommunityCommentNumberInput = addReply1.querySelector(".sellerCommunityCommentNumberInput").value;
+    const sellerCommunityNumberInput = addReply1.querySelector(".sellerCommunityNumberInput").value;
+
+    const sellerCommunityReplyNumber = clickedElement.querySelector(".sellerCommunityReplyNumber").value;
+    const sellerCommunityReplyLikeStatus = clickedElement.querySelector(".sellerCommunityReplyLikeStatus").value;
+    const sellerNumberInput = addReply1.querySelector(".sellerNumberInput").value;
+
+    const replyThumb = clickedElement.querySelector(".replyThumb");
+
+    const replyLikeStatus ={
+        sellerCommunityReplyNumber:sellerCommunityReplyNumber,
+        sellerNumber:sellerNumberInput,
+        sellerCommunityReplyLikeStatus:sellerCommunityReplyLikeStatus
+    };
+
+    const url="/api/seller/sellerReplyLikeProcess";
+
+    fetch(url,{
+        method:"post",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(replyLikeStatus)
+    })
+        .then(response=>response.json())
+        .then(response=>{
+            if(response.success===false){
+                window.location.href="/login/sellerLogin";
+            }
+            sellerCommunityDetailPage(sellerCommunityNumberInput,sellerCommunityCommentNumberInput);
+        });
+
+}
+
+//대댓글 싫어요
+function replyDislikeStatus(target){
+    const clickedElement = target.closest(".chatReplyContainer");
+    const addReply1 = target.closest(".addReply");
+
+    const sellerCommunityCommentNumberInput = addReply1.querySelector(".sellerCommunityCommentNumberInput").value;
+    const sellerCommunityNumberInput = addReply1.querySelector(".sellerCommunityNumberInput").value;
+
+    const sellerCommunityReplyNumber = clickedElement.querySelector(".sellerCommunityReplyNumber").value;
+    const sellerCommunityReplyLikeStatus = clickedElement.querySelector(".sellerCommunityReplyLikeStatus").value;
+    const sellerNumberInput = addReply1.querySelector(".sellerNumberInput").value;
+
+    const replyThumb = clickedElement.querySelector(".replyThumb");
+
+    const replyDislikeStatus ={
+        sellerCommunityReplyNumber:sellerCommunityReplyNumber,
+        sellerNumber:sellerNumberInput,
+        sellerCommunityReplyLikeStatus:sellerCommunityReplyLikeStatus
+    };
+
+    const url="/api/seller/sellerReplyDisLikeProcess";
+
+    fetch(url,{
+        method:"post",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(replyDislikeStatus)
+    })
+        .then(response=>response.json())
+        .then(response=>{
+            if(response.success===false){
+                window.location.href="/login/sellerLogin";
+            }
+
+            sellerCommunityDetailPage(sellerCommunityNumberInput,sellerCommunityCommentNumberInput);
+
+        });
+
 }
 
 function addReply(target) {

@@ -50,6 +50,8 @@ public class SellerCommunityRestController {
         sellerCommunityPaginationDto.setEndPage(endPage);
         sellerCommunityPaginationDto.setPaginationPage(lastPageNumber);
 
+        System.out.println(sellerCommunityPaginationDto);
+
         result.put("sellerCommunityPaginationDto", sellerCommunityPaginationDto);
 
         SellerDto sellerDto = (SellerDto) session.getAttribute("sellerDto");
@@ -77,7 +79,7 @@ public class SellerCommunityRestController {
         return response;
     }
 
-
+    @RequestMapping("sellerCommunityDetailPage")
     public  Map<String, Object> sellerCommunityDetailPage(HttpSession session, SellerCommunityLikeDto sellerCommunityLikeDto){
 
         Map<String, Object> response = new HashMap<>();
@@ -92,9 +94,9 @@ public class SellerCommunityRestController {
         return response;
     }
 
-    //수정 필요함
 
-    @PostMapping(value = "/api/seller/sellerCommunityWriteProcess", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+
+    @RequestMapping( "/sellerCommunityWriteProcess")
     public Map<String, Object> sellerCommunityWriteProcess(
             HttpSession session,
             @RequestParam("sellerCommunityTitle") String sellerCommunityTitle,
@@ -102,12 +104,7 @@ public class SellerCommunityRestController {
             @RequestPart("oneSellerCommunityImage") MultipartFile oneSellerCommunityImage,
             @RequestPart("multipleSellerCommunityImageList") List<MultipartFile> multipleSellerCommunityImageList
     ) {
-        System.out.println("컨트롤러 젅달됨");
 
-        System.out.println(sellerCommunityTitle);
-        System.out.println(sellerCommunityContent);
-        System.out.println(oneSellerCommunityImage);
-        System.out.println(multipleSellerCommunityImageList);
         SellerDto sellerDto = (SellerDto) session.getAttribute("sellerDto");
         Map<String, Object> response = new HashMap<>();
 
@@ -116,6 +113,7 @@ public class SellerCommunityRestController {
             SellerCommunityDto sellerCommunityDto = new SellerCommunityDto();
             sellerCommunityDto.setSellerCommunityTitle(sellerCommunityTitle);
             sellerCommunityDto.setSellerCommunityContent(sellerCommunityContent);
+            sellerCommunityDto.setSellerNumber(sellerDto.getSellerNumber());
 
             // 대표 이미지 저장 및 경로 설정
             if (!oneSellerCommunityImage.isEmpty()) {
@@ -175,99 +173,144 @@ public class SellerCommunityRestController {
     }
 
 
+
     @RequestMapping("sellerCommunityCommentInsertProcess")
-    public String sellerCommunityCommentInsertProcess(HttpSession session, SellerCommunityCommentDto sellerCommunityCommentDto){
+    public Map<String, Object> sellerCommunityCommentInsertProcess(HttpSession session,@RequestBody SellerCommunityCommentDto sellerCommunityCommentDto){
         SellerDto sellerDto = (SellerDto) session.getAttribute("sellerDto");
-        if(sellerDto==null){
-            return "redirect:/login/sellerLogin";
+        Map<String, Object> response = new HashMap<>();
+        if(sellerDto!=null){
+            sellerCommunityService.insertSellerCommunityComment(sellerCommunityCommentDto);
+            response.put("success", true);
+        }else{
+            response.put("success", false);
         }
-        sellerCommunityService.insertSellerCommunityComment(sellerCommunityCommentDto);
-        return "redirect:./sellerCommunityDetail?sellerCommunityNumber="+sellerCommunityCommentDto.getSellerCommunityNumber();
+
+        return response;
     }
+
+
     @RequestMapping("sellerCommunityReplyInsertProcess")
-    public String sellerCommunityReplyInsertProcess(HttpSession session, SellerCommunityReplyDto sellerCommunityReplyDto,int sellerCommunityNumber){
+    public Map<String, Object> sellerCommunityReplyInsertProcess(HttpSession session,@RequestBody SellerCommunityReplyDto sellerCommunityReplyDto){
         SellerDto sellerDto = (SellerDto) session.getAttribute("sellerDto");
-        if(sellerDto==null){
-            return "redirect:/login/sellerLogin";
+        Map<String, Object> response = new HashMap<>();
+        if(sellerDto!=null){
+            sellerCommunityService.insertSellerCommunityReply(sellerCommunityReplyDto);
+            response.put("success", true);
+        }else{
+            response.put("success", false);
         }
-        sellerCommunityService.insertSellerCommunityReply(sellerCommunityReplyDto);
-        return "redirect:./sellerCommunityDetail?sellerCommunityNumber="+sellerCommunityNumber;
+        return response;
     }
+
 
     @RequestMapping("sellerCommunityLikeProcess")
-    public String sellerCommunityLikeProcess(HttpSession session, SellerCommunityLikeDto sellerCommunityLikeDto,int sellerCommunityNumber){
-        int checkIfSellerCommunityLikeExists = sellerCommunityService.checkIfSellerCommunityLikeExists(sellerCommunityLikeDto);
-        SellerDto sellerDto = (SellerDto) session.getAttribute("sellerDto");
-        sellerCommunityLikeDto.setSellerNumber(sellerDto.getSellerNumber());
+    public Map<String, Object> sellerCommunityLikeProcess(HttpSession session, @RequestBody SellerCommunityLikeDto sellerCommunityLikeDto){
+        Map<String, Object> response = new HashMap<>();
 
-        if(checkIfSellerCommunityLikeExists==0){
-            sellerCommunityService.insertSellerCommunityLike(sellerCommunityLikeDto);
+
+        SellerDto sellerDto = (SellerDto) session.getAttribute("sellerDto");
+        if(sellerDto!=null){
+            int checkIfSellerCommunityLikeExists = sellerCommunityService.checkIfSellerCommunityLikeExists(sellerCommunityLikeDto);
+            if(checkIfSellerCommunityLikeExists==0){
+                sellerCommunityService.insertSellerCommunityLike(sellerCommunityLikeDto);
+            }else{
+                sellerCommunityService.deleteSellerCommunityLike(sellerCommunityLikeDto);
+            }
+            response.put("success", true);
         }else{
-            sellerCommunityService.deleteSellerCommunityLike(sellerCommunityLikeDto);
+            response.put("success", false);
         }
-        return "redirect:./sellerCommunityDetail?sellerCommunityNumber="+sellerCommunityNumber;
+
+        return response;
     }
 
     @RequestMapping("sellerCommentLikeProcess")
-    public String sellerCommentLikeProcess(HttpSession session, SellerCommunityCommentLikeStatusDto sellerCommunityCommentLikeStatusDto,int sellerCommunityNumber){
+    public Map<String, Object>   sellerCommentLikeProcess(HttpSession session,@RequestBody SellerCommunityCommentLikeStatusDto sellerCommunityCommentLikeStatusDto){
         SellerDto sellerDto = (SellerDto) session.getAttribute("sellerDto");
-        sellerCommunityCommentLikeStatusDto.setSellerNumber(sellerDto.getSellerNumber());
 
-        if(sellerCommunityCommentLikeStatusDto.getSellerCommentLikeStatus().isEmpty()){
-            sellerCommunityCommentLikeStatusDto.setSellerCommentLikeStatus("like");
-        }else if(sellerCommunityCommentLikeStatusDto.getSellerCommentLikeStatus().equals("dislike")){
-            sellerCommunityCommentLikeStatusDto.setSellerCommentLikeStatus("like");
+
+        Map<String, Object> response = new HashMap<>();
+
+        if(sellerDto!=null){
+            if(sellerCommunityCommentLikeStatusDto.getSellerCommentLikeStatus().isEmpty()){
+                sellerCommunityCommentLikeStatusDto.setSellerCommentLikeStatus("like");
+            }else if(sellerCommunityCommentLikeStatusDto.getSellerCommentLikeStatus().equals("dislike")){
+                sellerCommunityCommentLikeStatusDto.setSellerCommentLikeStatus("like");
+            }else{
+                sellerCommunityCommentLikeStatusDto.setSellerCommentLikeStatus("");
+            }
+            sellerCommunityService.updateSellerCommentLikeStatus(sellerCommunityCommentLikeStatusDto);
+            response.put("success", true);
         }else{
-            sellerCommunityCommentLikeStatusDto.setSellerCommentLikeStatus("");
+            response.put("success", false);
         }
-        sellerCommunityService.updateSellerCommentLikeStatus(sellerCommunityCommentLikeStatusDto);
-        return "redirect:./sellerCommunityDetail?sellerCommunityNumber="+sellerCommunityNumber;
+
+        return response;
     }
 
     @RequestMapping("sellerCommentDisLikeProcess")
-    public String sellerCommentDisLikeProcess(HttpSession session, SellerCommunityCommentLikeStatusDto sellerCommunityCommentLikeStatusDto,int sellerCommunityNumber){
+    public Map<String, Object>  sellerCommentDisLikeProcess(HttpSession session,@RequestBody  SellerCommunityCommentLikeStatusDto sellerCommunityCommentLikeStatusDto){
         SellerDto sellerDto = (SellerDto) session.getAttribute("sellerDto");
-        sellerCommunityCommentLikeStatusDto.setSellerNumber(sellerDto.getSellerNumber());
 
-        if(sellerCommunityCommentLikeStatusDto.getSellerCommentLikeStatus().isEmpty()){
-            sellerCommunityCommentLikeStatusDto.setSellerCommentLikeStatus("dislike");
-        }else if(sellerCommunityCommentLikeStatusDto.getSellerCommentLikeStatus().equals("like")){
-            sellerCommunityCommentLikeStatusDto.setSellerCommentLikeStatus("dislike");
+
+        Map<String, Object> response = new HashMap<>();
+
+        if(sellerDto!=null){
+            if(sellerCommunityCommentLikeStatusDto.getSellerCommentLikeStatus().isEmpty()){
+                sellerCommunityCommentLikeStatusDto.setSellerCommentLikeStatus("dislike");
+            }else if(sellerCommunityCommentLikeStatusDto.getSellerCommentLikeStatus().equals("like")){
+                sellerCommunityCommentLikeStatusDto.setSellerCommentLikeStatus("dislike");
+            }else{
+                sellerCommunityCommentLikeStatusDto.setSellerCommentLikeStatus("");
+            }
+            sellerCommunityService.updateSellerCommentLikeStatus(sellerCommunityCommentLikeStatusDto);
+            response.put("success", true);
         }else{
-            sellerCommunityCommentLikeStatusDto.setSellerCommentLikeStatus("");
+            response.put("success", false);
         }
-        sellerCommunityService.updateSellerCommentLikeStatus(sellerCommunityCommentLikeStatusDto);
-        return "redirect:./sellerCommunityDetail?sellerCommunityNumber="+sellerCommunityNumber;
+
+        return response;
     }
 
     @RequestMapping("sellerReplyLikeProcess")
-    public String sellerReplyLikeProcess(HttpSession session, SellerCommunityReplyLikeStatusDto sellerCommunityReplyLikeStatusDto,int sellerCommunityNumber){
+    public  Map<String, Object>  sellerReplyLikeProcess(HttpSession session,@RequestBody SellerCommunityReplyLikeStatusDto sellerCommunityReplyLikeStatusDto){
         SellerDto sellerDto = (SellerDto) session.getAttribute("sellerDto");
-        sellerCommunityReplyLikeStatusDto.setSellerNumber(sellerDto.getSellerNumber());
 
-        if(sellerCommunityReplyLikeStatusDto.getSellerCommunityReplyLikeStatus().isEmpty()){
-            sellerCommunityReplyLikeStatusDto.setSellerCommunityReplyLikeStatus("like");
-        }else if(sellerCommunityReplyLikeStatusDto.getSellerCommunityReplyLikeStatus().equals("dislike")){
-            sellerCommunityReplyLikeStatusDto.setSellerCommunityReplyLikeStatus("like");
+        Map<String, Object> response = new HashMap<>();
+        if(sellerDto!=null){
+            if(sellerCommunityReplyLikeStatusDto.getSellerCommunityReplyLikeStatus().isEmpty()){
+                sellerCommunityReplyLikeStatusDto.setSellerCommunityReplyLikeStatus("like");
+            }else if(sellerCommunityReplyLikeStatusDto.getSellerCommunityReplyLikeStatus().equals("dislike")){
+                sellerCommunityReplyLikeStatusDto.setSellerCommunityReplyLikeStatus("like");
+            }else{
+                sellerCommunityReplyLikeStatusDto.setSellerCommunityReplyLikeStatus("");
+            }
+            sellerCommunityService.updateSellerReplyLikeStatus(sellerCommunityReplyLikeStatusDto);
+            response.put("success", true);
         }else{
-            sellerCommunityReplyLikeStatusDto.setSellerCommunityReplyLikeStatus("");
+            response.put("success", false);
         }
-        sellerCommunityService.updateSellerReplyLikeStatus(sellerCommunityReplyLikeStatusDto);
-        return "redirect:./sellerCommunityDetail?sellerCommunityNumber="+sellerCommunityNumber;
+        return response;
     }
-    @RequestMapping("sellerReplyDisLikeProcess")
-    public String sellerReplyDisLikeProcess(HttpSession session, SellerCommunityReplyLikeStatusDto sellerCommunityReplyLikeStatusDto,int sellerCommunityNumber){
-        SellerDto sellerDto = (SellerDto) session.getAttribute("sellerDto");
-        sellerCommunityReplyLikeStatusDto.setSellerNumber(sellerDto.getSellerNumber());
 
-        if(sellerCommunityReplyLikeStatusDto.getSellerCommunityReplyLikeStatus().isEmpty()){
-            sellerCommunityReplyLikeStatusDto.setSellerCommunityReplyLikeStatus("dislike");
-        }else if(sellerCommunityReplyLikeStatusDto.getSellerCommunityReplyLikeStatus().equals("like")){
-            sellerCommunityReplyLikeStatusDto.setSellerCommunityReplyLikeStatus("dislike");
+    @RequestMapping("sellerReplyDisLikeProcess")
+    public Map<String, Object> sellerReplyDisLikeProcess(HttpSession session,@RequestBody SellerCommunityReplyLikeStatusDto sellerCommunityReplyLikeStatusDto){
+        SellerDto sellerDto = (SellerDto) session.getAttribute("sellerDto");
+
+        Map<String, Object> response = new HashMap<>();
+        if(sellerDto!=null){
+            if(sellerCommunityReplyLikeStatusDto.getSellerCommunityReplyLikeStatus().isEmpty()){
+                sellerCommunityReplyLikeStatusDto.setSellerCommunityReplyLikeStatus("dislike");
+            }else if(sellerCommunityReplyLikeStatusDto.getSellerCommunityReplyLikeStatus().equals("like")){
+                sellerCommunityReplyLikeStatusDto.setSellerCommunityReplyLikeStatus("dislike");
+            }else{
+                sellerCommunityReplyLikeStatusDto.setSellerCommunityReplyLikeStatus("");
+            }
+            sellerCommunityService.updateSellerReplyLikeStatus(sellerCommunityReplyLikeStatusDto);
+            response.put("success", true);
         }else{
-            sellerCommunityReplyLikeStatusDto.setSellerCommunityReplyLikeStatus("");
+            response.put("success", false);
         }
-        sellerCommunityService.updateSellerReplyLikeStatus(sellerCommunityReplyLikeStatusDto);
-        return "redirect:./sellerCommunityDetail?sellerCommunityNumber="+sellerCommunityNumber;
+        return response;
     }
 }

@@ -7,20 +7,21 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
-        .line-limit{
+        .line-limit {
             overflow: hidden;
             text-overflow: ellipsis;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
         }
-        .font{
+
+        .font {
             font-size: 0.8em;
         }
 
-        a{
+        a {
             text-decoration: none;
-            color:black;
+            color: black;
         }
 
         ul, li, ol {
@@ -102,8 +103,10 @@
                                 <div class="col-2 text-end pe-0 ">
                                     <div class="row position-relative">
                                         <div class="col">
-                                            <span><i class="bi bi-list-ul fs-5 position-absolute" style="top:5px; left:22px;"></i></span>
-                                            <select class="form-select" aria-label="Large select example" style="padding-left:40px; ">
+                                            <span><i class="bi bi-list-ul fs-5 position-absolute"
+                                                     style="top:5px; left:22px;"></i></span>
+                                            <select class="form-select" aria-label="Large select example"
+                                                    style="padding-left:40px; ">
                                                 <option selected>최신순</option>
                                                 <option value="1">인기순</option>
                                                 <option value="2">조회순</option>
@@ -115,29 +118,35 @@
                             </div>
                             <div class="row pt-2 pb-1">
                                 <div class="col-4">
-                                    <a href="/seller/sellerCommunity" class="fs-4"><i class="bi bi-arrow-counterclockwise"></i></a>
+                                    <a href="/seller/sellerCommunity" class="fs-4"><i
+                                            class="bi bi-arrow-counterclockwise"></i></a>
                                 </div>
                                 <div class="col-4 ps-0 ms-3 ">
                                     <div class="row position-relative">
                                         <div class="col">
-                                            <span><i class="position-absolute bi bi-search" style="top:7px; left:23px;"></i></span>
+                                            <span><i class="position-absolute bi bi-search"
+                                                     style="top:7px; left:23px;"></i></span>
                                             <input type="text" name="" class="form-control ps-5" placeholder="커뮤니티내 검색">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col text-end" style="margin-top:0.3%;">
-                                    <span th:text="${sellerCommunityPaginationDto.currentPage}">1</span> / <span th:text="${sellerCommunityPaginationDto.paginationPage}">7312</span><span>페이지</span>
+                                    <span th:text="${sellerCommunityPaginationDto.currentPage}">1</span> / <span
+                                        th:text="${sellerCommunityPaginationDto.paginationPage}">7312</span><span>페이지</span>
 
-                                    <a th:if="${sellerCommunityPaginationDto.currentPage !=1}" th:href="@{./sellerCommunity(currentPage=${sellerCommunityPaginationDto.currentPage -1})}">
+                                    <a th:if="${sellerCommunityPaginationDto.currentPage !=1}"
+                                       th:href="@{./sellerCommunity(currentPage=${sellerCommunityPaginationDto.currentPage -1})}">
                                         <i class="bi bi-arrow-left fs-5 ms-3"></i>
                                     </a>
                                     <span class="text-black-50" th:if="${sellerCommunityPaginationDto.currentPage ==1}">
                                         <i class="bi bi-arrow-left fs-5 ms-3"></i>
                                     </span>
-                                    <a th:if="${sellerCommunityPaginationDto.currentPage < sellerCommunityPaginationDto.paginationPage}" th:href="@{./sellerCommunity(currentPage=${sellerCommunityPaginationDto.currentPage +1})}">
+                                    <a th:if="${sellerCommunityPaginationDto.currentPage < sellerCommunityPaginationDto.paginationPage}"
+                                       th:href="@{./sellerCommunity(currentPage=${sellerCommunityPaginationDto.currentPage +1})}">
                                         <i class="bi bi-arrow-right fs-5 ms-3"></i>
                                     </a>
-                                    <span class="text-black-50" th:if="${sellerCommunityPaginationDto.currentPage ==sellerCommunityPaginationDto.paginationPage}">
+                                    <span class="text-black-50"
+                                          th:if="${sellerCommunityPaginationDto.currentPage ==sellerCommunityPaginationDto.paginationPage}">
                                          <i class="bi bi-arrow-right fs-5 ms-3"></i>
                                     </span>
                                 </div>
@@ -150,32 +159,26 @@
                             <div class="row">
                                 <div class="col pt-3">
                                     <div class="row">
-                                        <div class="col-3 text-start ps-0">
-                                            <a id="previousPage" href="/seller/sellerCommunity">
-                                                <i class="bi-arrow-left me-2"></i>
-                                                <span>Previous</span>
-                                            </a>
+                                        <div class="col-3 text-start ps-0 " id="previousPageContainer">
+                                            <i onclick="previousPage();" id="previousPage" class=" bi-arrow-left me-2" style="cursor:pointer;"></i>
+                                            <span>Previous</span>
                                         </div>
-                                        <div class="col text-center" id="numberContainer">
-                                            <a id="firstPage" href="/seller/sellerCommunity" class="px-3 pt-3">
-                                                <span>1</span>
+                                        <div class="col text-center">
+                                            <span onclick="firstPage();" id="firstPageContainer" style="cursor:pointer;"   class="px-3 pt-3">
+                                                <span id="firstPage"></span>
                                                 <span>...</span>
-                                            </a>
-
-                                            <a th:if="${sellerCommunityPaginationDto.currentPage != sellerCommunityPaginationDto.paginationPage}" th:href="@{./sellerCommunity(currentPage=${sellerCommunityPaginationDto.paginationPage})}" class="px-3 pt-3">
-                                                <span>...</span>
-                                                <span th:text="${sellerCommunityPaginationDto.paginationPage}"></span>
-                                            </a>
-                                        </div>
-                                        <div class="col-3 text-end pe-0">
-                                            <a th:if="${sellerCommunityPaginationDto.endPage < sellerCommunityPaginationDto.paginationPage}" th:href="@{./sellerCommunity(currentPage=${sellerCommunityPaginationDto.endPage +1})}">
-                                                <span >Next</span>
-                                                <i class="bi bi-arrow-right ms-2"></i>
-                                            </a>
-                                            <span class="text-black-50" th:if="${sellerCommunityPaginationDto.endPage ==sellerCommunityPaginationDto.paginationPage}">
-                                                <span>Next</span>
-                                                 <i class="bi bi-arrow-right ms-2"></i>
                                             </span>
+
+                                            <span style="cursor:pointer;" id="numberSequenceContainer"></span>
+
+                                            <span style="cursor:pointer;" id="endPageContainer" onclick="endPage();" class="px-3 pt-3">
+                                                <span>...</span>
+                                                <span id="endPage"></span>
+                                            </span>
+                                        </div>
+                                        <div class="col-3 text-end pe-0 text-black-50" id="nextPageContainer">
+                                            <span>Next</span>
+                                            <i style="cursor:pointer;" onclick="nextPage();" id="NextPage" class="bi bi-arrow-right ms-2"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -190,9 +193,7 @@
     </div>
 </div>
 <!--페이징-->
-<a href="/seller/sellerCommunity" class="px-3 pt-3 pageList">
-    <span class="numberSequence"></span>
-</a>
+<span class="px-3 pt-3 pageList d-none"></span>
 <!--탬플릿-->
 <div class="row border shadow-sm py-2 mt-1 rounded sellerCommentWrapper d-none">
     <div class="col">
@@ -240,12 +241,12 @@
 </div>
 
 
-
 <div class="row">
     <div class="col pt-3">
         <div class="row">
             <div class="col-3 text-start ps-0">
-                <a th:if="${sellerCommunityPaginationDto.startPage !=1}" th:href="@{./sellerCommunity(currentPage=${sellerCommunityPaginationDto.startPage -1})}">
+                <a th:if="${sellerCommunityPaginationDto.startPage !=1}"
+                   th:href="@{./sellerCommunity(currentPage=${sellerCommunityPaginationDto.startPage -1})}">
                     <i class="bi bi-arrow-left me-2"></i>
                     <span>Previous</span>
                 </a>
@@ -255,24 +256,34 @@
                 </span>
             </div>
             <div class="col text-center">
-                <a th:href="@{./sellerCommunity(currentPage=${1})}" th:if="${sellerCommunityPaginationDto.currentPage!=1 || sellerCommunityPaginationDto.startPage !=1}"  class="px-3 pt-3">
+                <a th:href="@{./sellerCommunity(currentPage=${1})}"
+                   th:if="${sellerCommunityPaginationDto.currentPage!=1 || sellerCommunityPaginationDto.startPage !=1}"
+                   class="px-3 pt-3">
                     <span>1</span>
                     <span>...</span>
                 </a>
-                <a th:each="i : ${#numbers.sequence(sellerCommunityPaginationDto.startPage,sellerCommunityPaginationDto.endPage)}" th:href="@{./sellerCommunity(currentPage=${i})}"  th:classappend="${sellerCommunityPaginationDto.currentPage == i ? 'border-top border-3 border-primary':''}"  class="px-3 pt-3">
-                    <span th:classappend="${sellerCommunityPaginationDto.currentPage == i ? 'text-primary':''}" th:text="${i}"></span>
+                <a th:each="i : ${#numbers.sequence(sellerCommunityPaginationDto.startPage,sellerCommunityPaginationDto.endPage)}"
+                   th:href="@{./sellerCommunity(currentPage=${i})}"
+                   th:classappend="${sellerCommunityPaginationDto.currentPage == i ? 'border-top border-3 border-primary':''}"
+                   class="px-3 pt-3">
+                    <span th:classappend="${sellerCommunityPaginationDto.currentPage == i ? 'text-primary':''}"
+                          th:text="${i}"></span>
                 </a>
-                <a th:if="${sellerCommunityPaginationDto.currentPage != sellerCommunityPaginationDto.paginationPage}" th:href="@{./sellerCommunity(currentPage=${sellerCommunityPaginationDto.paginationPage})}" class="px-3 pt-3">
+                <a th:if="${sellerCommunityPaginationDto.currentPage != sellerCommunityPaginationDto.paginationPage}"
+                   th:href="@{./sellerCommunity(currentPage=${sellerCommunityPaginationDto.paginationPage})}"
+                   class="px-3 pt-3">
                     <span>...</span>
                     <span th:text="${sellerCommunityPaginationDto.paginationPage}"></span>
                 </a>
             </div>
             <div class="col-3 text-end pe-0">
-                <a th:if="${sellerCommunityPaginationDto.endPage < sellerCommunityPaginationDto.paginationPage}" th:href="@{./sellerCommunity(currentPage=${sellerCommunityPaginationDto.endPage +1})}">
-                    <span >Next</span>
+                <a th:if="${sellerCommunityPaginationDto.endPage < sellerCommunityPaginationDto.paginationPage}"
+                   th:href="@{./sellerCommunity(currentPage=${sellerCommunityPaginationDto.endPage +1})}">
+                    <span>Next</span>
                     <i class="bi bi-arrow-right ms-2"></i>
                 </a>
-                <span class="text-black-50" th:if="${sellerCommunityPaginationDto.endPage ==sellerCommunityPaginationDto.paginationPage}">
+                <span class="text-black-50"
+                      th:if="${sellerCommunityPaginationDto.endPage ==sellerCommunityPaginationDto.paginationPage}">
                     <span>Next</span>
                      <i class="bi bi-arrow-right ms-2"></i>
                 </span>
@@ -292,7 +303,7 @@
             <div class="modal-body">
                 <!--게시판 상세페이지 모달로 로드-->
                 <div class="row">
-                    <div class="row pt-3">
+                    <div class="row pt-3" id="bigContainer">
                         <div class="col">
                             <div class="row ">
                                 <div class="col-md-auto">
@@ -306,7 +317,7 @@
                                     </div>
                                     <div class="row">
                                         <div class="col">
-                                            <span id="sellerCommunityCreatedAt" ></span>
+                                            <span id="sellerCommunityCreatedAt"></span>
                                             <span><i class="bi-dot"></i></span>
                                             <span><i class="bi-eye"></i></span>
                                             <span id="sellerCommunityVisitCount"></span>
@@ -315,56 +326,57 @@
                                 </div>
                             </div>
 
-                          <div class="row pb-5 pt-3" >
-                              <div class="col">
-                                  <div class="row">
-                                      <div class="col">
-                                          <span id="sellerCommunityTitle" class="fw-bold fs-1"></span>
-                                      </div>
-                                  </div>
-                                  <!--이미지컨테이너-->
-                                  <div class="row">
-                                      <div class="col" id="imageContainer">
+                            <div class="row pb-5 pt-3">
+                                <div class="col">
+                                    <div class="row">
+                                        <div class="col">
+                                            <span id="sellerCommunityTitle" class="fw-bold fs-1"></span>
+                                        </div>
+                                    </div>
+                                    <!--이미지컨테이너-->
+                                    <div class="row">
+                                        <div class="col" id="imageContainer">
 
-                                      </div>
-                                  </div>
+                                        </div>
+                                    </div>
 
-                                  <div class="row">
-                                      <div class="col">
-                                          <span id="sellerCommunityContent" style="white-space: pre-wrap;"></span>
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <span id="sellerCommunityContent" style="white-space: pre-wrap;"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-                          <div class="row border-top border-dark py-2">
-                              <div class="col">
-                                  <a id="sellerCommunityDetailLike" href="/seller/sellerCommunityLikeProcess">
-                                      <i class="heart bi-heart text-danger"></i>
-                                  </a>
-                                  <span>좋아요</span>
-                                  <span id="detailLikeCount"></span>
-                                  <span class="ms-2"><i class="bi bi-chat-dots"></i></span>
-                                  <span>댓글</span>
-                                  <span id="detailDislikeCount"></span>
-                              </div>
-                          </div>
+                            <div class="row border-top border-dark py-2">
+                                <div class="col">
+                                    <i onclick="sellerCommunityLikeProcess()" class="heart bi-heart text-danger"></i>
+                                    <span>좋아요</span>
+                                    <span id="detailLikeCount"></span>
+                                    <span class="ms-2"><i class="bi bi-chat-dots"></i></span>
+                                    <span>댓글</span>
+                                    <span id="detailDislikeCount"></span>
+                                </div>
+                            </div>
                             <!--댓글컨테이너-->
-                          <div class="row">
-                              <div class="col" id="commentContainer">
+                            <div class="row">
+                                <div class="col" id="commentContainer">
 
-                              </div>
-                          </div>
-                          <form action="/seller/sellerCommunityCommentInsertProcess" class="row mt-2">
-                              <input id="sellerCommunityNumber" type="hidden" name="sellerCommunityNumber">
-                              <input id="sellerNumber"   type="hidden" name="sellerNumber" >
-                              <div class="col-10">
-                                  <textarea class="form-control py-1" name="sellerCommunityCommentContent" placeholder="댓글쓰기"></textarea>
-                              </div>
-                              <div class="col">
-                                  <input class=" form-control btn btn-danger py-3" type="submit" value="작성">
-                              </div>
-                          </form>
+                                </div>
+                            </div>
+                            <form id="sellerCommunityCommentForm"
+                                  action="/api/seller/sellerCommunityCommentInsertProcess"
+                                  onsubmit="sellerCommunityCommentInsertProcess(event)" method="post" class="row mt-2">
+                                <input id="sellerCommunityNumber" type="hidden" name="sellerCommunityNumber">
+                                <input id="sellerNumber" type="hidden" name="sellerNumber">
+                                <div class="col-10">
+                                    <textarea class="form-control py-1" id="sellerCommunityCommentContent"
+                                              name="sellerCommunityCommentContent" placeholder="댓글쓰기"></textarea>
+                                </div>
+                                <div class="col">
+                                    <input class=" form-control btn btn-danger py-3" type="submit" value="작성">
+                                </div>
+                            </form>
                         </div>
                     </div>
                     <div class="row pt-5"></div>
@@ -404,88 +416,88 @@
         </div>
         <div class="row py-2">
             <div class="col">
-                 <span onclick="addReply(this)" style="cursor:pointer;">
+                 <span class="replyOpen" onclick="addReply(this)" style="cursor:pointer;">
                      <span>답글</span>
-                      <span class="fw-bold commentReplyCount" ></span>
+                      <span class="fw-bold commentReplyCount"></span>
                  </span>
             </div>
-            <div class="col text-end me-2">
-                <a class="commentLikeStatus" href="/seller/sellerCommentLikeProcess">
-                    <i class="thumb bi bi-hand-thumbs-up"></i>
-                </a>
+            <div class="col text-end me-2 likeStatusContainer">
+                <input type="hidden" class="sellerCommentLikeStatus">
+                <i class="thumb bi bi-hand-thumbs-up" onclick="commentLikeStatus(this)"></i>
                 <span class="commentLikeCount"></span>
-
-                <a class="commentDislikeStatus"  href="/seller/sellerCommentDisLikeProcess">
-                     <i class="thumbDown bi bi-hand-thumbs-down"></i>
-                </a>
+                <i class="thumbDown bi bi-hand-thumbs-down" onclick="commentDislikeStatus(this)"></i>
                 <span class="commentDisLikeCount"></span>
             </div>
         </div>
-        <form action="/seller/sellerCommunityReplyInsertProcess"  class="row addReply d-none py-2">
-            <input class="sellerCommunityNumberInput" type="hidden" name="sellerCommunityNumber" >
-            <input class="sellerCommunityCommentNumberInput" type="hidden" name="sellerCommunityCommentNumber" >
-            <input class="sellerNumberInput" type="hidden" name="sellerNumber" >
-            <div class="col-10">
-                <textarea class="form-control py-1" name="sellerCommunityReplyContent" placeholder="대댓글쓰기"></textarea>
-
-            </div>
+        <div class="row addReply d-none aaa">
             <div class="col">
-                <input class="form-control btn btn-danger py-3" type="submit" value="작성">
-            </div>
-        </form>
-        <!--대댓글 컨테이너-->
-        <div class="row border-top">
-            <div class="col" id="replyContainer">
+                <form onsubmit="sellerCommunityReplyInsertProcess(event)"
+                      action="/api/seller/sellerCommunityReplyInsertProcess" method="post"
+                      class="sellerCommunityReplyInsertForm row  py-2">
+                    <input class="sellerCommunityNumberInput" type="hidden" name="sellerCommunityNumber">
+                    <input class="sellerCommunityCommentNumberInput" type="hidden" name="sellerCommunityCommentNumber">
+                    <input class="sellerNumberInput" type="hidden" name="sellerNumber">
+                    <div class="col-10">
+                        <textarea class="form-control py-1 sellerCommunityReplyContent"
+                                  name="sellerCommunityReplyContent" placeholder="대댓글쓰기"></textarea>
 
+                    </div>
+                    <div class="col">
+                        <input class="form-control btn btn-danger py-3 " type="submit" value="작성">
+                    </div>
+                </form>
+                <!--대댓글 컨테이너-->
+                <div class="row">
+                    <div class="col replyContainer">
+
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <!--대댓글 탬플릿-->
- <div class="row border-top chatReplyContainer d-none">
-     <div class="col ms-5">
-         <div class="row">
-             <div class="col-md-auto">
-                 <span><i class="bi-person-circle fs-2"></i></span>
-             </div>
-             <div class="col">
-                 <div class="row mt-2">
-                     <div class="col">
-                         <span class="fw-bold replySellerName"></span>
-                     </div>
-                 </div>
-                 <div class="row">
-                     <div class="col">
-                         <span class="replyCreatedAt"></span>
-                     </div>
-                 </div>
-             </div>
-         </div>
-         <div class="row">
-             <div class="col">
-                 <span class="replyContent"></span>
-             </div>
-         </div>
-         <div class="row py-2">
-             <div class="col text-end me-2">
-                 <a class="replyLikeStatus" href="seller/sellerReplyLikeProcess">
-                    <i class="replyThumb bi bi-hand-thumbs-up"></i>
-                 </a>
-                 <span class="replyThumbCount"></span>
-
-                 <a class="replyDislikeStatus" href="/seller/sellerReplyDisLikeProcess">
-                    <i class="replyThumbDown bi bi-hand-thumbs-down"></i>
-                 </a>
-                 <span class="replyThumbDownCount"></span>
-             </div>
-         </div>
-     </div>
- </div>
+<div class="row border-top chatReplyContainer d-none">
+    <div class="col ms-5">
+        <div class="row">
+            <div class="col-md-auto">
+                <span><i class="bi-person-circle fs-2"></i></span>
+            </div>
+            <div class="col">
+                <div class="row mt-2">
+                    <div class="col">
+                        <span class="fw-bold replySellerName"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <span class="replyCreatedAt"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <span class="replyContent"></span>
+            </div>
+        </div>
+        <div class="row py-2">
+            <div class="col text-end me-2">
+                <input type="hidden" class="sellerCommunityReplyNumber">
+                <input type="hidden" class="sellerCommunityReplyLikeStatus">
+                <i class="replyThumb bi bi-hand-thumbs-up" onclick="replyLikeStatus(this)"></i>
+                <span class="replyThumbCount"></span>
+                <i class="replyThumbDown bi bi-hand-thumbs-down" onclick="replyDislikeStatus(this)"></i>
+                <span class="replyThumbDownCount"></span>
+            </div>
+        </div>
+    </div>
+</div>
 <!--이미지 불러오기-->
-<div class="row py-5 imageWrapper">
+<div class="row py-5 imageWrapper d-none">
     <div class="col">
-        <img  class="img-fluid images" alt="">
+        <img class="img-fluid images" alt="">
     </div>
 </div>
 
@@ -496,68 +508,74 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-            <div class="row mt-2">
-                <div class="col">
-                    <span class="fw-bold fs-3">게시글 쓰기</span>
+                <div class="row mt-2">
+                    <div class="col">
+                        <span class="fw-bold fs-3">게시글 쓰기</span>
+                    </div>
                 </div>
-            </div>
-            <div class="row mt-3">
-                <div class="col">
-                    <form id="sellerCommunityForm" action="/api/seller/sellerCommunityWriteProcess" onsubmit="submitSellerCommunity()"  enctype="multipart/form-data">
-                        <div class="row">
-                            <div class="col">
-                                <span id="inputSuccessMessage"></span>
+                <div class="row mt-3">
+                    <div class="col">
+                        <form id="sellerCommunityForm" method="post" action="/api/seller/sellerCommunityWriteProcess"
+                              onsubmit="submitSellerCommunity(event)" enctype="multipart/form-data">
+                            <div class="row">
+                                <div class="col">
+                                    <span id="inputSuccessMessage"></span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <span class="font">게시글제목</span>
+                            <div class="row">
+                                <div class="col">
+                                    <span class="font">게시글제목</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row mt-1">
-                            <div class="col">
-                                <input class="form-control font" type="text" id="sellerCommunityTitleInput" name="sellerCommunityTitle" placeholder="제목입력하세요">
+                            <div class="row mt-1">
+                                <div class="col">
+                                    <input class="form-control font" type="text" id="sellerCommunityTitleInput"
+                                           name="sellerCommunityTitle" placeholder="제목입력하세요">
+                                </div>
                             </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col">
-                                <span class="font">게시글 대표 이미지 등록</span>
+                            <div class="row mt-3">
+                                <div class="col">
+                                    <span class="font">게시글 대표 이미지 등록</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row mt-1">
-                            <div class="col">
-                                <input id="oneSellerCommunityImage" name="oneSellerCommunityImage" class="form-control font" type="file">
+                            <div class="row mt-1">
+                                <div class="col">
+                                    <input id="oneSellerCommunityImage" name="oneSellerCommunityImage"
+                                           class="form-control font" type="file">
+                                </div>
                             </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col">
-                                <span class="font">게시글 상세 이미지 등록</span>
+                            <div class="row mt-3">
+                                <div class="col">
+                                    <span class="font">게시글 상세 이미지 등록</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row mt-1">
-                            <div class="col">
-                                <input id="multipleSellerCommunityImageList" name="multipleSellerCommunityImageList" class="form-control font" type="file" multiple>
+                            <div class="row mt-1">
+                                <div class="col">
+                                    <input id="multipleSellerCommunityImageList" name="multipleSellerCommunityImageList"
+                                           class="form-control font" type="file" multiple>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col">
-                                <span class="font">게시글 내용</span>
+                            <div class="row mt-3">
+                                <div class="col">
+                                    <span class="font">게시글 내용</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row mt-1">
-                            <div class="col">
-                                <textarea rows="10" style="padding-bottom: 1%;"  class="form-control font" id="sellerCommunityContentInput" name="sellerCommunityContent" placeholder="내용을 입력해주세요"></textarea>
+                            <div class="row mt-1">
+                                <div class="col">
+                                    <textarea rows="10" style="padding-bottom: 1%;" class="form-control font"
+                                              id="sellerCommunityContentInput" name="sellerCommunityContent"
+                                              placeholder="내용을 입력해주세요"></textarea>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row mt-4">
-                            <div class="col"></div>
-                            <div class="col-2 text-end">
-                                <input class="btn btn-danger" type="submit" value="등록">
+                            <div class="row mt-4">
+                                <div class="col"></div>
+                                <div class="col-2 text-end">
+                                    <input class="btn btn-danger" type="submit" value="등록">
+                                </div>
                             </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
-            </div>
 
             </div>
             <div class="modal-footer">
@@ -569,5 +587,6 @@
 
 <script src="/js/sellerCommunity.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

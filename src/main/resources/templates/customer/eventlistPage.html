@@ -145,6 +145,10 @@
 
         }
 
+        function detailPageProcess(target){
+            
+        }
+
         window.addEventListener("DOMContentLoaded", () => {
                 reloadEventList();
             });
@@ -164,7 +168,7 @@
                 <div class="col">
                     <ul class="nav nav-underline">
                         <li class="nav-item col-6 text-center">
-                            <a onclick="reloadEventList()" class="link-underline link-underline-opacity-0 text-black nav-link">진행중인 이벤트</a>
+                            <a onclick="reloadEventList()" class="reload link-underline link-underline-opacity-0 text-black nav-link">진행중인 이벤트</a>
                         </li>
                         <li class="nav-item col-5 text-center">
                             <a onclick="endEventList()" class="link-underline link-underline-opacity-0 text-black nav-link">종료된 이벤트</a>
@@ -201,13 +205,13 @@
         <div class="col">
             <div class="row">
                 <div class="col">
-                    <a class="detailPage" href="eventDetailPage"><img class="mainImg img-fluid"></a>
+                    <img onclick="detailPageProcess(this)" class="mainImg img-fluid">
                 </div>
             </div>
             <div class="row">
                 <div class="col">
                     <input type="hidden" class="detailPageNumber">
-                    <i onclick="likeDisLikeProcessTwo(this)" class="thumbsUp bi bi-hand-thumbs-up"></i>
+                    <i onclick="likeDisLikeProcess(this)" class="thumbsUp bi bi-hand-thumbs-up"></i>
                     <span class="eventBoardLikeCount"></span>
                 </div>
             </div>
@@ -220,7 +224,7 @@
         <div class="col">
             <div class="row">
                 <div class="col">
-                    <a class="detailPage" href="eventDetailPage"><img class="mainImg img-fluid"></a>
+                    <img onclick="detailPageProcess(this)" class="mainImg img-fluid">
                 </div>
             </div>
             <div class="row">
@@ -235,7 +239,26 @@
 </div>
 
 
-
+<!-- Modal -->
+<div class="d-none">
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://kit.fontawesome.com/7b271bba58.js" crossorigin="anonymous"></script>

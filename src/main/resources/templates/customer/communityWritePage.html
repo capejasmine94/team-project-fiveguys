@@ -11,41 +11,62 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 
-<body>
+<body style="background-color: #B41E30; margin-top:51px; margin-bottom: 69px">
+
+<div th:replace="common/communityNavi::topNavi"></div>
+<div th:replace="common/customerNavi::bottomNavi"></div>
+
     <!--글작성 페이지-->
     <div class="container">
         <form action="./communityWriteProcess" method="post" enctype="multipart/form-data">
             <div class="row">
                 <div class="col">
                     <div class="row">
-                        <div class="col">
-                            닉네임:
-                            <span th:text="${session.customerDto.customerName}"></span>
+                        <div class="col text-end my-3">
+<!--                            닉네임-->
+                            <span class="text-white fs-5"><i class="bi bi-person-circle"></i></span>
+                            <span class="text-white fs-5" th:text="${session.customerDto.customerName}"></span>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="row">
-                <div class="col">
-                    제목: <input name="communityTitle" type="text">
+                <div class="col d-grid text-white">
+                    제목
+                </div>
+            </div>
+            <div class="row">
+                <div class="col d-grid my-1">
+                    <input name="communityTitle" type="text" class="rounded-3 text-dark">
                 </div>
             </div>
 
-                <div class="row">
-                    <div class="col">
-                        내용: <br>
-                        <textarea name="communityContent" ></textarea>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        이미지 : <input type="file" name="uploadFiles" multiple accept="image/*">
-                    </div>
-                </div>
             <div class="row">
-                <div class="col d-grid">
-                   <button>글쓰기</button>
+                <div class="col text-white mt-3">
+                    내용
+                </div>
+            </div>
+            <div class="row">
+                <div class="col d-grid mt-1">
+                    <textarea name="communityContent" class="rounded-3 text-dark mt-2 mb-3" style="height:10em;"></textarea>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+<!--                        이미지 첨부-->
+                    <div class="mb-3 mt-2">
+                        <label for="formFileMultiple" class="form-label text-white">사진 첨부</label>
+                        <input class="form-control" type="file" id="formFileMultiple" name="uploadFiles" multiple accept="image/*">
+                    </div>
+<!--                        이미지 : <input type="file" name="uploadFiles" multiple accept="image/*">-->
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col d-grid my-2">
+                    <button class="btn btn-dark rounded-4" >글쓰기</button>
                 </div>
             </div>
         </form>

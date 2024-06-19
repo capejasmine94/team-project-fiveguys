@@ -19,9 +19,7 @@
     </style>
 </head>
 
-
-
-<body style="background-color: #B41E30;">
+<body style="background-color: #B41E30; margin-bottom: 79px">
 
     <div th:replace="common/communityNavi::topNavi"></div>
     <div th:replace="common/customerNavi::bottomNavi"></div>
@@ -29,57 +27,93 @@
     <!--자유게시판 메인-->
     <div class="container" style="margin-top: 4rem">
 
-                    <div class="row mx-1 my-1 border border-danger bg-white rounded-4 shadow" th:each = "communityData : ${selectCommunityList}"  >
-                        <div class="col ps-4 pe-4">
-                            <div class="row pt-2 pb-1">
-                                <div class="col-auto pe-0">
-                                    <input name="communityNumber" type="hidden" th:value="${communityData.communityDto.communityNumber}">
-                                    <span class="me-1">
-<!--                                        아이콘-->
-                                        <i class="bi bi-person-circle"></i>
-                                    </span>
-                                </div>
-                                <div class="col-auto p-0 me-1" style="font-size : 0.9rem">
-<!--                                    닉네임-->
-                                    <span><span th:text="${communityData.customerDto.customerName}"></span> • </span>
-                                </div>
-                                <div class="col-auto p-0 text-secondary" style="font-size : 0.9rem">
-                                    <span th:text="${communityData.communityDto.communityCreatedAt}"></span>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-        <!--                            글제목:-->
-                                    <span>
-                                        <a class="text-decoration-none text-black fs-5" th:href="@{./communityReadPage(communityNumber=${communityData.communityDto.communityNumber})}" th:text="${communityData.communityDto.communityTitle}"></a>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="row justify-content-end pt-2 pb-2">
-                                <div class="col-auto p-1 d-flex">
-        <!--                            조회수-->
-                                    <span><i class="bi bi-eye"></i></span>
-                                    <span th:text="${communityData.communityDto.communityVisitCount}"></span>
-                                </div>
-                                <div class="col-auto p-1 d-flex">
-<!--                             댓글카운트-->
-                                    <span><i class="bi bi-chat-dots"></i></span>
-                                </div>
-                                <div class="col-auto p-1 d-flex">
-<!--                            좋아요카운트-->
-                                    <span class="text-danger"><i class="bi bi-heart"></i></span>
-                                </div>
-                            </div>
-                        </div>
+        <div class="row mx-1 my-1 border border-danger bg-white rounded-4 shadow" th:each = "communityData : ${selectCommunityList}"  >
+            <div class="col ps-4 pe-4">
+                <div class="row pt-2 pb-1">
+                    <div class="col-auto pe-0">
+                        <input name="communityNumber" type="hidden" th:value="${communityData.communityDto.communityNumber}">
+                        <span class="me-1">
+<!--                아이콘-->
+                            <i class="bi bi-person-circle"></i>
+                        </span>
                     </div>
-
-
-
-            <th:block th:if="${session.customerDto} != null">
-                <button><a href="./communityWritePage">글쓰기</a></button>
-            </th:block>
+                    <div class="col-auto p-0 me-1" style="font-size : 0.9rem">
+<!--                닉네임-->
+                        <span><span th:text="${communityData.customerDto.customerName}"></span> • </span>
+                    </div>
+                    <div class="col-auto p-0 text-secondary" style="font-size : 0.9rem">
+                        <span th:text="${communityData.communityDto.communityCreatedAt}"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+<!--                글제목:-->
+                        <span>
+                            <a class="text-decoration-none text-black fs-5" th:href="@{./communityReadPage(communityNumber=${communityData.communityDto.communityNumber})}" th:text="${communityData.communityDto.communityTitle}"></a>
+                        </span>
+                    </div>
+                </div>
+                <div class="row justify-content-end pt-2 pb-2">
+                    <div class="col-auto p-1 d-flex">
+<!--                 조회수-->
+                        <span><i class="bi bi-eye"></i></span>
+                        <span th:text="${communityData.communityDto.communityVisitCount}"></span>
+                    </div>
+                    <div class="col-auto p-1 d-flex">
+<!--                댓글카운트-->
+                        <span><i class="bi bi-chat-dots"></i></span>
+                        <span th:text="${communityData.commentCount}"></span>
+                    </div>
+                    <div class="col-auto p-1 d-flex">
+<!--                좋아요카운트-->
+                        <span class="text-danger"><i class="bi bi-heart"></i></span>
+                        <span th:text="${communityData.likeCount}"></span>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
+
+
+        <div class="row">
+            <div class="col">
+
+                <!--                페이지네이션-->
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center my-2">
+                        <li class="page-item">
+                            <a class="page-link text-white bg-transparent border-0" href="#" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item"><a class="page-link text-white bg-transparent border-0" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link text-white bg-transparent border-0" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link text-white bg-transparent border-0" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link text-white bg-transparent border-0" href="#" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+
+            </div>
+        </div>
+
+
+            <div class="col text-end">
+                <!--                글쓰기버튼-->
+                <th:block th:if="${session.customerDto} != null">
+                    <span class="text-end"><button class="btn btn-dark rounded-4" onclick="location.href='./communityWritePage'">작성하기</button></span>
+                </th:block>
+            </div>
+
+        </div>
+
+
+
+
+
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://kit.fontawesome.com/7b271bba58.js" crossorigin="anonymous"></script>

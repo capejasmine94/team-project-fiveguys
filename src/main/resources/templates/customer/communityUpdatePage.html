@@ -12,42 +12,64 @@
 
 </head>
 
-<body>
+<body style="background-color: #B41E30; margin-top:51px; margin-bottom: 69px">
+
+<div th:replace="common/communityNavi::topNavi"></div>
+<div th:replace="common/customerNavi::bottomNavi"></div>
+
 <!--글 수정 페이지-->
 <div class="container">
     <form action="./communityUpdateProcess" method="post" enctype="multipart/form-data">
         <div class="row">
             <div class="col">
                 <div class="row">
-                    <div class="col">
-                        닉네임:
-                        <span th:text="${communityData.customerDto.customerName}"></span>
+                    <div class="col text-end my-3">
+<!--                        닉네임-->
+                        <span class="text-white fs-5"><i class="bi bi-person-circle"></i></span>
+                        <span class="text-white fs-5" th:text="${communityData.customerDto.customerName}"></span>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="row">
-            <div class="col">
-                제목: <input name="communityTitle" type="text" th:value="${communityData.communityDto.communityTitle}">
+            <div class="col d-grid text-white">
+                제목
+            </div>
+        </div>
+        <div class="row">
+            <div class="col d-grid my-1">
+                <input name="communityTitle" type="text"
+                       th:value="${communityData.communityDto.communityTitle}" class="rounded-3 text-dark">
             </div>
         </div>
 
         <div class="row">
-            <div class="col">
-                내용: <br>
-                <textarea name="communityContent" th:text="${communityData.communityDto.communityContent}"></textarea>
+            <div class="col text-white mt-3">
+                내용
+            </div>
+        </div>
+        <div class="row">
+            <div class="col d-grid mt-1">
+                <textarea name="communityContent" th:text="${communityData.communityDto.communityContent}"
+                          class="rounded-3 text-dark mt-2 mb-3" style="height:10em;"></textarea>
             </div>
         </div>
         <div class="row">
             <div class="col">
-                이미지 : <input type="file" name="uploadFiles" multiple accept="image/*">
+<!--                이미지 첨부-->
+                <div class="mb-3 mt-2">
+                    <label for="formFileMultiple" class="form-label text-white">사진 첨부</label>
+                    <input class="form-control" type="file" id="formFileMultiple" name="uploadFiles" multiple accept="image/*">
+<!--                    <input type="file" name="uploadFiles" multiple accept="image/*">-->
+                </div>
             </div>
         </div>
+
         <div class="row">
-            <div class="col d-grid">
+            <div class="col d-grid my-2">
                 <input type="hidden" name="communityNumber" th:value="${communityData.communityDto.communityNumber}">
-                <button>글수정</button>
+                <button class="btn btn-dark rounded-4" >글 수정</button>
             </div>
         </div>
     </form>

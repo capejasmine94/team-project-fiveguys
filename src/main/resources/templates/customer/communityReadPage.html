@@ -11,12 +11,12 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 
-<body>
+<body style="background-color: #B41E30; margin-top: 51px; margin-bottom: 69px">
 
-    <div th:replace="common/customerNavi::topNavi"></div>
+    <div th:replace="common/communityNavi::topNavi"></div>
     <div th:replace="common/customerNavi::bottomNavi"></div>
 
-<!--글작성 페이지-->
+<!--글보기 페이지-->
 <div class="container ">
     <div class="row">
 
@@ -66,6 +66,7 @@
                     <div th:if="${session.customerDto != null and communityData.communityDto.customerNumber != session.customerDto.customerNumber}">
                         <a th:if="${communityLikeDto1} == null" th:href="@{./communityLikeProcess(communityNumber=${communityData.communityDto.communityNumber}, customerNumber=${session.customerDto.customerNumber})}" class="text-danger"><i class="bi bi-heart"></i></a>
                         <a th:if="${communityLikeDto1} != null" th:href="@{./deleteLikeNumber(communityNumber=${communityData.communityDto.communityNumber}, customerNumber=${session.customerDto.customerNumber})}" class="text-danger"><i class="bi bi-heart-fill"></i></a>
+                        <span th:text="${likeCount}"></span>
                     </div>
                 </div>
             </div>

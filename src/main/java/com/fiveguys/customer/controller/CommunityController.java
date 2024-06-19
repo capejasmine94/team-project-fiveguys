@@ -75,6 +75,9 @@ public class CommunityController {
         CommunityLikeDto communityLikeDto1 = communityService.selectCommunityLike(communityLikeDto);
         model.addAttribute("communityLikeDto1", communityLikeDto1);
 
+        int likeCount = communityService.selectCountCommunityLike(communityNumber);
+        model.addAttribute("likeCount", likeCount);
+
         return "customer/communityReadPage";
     }
 

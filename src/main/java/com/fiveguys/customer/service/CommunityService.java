@@ -30,10 +30,19 @@ public class CommunityService {
             int writerPk = communityDto.getCustomerNumber();
             CustomerDto customerDto = communitySqlMapper.selectCustomerNumber(writerPk);
 
+            //좋아요 카운트
+            int communiyNumber = communityDto.getCommunityNumber();
+            int likeCount = communitySqlMapper.selectCountCommunityLike(communiyNumber);
+
+            //댓글 카운트
+            int commentCount = communitySqlMapper.selectCountCommentNumber(communiyNumber);
+
             Map<String, Object> map = new HashMap<>();
 
             map.put("communityDto", communityDto);
             map.put("customerDto", customerDto);
+            map.put("likeCount", likeCount);
+            map.put("commentCount", commentCount);
 
             result.add(map);
         }
@@ -101,9 +110,13 @@ public class CommunityService {
     }
 
     public CommunityLikeDto selectCommunityLike(CommunityLikeDto communityLikeDto){
-
         return communitySqlMapper.selectCommunityLike(communityLikeDto);
     }
+
+    public int selectCountCommunityLike(int communityNumber){
+        return communitySqlMapper.selectCountCommunityLike(communityNumber);
+    }
+
 
 }
 

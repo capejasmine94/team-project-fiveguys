@@ -25,11 +25,14 @@ public interface CommunitySqlMapper {
     //댓글
     public void insertCommunityComment(CommunityCommentDto communityCommentDto);
     public List<CommunityCommentDto> selectCommunityCommentList(int communityNumber);
+    public int selectCountCommentNumber(int commentNumber);
 
     //좋아요
     public void insertCommunityLike(CommunityLikeDto communityLikeDto);
     public void deleteLikeNumber(int LikeNumber);
     public CommunityLikeDto selectCommunityLike(CommunityLikeDto communityLikeDto);
+    public int selectCountCommunityLike(int communityNumber);
+
 
 
 }

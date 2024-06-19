@@ -114,8 +114,19 @@
         and customerNumber = #{customerNumber}
     </select>
 
-    
+    <!--    좋아요 카운트-->
+    <select id="selectCountCommunityLike" resultType="int">
+        select count(*)
+        from fc_communityLike
+        where communityNumber = #{communityNumber}
+    </select>
 
+<!--    댓글카운트-->
+    <select id="selectCountCommentNumber" resultType="int">
+        select count(*)
+        from fc_communityComment
+        where communityNumber = #{communityNumber}
+    </select>
 
 
 

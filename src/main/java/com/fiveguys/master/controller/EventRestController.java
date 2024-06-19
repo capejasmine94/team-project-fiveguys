@@ -41,28 +41,29 @@ public class EventRestController {
     public Map<String,Object> detailPage(@RequestParam("eventNumber") int eventNumber, Model model, HttpSession session){
         Map<String,Object> map = new HashMap<>();
 
+        eventService.updateEventBoardVisitCount(eventNumber);
         //게시글 정보
         Map<String,Object> eventBoardDtoAndDetail =  eventService.eventBoardDtoAndDetail(eventNumber);
-        model.addAttribute("eventBoardDtoAndDetail",eventBoardDtoAndDetail);
+        map.put("eventBoardDtoAndDetail",eventBoardDtoAndDetail);
         List<Map<String,Object>> eventBoardCommentList = eventService.selectEventBoardComet(eventNumber);
 
         int eventBoardLikeCount = eventService.selectEventBoardLikeCount(eventNumber);
         map.put("eventBoardLikeCount",eventBoardLikeCount);
 
-
+        
         MasterDto masterDto = (MasterDto) session.getAttribute("masterDto");
-        model.addAttribute("eventBoardCommentList",eventBoardCommentList);
+        map.put("eventBoardCommentList",eventBoardCommentList);
 
         int selectLikeCheck =0;
         CustomerDto customerDto = (CustomerDto) session.getAttribute("customerDto");
-
+        map.put("loginInfo","loginfail");
         if(customerDto != null) {
             EventLikeDto eventLikeDto = new EventLikeDto();
             eventLikeDto.setEventNumber(eventNumber);
             eventLikeDto.setCustomerNumber(customerDto.getCustomerNumber());
             selectLikeCheck = eventService.selectEventBoardLikeCheck(eventLikeDto);
 
-
+            map.put("loginInfo","loginSuccess");
         }
         map.put("selectLikeCheck", selectLikeCheck);
         return  map;
@@ -91,9 +92,8 @@ public class EventRestController {
             map.put("loginSuccess","false");
         }
 
-
-
-
         return map;
     }
+
+    
 }

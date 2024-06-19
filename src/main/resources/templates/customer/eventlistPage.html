@@ -27,9 +27,6 @@
                     const mainImage = newEventTemplate.querySelector(".mainImg");
                     mainImage.src = "/images/" + e.eventBoardDto.eventMainImage;
 
-                    const detailPage = newEventTemplate.querySelector(".detailPage");
-                    detailPage.href = detailPage.href + "?eventNumber="+ e.eventBoardDto.eventNumber;
-
                     const detailPageNumber = newEventTemplate.querySelector(".detailPageNumber");
                     detailPageNumber.value = e.eventBoardDto.eventNumber;
 
@@ -71,9 +68,6 @@
                     const mainImage = newEventTemplate.querySelector(".mainImg");
                     mainImage.src = "/images/" + e.eventBoardDto.eventMainImage;
 
-                    const detailPage = newEventTemplate.querySelector(".detailPage");
-                    detailPage.href = detailPage.href + "?eventNumber="+ e.eventBoardDto.eventNumber;
-
                     const detailPageNumber = newEventTemplate.querySelector(".detailPageNumber");
                     detailPageNumber.value = e.eventBoardDto.eventNumber;
 
@@ -114,17 +108,123 @@
 
 
         function likeDislikeTwo(eventBoardLikeCount,eventNumber){
-              const url = "/api/event/insertDeleteLikeProcess?eventNumber="+eventNumber;
+                const url = "/api/event/insertDeleteLikeProcess?eventNumber="+eventNumber;
 
-              fetch(url)
-              .then(response => response.json())
-              .then(response => {
-                  const likeCount = document.querySelector("likeCount");
-                  if(response.loginSuccess === "false"){
-                    window.location.href="/login/customerLogin";
-                  }
+                fetch(url)
+                .then(response => response.json())
+                .then(response => {
+                    
+                    const likeCount = document.querySelector("likeCount");
+                    
+                    if(response.loginSuccess === "false"){
+                        window.location.href="/login/customerLogin";
+                    }
               })
               endEventList();
+        }
+
+        function showDetailModal(eventNumber){
+            const url = "/api/event/eventDetailPage?eventNumber="+eventNumber;
+            fetch(url)
+            .then(response => response.json())
+            .then(response=>{
+                const modal = bootstrap.Modal.getOrCreateInstance("#exampleModal");
+                const location = document.querySelector("#exampleModalLabel");
+                const startDaylocation = document.querySelector(".eventStartDay");
+                const endDaylocation = document.querySelector(".eventEndtDay");
+                location.textContent = response.eventBoardDtoAndDetail.eventBoardDto.eventTitle;
+                
+                console.log(response.eventBoardDtoAndDetail.eventBoardDto.eventStartDay);
+                startDaylocation.textContent = response.eventBoardDtoAndDetail.eventBoardDto.eventStartDay;
+                endDaylocation.textContent = response.eventBoardDtoAndDetail.eventBoardDto.eventEndDay;
+
+                const eventBoardDetailLikeCount = document.querySelector(".eventBoardDetailLikeCount");
+                eventBoardDetailLikeCount.textContent = response.eventBoardLikeCount
+
+                const eventBoardVisit = document.querySelector(".eventBoardVisit");
+                eventBoardVisit.textContent = response.eventBoardDtoAndDetail.eventBoardDto.eventVisitCount;
+
+                const boardDetailImageLocation = document.getElementById("boardDetailImageLocation");
+                boardDetailImageLocation.innerHTML = "";
+
+                const detailImageList = document.getElementById("detailImageList");
+                const detailImageListTemplete = detailImageList.querySelector(".detailImageListTemplete");
+                
+                for(e of response.eventBoardDtoAndDetail.eventDetailImageDtoList){ 
+                    const newdetailImageListTemplete = detailImageListTemplete.cloneNode(true);
+                    const detailImage = newdetailImageListTemplete.querySelector(".detailImage");
+                    detailImage.src = "/images/" + e.eventDetailImage;
+
+                    boardDetailImageLocation.appendChild(newdetailImageListTemplete);
+                }
+                
+                const LoginMotion = document.getElementById("LoginMotion");
+                
+                
+                const loginInfo = response.loginInfo;
+
+                if(loginInfo === "loginSuccess"){
+                    const loginSuccess = document.querySelector(".loginSuccess");
+                    LoginMotion.appendChild(loginSuccess);
+                }else{
+                    const loginFail = document.querySelector(".loginFail");
+                    LoginMotion.appendChild(loginFail);
+                }
+                
+                const commentListLocation = document.getElementById("commentListLocation");
+                commentListLocation.innerHTML = "";
+
+                const commentListTempleteLocation = document.getElementById("commentListTempleteLocation");
+                const commentListTemplete = commentListTempleteLocation.querySelector(".commentListTemplete")
+                for(comment of response.eventBoardCommentList){
+                    const newCommentListTemplete = commentListTemplete.cloneNode(true);
+
+                    const customerName = newCommentListTemplete.querySelector(".customerName");
+                    customerName.textContent = comment.customerDto.customerName;
+
+                    const eventCommentContent = newCommentListTemplete.querySelector(".eventCommentContent");
+                    eventCommentContent.textContent = comment.eventCommentDto.eventCommentContent;
+
+                    const eventCommentCreatedAt = newCommentListTemplete.querySelector(".eventCommentCreatedAt");
+                    const commentCreatedAt = new Date(comment.eventCommentDto.eventCommentCreatedAt);
+                    const year = commentCreatedAt.getFullYear();
+                    const month = String(commentCreatedAt.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
+                    const day = String(commentCreatedAt.getDate()).padStart(2, '0');
+
+                    const formattedDate = `${year}-${month}-${day}`;
+
+                    eventCommentCreatedAt.textContent = formattedDate;
+
+                    if(comment.eventCommentDto.masterReply != null){
+                        const replyCommentTempleteLocation = document.getElementById("replyCommentTempleteLocation");
+                        const replyCommentTemplete = replyCommentTempleteLocation.querySelector(".replyCommentTemplete")
+                        const newReplyCommentTemplete = replyCommentTemplete.cloneNode(true);
+
+                        const replyCommentLocation = newCommentListTemplete.querySelector(".replyCommentLocation");
+                                                
+                        const masterReply = newReplyCommentTemplete.querySelector(".masterReply");
+                        masterReply.textContent = comment.eventCommentDto.masterReply;
+
+                        const masterReplyCreatedAt = newReplyCommentTemplete.querySelector(".masterReplyCreatedAt");
+                        const replyCreatedAt = new Date(comment.eventCommentDto.masterReplyCreatedAt);
+                        const year = commentCreatedAt.getFullYear();
+                        const month = String(commentCreatedAt.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
+                        const day = String(commentCreatedAt.getDate()).padStart(2, '0');
+
+                        const formattedDate = `${year}-${month}-${day}`;
+
+                        masterReplyCreatedAt.textContent = formattedDate;
+
+                        newCommentListTemplete.appendChild(newReplyCommentTemplete);
+
+                    }
+
+                    commentListLocation.appendChild(newCommentListTemplete);
+                }
+
+                modal.show();
+
+            })
         }
 
         function likeDisLikeProcess(target){
@@ -146,9 +246,13 @@
         }
 
         function detailPageProcess(target){
-            
+            const location = target.closest(".EventList");
+            const detailPageNumber = location.querySelector(".detailPageNumber").value;
+
+            showDetailModal(detailPageNumber);
         }
 
+       
         window.addEventListener("DOMContentLoaded", () => {
                 reloadEventList();
             });
@@ -218,7 +322,7 @@
         </div>
     </div>
 </div>
-
+<!-- 종료된 이벤트 목록 -->
 <div class="d-none">
     <div class="endEventList row mb-2 ">
         <div class="col">
@@ -240,20 +344,174 @@
 
 
 <!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row" style="margin-bottom:82px;">
+                        <div class="col mt-2 px-5">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="row mt-4">
+                                        <div class="col text-center px-0">
+                                            <span class="fw-bold text-secondary" style="font-size:0.8em;"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col px-0">
+                                            <span class="fw-bold text-secondary" style="font-size:0.8em;">기간 :</span>
+                                            <span class="eventStartDay text-secondary" style="font-size:0.8em;"></span>
+                                            <span class="fw-bold text-secondary" style="font-size:0.8em;">~</span>
+                                            <span class="eventEndtDay text-secondary" style="font-size:0.8em;"></span>
+                                        </div>
+                                        <div class="col-auto pe-0 text-end">
+                                            <i class="thumbsUp bi bi-hand-thumbs-up"></i>
+                                            <span class="eventBoardDetailLikeCount" ></span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="bi bi-eye"></i>
+                                            <span class="eventBoardVisit"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-4" >
+                                        <div class="col px-0"  id="boardDetailImageLocation">
+
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col">
+                                            <div class="row border border-black"></div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-4 mb-4" >
+                                        <div class="col">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="row border" id="LoginMotion">
+                                                        <!-- 비로그인 모션 or 로그인 모션 -->
+                                                    </div>                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col" id="commentListLocation">
+                                            <!-- 코멘트 리스트-->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 상세이미지 템플릿 -->
+<div class="d-none" id="detailImageList">
+    <div class="row detailImageListTemplete">
+        <div class="col">
+            <img class="detailImage img-fluid">
+        </div>
+    </div>
+</div>
+
+<!-- 비로그인 템플릿-->
 <div class="d-none">
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="loginFail col">
+        <div class="row mt-3">
+            <div class="col">
+                <textarea class="form-control" placeholder="댓글을 쓰려면 로그인이 필요합니다." disabled></textarea>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col text-end mb-3">
+                <input type="button" class="btn btn-primary" value="댓글쓰기" disabled></input>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 로그인 모션 -->
+<div class="d-none">
+    <div class="loginSuccess col">
+        <form method="post">
+            <div class="row mt-3">
+                <div class="col">
+                    <textarea class="form-control" name="eventCommentContent" ></textarea>
                 </div>
-                <div class="modal-body">
-                    ...
+            </div>
+            <div class="row mt-2">
+                <div class="col text-end mb-3">
+                    <input type="submit" onclick="writeProcess()"  class="btn btn-primary" value="댓글쓰기" ></input>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- 코멘트 템플릿 -->
+<div class="d-none" id="commentListTempleteLocation">
+    <div class="commentListTemplete row border-bottom py-3">
+        <div class="col">
+            <div class="row">
+                <div class="col">
+                    <div class="row">
+                        <div class="col">
+                            <span class="customerName fw-bolder" style="font-size:0.9em;"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <span class="eventCommentContent"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <span style="font-size:0.8em;" class="eventCommentCreatedAt"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="replyCommentLocation col">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 대댓글 탬플릿 -->
+<div class="d-none" id="replyCommentTempleteLocation">
+    <div class="row replyCommentTemplete">
+        <div class="col-1"></div>
+        <div class="col">
+            <div class="row">
+                <div class="col">
+                    <div class="row">
+                        <div class="col">
+                            <span class="fw-bolder" style="font-size:0.9em;" >운영자</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <span class="masterReply"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <span class="masterReplyCreatedAt" style="font-size:0.8em;"></span>
                 </div>
             </div>
         </div>

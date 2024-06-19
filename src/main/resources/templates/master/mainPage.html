@@ -11,8 +11,61 @@
 
 </head>
 <body>
-<div class="container">
-   메인페이지
+<div class="container-fluid">
+
+    <div class="row">
+
+        <div class="col-1"></div>
+
+        <div class="col-10">
+
+            <div class="row pt-5">
+
+                <nav class="navbar navbar-expand-lg bg-danger">
+                    <div class="container-fluid">
+                        <a class="navbar-brand fs-2 text-white fw-bold text-center col-2" href="/master/mainPage">F.Guys</a>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbar">
+                            <div class="navbar-nav">
+                                <a class="nav-link fs-5 text-white fw-bold text-start" href="#">메뉴등록</a>
+                                <a class="nav-link fs-5 text-white fw-bold text-start" href="#">주문확인</a>
+                                <a class="nav-link fs-5 text-white fw-bold text-start" href="#">리뷰확인</a>
+                                <a class="nav-link fs-5 text-white fw-bold text-start" href="/event/eventlistPage">이벤트</a>
+                                <a class="nav-link fs-5 text-white fw-bold text-start" href="#">매출</a>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+
+            </div>
+
+
+
+            <div class="row pt-2">
+
+                <div class="col-2">
+
+                    <div class="card border-danger h-60 bg-danger">
+                        <img src="/img/userIcon.jpg" class="card-img-top" alt="...">
+                        <div class="card-body text-center">
+                            <span class="fs-5 text-white fw-bold" th:text="${session.masterDto.masterNickName}"></span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+        </div>
+
+        <div class="col-1"></div>
+
+    </div>
+
 </div>
 
 

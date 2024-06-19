@@ -206,6 +206,7 @@ public class SellerController {
     }
 
 
+
     @RequestMapping("reviewDetailPage")
     public String reviewDetailPage(Model model, int id) {
 
@@ -214,6 +215,20 @@ public class SellerController {
         model.addAttribute("reviewInform", reviewInform);
 
         return "/seller/reviewDetailPage";
+    }
+
+
+
+    @RequestMapping("myReviewPage")
+    public String myReviewPage(HttpSession session, Model model) {
+
+        SellerDto sellerDto = (SellerDto)session.getAttribute("sellerDto");
+        int sellerNumber = sellerDto.getSellerNumber();
+        List<Map<String, Object>> reviewInform = sellerService.selectMyReview(sellerNumber);
+
+        model.addAttribute("reviewInform", reviewInform);
+
+        return "/seller/myReviewPage";
     }
 
 

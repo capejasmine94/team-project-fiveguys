@@ -176,8 +176,6 @@ public class SellerService {
 
 
 
-
-
     public Map<String, Object> selectSellerReview(int id) {
 
         SellerReviewDto sellerReviewDto = sellerSqlMapper.selectSellerReview(id);
@@ -192,6 +190,29 @@ public class SellerService {
         map.put("sellerReviewDto", sellerReviewDto);
 
         return map;
+    }
+
+
+    public List<Map<String, Object>> selectMyReview(int sellerNumber) {
+
+        List<Map<String, Object>> sellerReviewList = new ArrayList<>();
+        List<SellerReviewDto> sellerReviewDtos = sellerSqlMapper.selectMyReview(sellerNumber);
+
+        for (SellerReviewDto sellerReviewDto : sellerReviewDtos) {
+
+            SellerOrderDto sellerOrderDto = sellerSqlMapper.selectSellerOrderInform(sellerReviewDto.getSellerOrderNumber());
+            SellerDto sellerDto = sellerSqlMapper.selectSellerInform(sellerOrderDto.getSellerNumber());
+
+            Map<String, Object> map = new HashMap<>();
+            map.put("sellerDto", sellerDto);
+            map.put("sellerOrderDto", sellerOrderDto);
+            map.put("sellerReviewDto", sellerReviewDto);
+
+            sellerReviewList.add(map);
+        }
+
+        return sellerReviewList;
+
     }
 
 

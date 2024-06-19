@@ -88,8 +88,19 @@
                     </div>
 
                     <div class="row pt-2">
+                        <a href="/seller/myReviewPage" class="col text-center fw-bold text-dark text-decoration-none">내 리뷰</a>
+                    </div>
+
+
+                    <div class="row pt-2">
+                        <div class="col  border-bottom border-danger"></div>
+                    </div>
+
+
+                    <div class="row pt-2">
                         <a href="/seller/reviewChoicePage" class="col text-center fw-bold text-dark text-decoration-none">리뷰하기</a>
                     </div>
+
 
                     <div class="row pt-2">
                         <div class="col border border-5 border-bottom border-danger"></div>
@@ -123,11 +134,11 @@
                             <td th:text="${sellerOrderList.sellerOrderDto.sellerOrderStatus}"></td>
 
                             <td class="text-center" th:if="${sellerOrderList.sellerOrderDto.sellerOrderStatus=='배송완료'} and ${sellerOrderList.checkCount==0}">
-                                <a th:href="@{/seller/reviewWritePage(id=${sellerOrderList.sellerOrderDto.sellerOrderNumber})}" class="btn btn-warning btn-sm">리뷰쓰기</a>
+                                <a th:href="@{/seller/reviewWritePage(id=${sellerOrderList.sellerOrderDto.sellerOrderNumber})}" class="btn btn-danger btn-sm">리뷰쓰기</a>
                             </td>
 
                             <td class="text-center" th:if="${sellerOrderList.sellerOrderDto.sellerOrderStatus=='배송완료'} and ${sellerOrderList.checkCount!=0}">
-                                <div class="btn btn-warning btn-sm">작성완료</div>
+                                <div class="btn btn-dark btn-sm">작성완료</div>
                             </td>
 
                             <td th:if="${sellerOrderList.sellerOrderDto.sellerOrderStatus!='배송완료'}"></td>

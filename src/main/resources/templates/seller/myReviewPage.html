@@ -102,6 +102,7 @@
                     <div class="row pt-2">
                         <div class="col border border-5 border-bottom border-danger"></div>
                     </div>
+
                 </div>
 
 
@@ -109,29 +110,34 @@
                 <div class="col-10">
 
                     <div class="row pt-2">
-                        <div class="col fs-1 fw-bold">내 정보</div>
+                        <div class="col fs-3 fw-bold text-center">내 리뷰</div>
                     </div>
 
-                    <div class="row border-bottom border-secondary pt-2"></div>
+                    <table class="table row-12">
+                        <thead>
+                        <tr>
+                            <th class="text-center" scope="col">번호</th>
+                            <th scope="col">지점명</th>
+                            <th scope="col">내용</th>
+                            <th scope="col">리뷰작성일</th>
+                        </tr>
+                        </thead>
 
-                    <div class="row pt-2">
-                        <span class="col-4 fs-5 fw-bold">아이디 : <span class="fs-6 text-secondary" th:text="${session.sellerDto.sellerId}"></span></span>
-                        <span class="col-4 fs-5 fw-bold">이름 : <span class="fs-6 text-secondary" th:text="${session.sellerDto.sellerName}"></span></span>
-                    </div>
+                        <tbody>
+                        <tr th:each="reviewInform : ${reviewInform}">
+                            <td class="text-center" th:text="${reviewInform.sellerReviewDto.sellerReviewNumber}"></td>
+                            <td th:text="${reviewInform.sellerDto.sellerName}"></td>
+                            <td>
+                                <a th:href="@{/seller/reviewDetailPage(id=${reviewInform.sellerReviewDto.sellerReviewNumber})}"
+                                   th:text="${#strings.length(reviewInform.sellerReviewDto.sellerReviewContent) > 7 ? #strings.substring(reviewInform.sellerReviewDto.sellerReviewContent, 0, 7) + '...' : reviewInform.sellerReviewDto.sellerReviewContent}"
+                                   class="text-decoration-none fw-bold text-black">
+                                </a>
+                            </td>
+                            <td th:text="${#dates.format(reviewInform.sellerReviewDto.sellerReviewCreatedAt, 'yyyy-MM-dd')}"></td>
 
-                    <div class="row pt-2">
-                        <span class="col-4 fs-5 fw-bold">전화번호 : <span class="fs-6 text-secondary" th:text="${session.sellerDto.sellerPhoneNumber}"></span></span>
-                        <span class="col-4 fs-5 fw-bold">주소 : <span class="fs-6 text-secondary" th:text="${session.sellerDto.sellerAddress}"></span></span>
-                        <span class="col-4 fs-5 fw-bold">생성일 : <span class="fs-6 text-secondary" th:text="${#dates.format(session.sellerDto.sellerCreatedAt, 'yyyy-MM-dd')}"></span></span>
-                    </div>
-
-                    <div class="row border-bottom border-secondary pt-3"></div>
-
-
-                    <div class="row pt-3">
-                        <a href="" class="col text-end fs-6 text-black text-decoration-none fw-bold">비밀번호 변경</a>
-                    </div>
-
+                        </tr>
+                        </tbody>
+                    </table>
 
 
                 </div>

@@ -36,11 +36,13 @@
         where sellerOrderNumber = #{sellerOrderNumber}
     </select>
 
+
     <update id="updateMaterialQuantity">
         update fc_sellerOrder
         set sellerOrderQuantity = #{sellerOrderQuantity}
         where sellerOrderNumber = #{sellerOrderNumber}
     </update>
+
 
     <select id="selectRecentSellerOrder">
         SELECT *
@@ -59,6 +61,7 @@
         GROUP BY sellerOrderCreatedAt
         ORDER BY sellerOrderCreatedAt DESC
     </select>
+
 
     <select id="selectSameSellerOrder">
         select * from fc_sellerOrder WHERE
@@ -79,6 +82,7 @@
         values(#{sellerOrderNumber}, #{sellerReviewContent}, '');
     </insert>
 
+
     <select id="selectAllSellerReview">
         select * from fc_sellerReview
         order by sellerReviewNumber desc;
@@ -90,9 +94,20 @@
         where sellerReviewNumber = #{sellerReviewNumber}
     </select>
 
+
     <select id="selectSellerReviewCheck">
         select count(*) from fc_sellerReview
         where sellerOrderNumber = #{sellerOrderNumber}
+    </select>
+
+
+
+    <select id="selectMyReview">
+        select * from fc_sellerReview fs inner join
+            (select sellerOrderNumber from fc_sellerOrder
+                where sellerNumber = #{sellerNumber} group by sellerOrderCreatedAt)
+        fso on fs.sellerOrderNumber = fso.sellerOrderNumber
+        order by fs.sellerReviewNumber desc;
     </select>
 
 

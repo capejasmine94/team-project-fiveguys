@@ -40,6 +40,8 @@ public interface SellerSqlMapper {
 
     public int selectSellerReviewCheck(int sellerOrderNumber);
 
+    public List<SellerReviewDto> selectMyReview(int sellerNumber);
+
 
 
 

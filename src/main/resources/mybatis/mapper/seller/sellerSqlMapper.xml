@@ -78,8 +78,8 @@
 
     <insert id="insertSellerReview">
         insert into fc_sellerReview
-            (sellerOrderNumber, sellerReviewContent, masterReply)
-        values(#{sellerOrderNumber}, #{sellerReviewContent}, '');
+            (sellerOrderNumber, sellerReviewContent)
+        values(#{sellerOrderNumber}, #{sellerReviewContent});
     </insert>
 
 
@@ -108,6 +108,12 @@
                 where sellerNumber = #{sellerNumber} group by sellerOrderCreatedAt)
         fso on fs.sellerOrderNumber = fso.sellerOrderNumber
         order by fs.sellerReviewNumber desc;
+    </select>
+
+
+    <select id="selectMasterReply">
+        SELECT * from fc_masterReply
+        where sellerReviewNumber = #{sellerReviewNumber}
     </select>
 
 

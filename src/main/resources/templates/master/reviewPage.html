@@ -41,7 +41,7 @@
                             <div class="navbar-nav">
                                 <a class="nav-link fs-5 text-white fw-bold text-start" href="#">메뉴등록</a>
                                 <a class="nav-link fs-5 text-white fw-bold text-start" href="#">주문확인</a>
-                                <a class="nav-link fs-5 text-white fw-bold text-start" href="/master/reviewPage">리뷰확인</a>
+                                <a class="nav-link fs-5 text-white fw-bold text-start" href="#">리뷰확인</a>
                                 <a class="nav-link fs-5 text-white fw-bold text-start" href="/event/eventlistPage">이벤트</a>
                                 <a class="nav-link fs-5 text-white fw-bold text-start" href="#">매출</a>
                             </div>
@@ -50,6 +50,42 @@
                 </nav>
 
             </div>
+
+
+            <div class="row">
+
+                <table class="table table-danger">
+                    <thead>
+                    <tr>
+                        <th class="text-center" scope="col">#</th>
+                        <th class="text-end" scope="col">지점명</th>
+                        <th class="text-center" scope="col">내용</th>
+                        <th class="text-start" scope="col">작성일</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="sellerReviewList : ${sellerReviewList}">
+                        <td class="text-center" th:text="${sellerReviewList.sellerReviewDto.sellerReviewNumber}"></td>
+                        <td class="text-end" th:text="${sellerReviewList.sellerDto.sellerName}"></td>
+
+
+                        <td class="text-center text-black">
+                            <a th:href="@{/master/reviewDetailPage(id=${sellerReviewList.sellerReviewDto.sellerOrderNumber})}"
+                               th:text="${sellerReviewList.sellerReviewDto.sellerReviewContent}">>
+                            </a>
+                        </td>
+
+
+                        <td class="text-start" th:text="${#dates.format(sellerReviewList.sellerReviewDto.sellerReviewCreatedAt, 'yyyy-MM-dd')}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+
+
+
 
 
 

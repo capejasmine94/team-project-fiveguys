@@ -1,9 +1,6 @@
 package com.fiveguys.seller.mapper;
 
-import com.fiveguys.dto.MaterialDto;
-import com.fiveguys.dto.SellerDto;
-import com.fiveguys.dto.SellerOrderDto;
-import com.fiveguys.dto.SellerReviewDto;
+import com.fiveguys.dto.*;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -41,6 +38,8 @@ public interface SellerSqlMapper {
     public int selectSellerReviewCheck(int sellerOrderNumber);
 
     public List<SellerReviewDto> selectMyReview(int sellerNumber);
+
+    public MasterReplyDto selectMasterReply(int sellerReviewNumber);
 
 
 

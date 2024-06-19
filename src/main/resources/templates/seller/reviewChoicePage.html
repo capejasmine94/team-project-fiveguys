@@ -125,7 +125,7 @@
                         <tbody>
                         <tr th:each="sellerOrderList : ${sellerOrderList}">
                             <td class="text-center">
-                                <a th:href="@{/seller/orderDetailCheckPage(id=${sellerOrderList.sellerOrderDto. sellerOrderNumber})}"
+                                <a th:href="@{/seller/orderDetailCheckPage(id=${sellerOrderList.sellerOrderDto.sellerOrderNumber})}"
                                    th:text="${#dates.format(sellerOrderList.sellerOrderDto.sellerOrderCreatedAt, 'yyyy-MM-dd')}"
                                    class="text-decoration-none fw-bold text-black">
                                 </a>

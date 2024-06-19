@@ -41,7 +41,7 @@
                             <div class="navbar-nav">
                                 <a class="nav-link fs-5 text-white fw-bold text-start" href="#">메뉴등록</a>
                                 <a class="nav-link fs-5 text-white fw-bold text-start" href="#">주문확인</a>
-                                <a class="nav-link fs-5 text-white fw-bold text-start" href="/master/reviewPage">리뷰확인</a>
+                                <a class="nav-link fs-5 text-white fw-bold text-start" href="#">리뷰확인</a>
                                 <a class="nav-link fs-5 text-white fw-bold text-start" href="/event/eventlistPage">이벤트</a>
                                 <a class="nav-link fs-5 text-white fw-bold text-start" href="#">매출</a>
                             </div>
@@ -50,6 +50,58 @@
                 </nav>
 
             </div>
+
+
+
+            <div class="row pt-4">
+                <div class="col">
+                    <span class="fs-2 fw-bold" th:text="${reviewInform.sellerDto.sellerName}"></span>
+                    <span class="fs-3 fw-bold">사장님 리뷰</span>
+                </div>
+            </div>
+
+            <div class="row pt-4">
+                <span class="col-3 fs-4 fw-bolder text-secondary">지점 : <span class="fs-5 fw-bold text-secondary" th:text="${reviewInform.sellerDto.sellerAddress}"></span></span>
+                <span class="col-3 fs-4 fw-bolder text-secondary">게시일 : <span class="fs-5 fw-bold text-secondary" th:text="${#dates.format(reviewInform.sellerReviewDto.sellerReviewCreatedAt, 'yyyy-MM-dd')}"></span></span>
+                <span class="col-3 fs-4 fw-bolder text-secondary">주문번호 : <span class="fs-5 fw-bold text-secondary" th:text="${reviewInform.sellerReviewDto.sellerOrderNumber}"></span></span>
+            </div>
+
+            <div class="row pt-2">
+                <div class="col border border-bottom border-secondary"></div>
+            </div>
+
+            <div class="row pt-3">
+                <div class="col fs-4 fw-bold" th:text="${reviewInform.sellerReviewDto.sellerReviewContent}"></div>
+            </div>
+
+
+
+            <div class="row pt-5 mt-5">
+                <div class="col border border-bottom border-danger"></div>
+            </div>
+
+            <div class="row pt-2">
+                <div class="col fs-5 fw-bolder">본사 답글</div>
+            </div>
+
+
+            <div th:if="${reviewInform.masterReplyDto != null}" class="row pt-2">
+                <div class="col fs-4 fw-bold" th:text="${reviewInform.masterReplyDto.masterReplyContent}"></div>
+            </div>
+
+
+            <form th:if="${reviewInform.masterReplyDto == null}" action="/master/insertMasterReply">
+                <div class="row pt-2">
+                    <input type="hidden" name="sellerReviewNumber" th:value="${reviewInform.sellerReviewDto.sellerReviewNumber}">
+
+                    <textarea class="col form-control" name="masterReplyContent" rows="5" placeholder="답글을 입력해주세요."></textarea>
+                </div>
+
+                <div class="row pt-2">
+                    <div class="col-11"></div>
+                    <button type="submit" class="col-1 btn btn-danger">등록</button>
+                </div>
+            </form>
 
 
 

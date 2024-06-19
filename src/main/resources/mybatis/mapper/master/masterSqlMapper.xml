@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fiveguys.master.mapper.MasterSqlMapper">
+
+
+    <select id="selectAllSellerReview">
+        SELECT * from fc_sellerReview
+    </select>
+
+
+    <select id="selectSellerReview">
+    select * from fc_sellerReview
+    where sellerOrderNumber = #{sellerOrderNumber};
+    </select>
+
+
+    <select id="selectSellerOrder">
+        select * from fc_sellerOrder
+        where sellerOrderNumber = #{sellerOrderNumber}
+    </select>
+
+
+    <select id="selectSeller">
+        select * from fc_seller
+        where sellerNumber = #{sellerNumber}
+    </select>
+
+
+    <insert id="insertMasterReply">
+        insert into fc_masterReply
+        (sellerReviewNumber, masterReplyContent)
+        values(#{sellerReviewNumber}, #{masterReplyContent})
+    </insert>
+
+
+    <select id="selectMasterReply">
+        SELECT * from fc_masterReply
+        where sellerReviewNumber = #{sellerReviewNumber}
+    </select>
+
+
+
+
+
+
+
+</mapper>

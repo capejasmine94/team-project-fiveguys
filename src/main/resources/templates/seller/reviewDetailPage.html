@@ -36,13 +36,19 @@
                 <div class="fs-3 fw-bold" th:text="${reviewInform.sellerReviewDto.sellerReviewContent}"></div>
             </div>
 
-            <div class="row pt-5 mt-3">
-                <div class="col border border-bottom border-secondary"></div>
+
+            <div class="row pt-5 mt-5">
+                <div class="col border border-bottom border-danger"></div>
             </div>
 
 
-            <div class="row pt-3">
+            <div th:if="${reviewInform.masterReplyDto != null}" class="row pt-2">
                 <div class="col fs-5 fw-bolder">본사 답글</div>
+
+                <div class="row pt-2">
+                    <div class="col fs-4 fw-bold" th:text="${reviewInform.masterReplyDto.masterReplyContent}"></div>
+                </div>
+
             </div>
 
 

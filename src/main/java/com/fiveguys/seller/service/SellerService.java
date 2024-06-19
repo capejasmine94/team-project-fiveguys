@@ -1,10 +1,7 @@
 package com.fiveguys.seller.service;
 
 
-import com.fiveguys.dto.MaterialDto;
-import com.fiveguys.dto.SellerDto;
-import com.fiveguys.dto.SellerOrderDto;
-import com.fiveguys.dto.SellerReviewDto;
+import com.fiveguys.dto.*;
 import com.fiveguys.seller.mapper.SellerSqlMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -182,12 +179,14 @@ public class SellerService {
 
         SellerOrderDto sellerOrderDto = sellerSqlMapper.selectSellerOrderInform(sellerReviewDto.getSellerOrderNumber());
         SellerDto sellerDto = sellerSqlMapper.selectSellerInform(sellerOrderDto.getSellerNumber());
+        MasterReplyDto masterReplyDto = sellerSqlMapper.selectMasterReply(sellerReviewDto.getSellerReviewNumber());
 
 
         Map<String, Object> map = new HashMap<>();
         map.put("sellerDto", sellerDto);
         map.put("sellerOrderDto", sellerOrderDto);
         map.put("sellerReviewDto", sellerReviewDto);
+        map.put("masterReplyDto", masterReplyDto);
 
         return map;
     }

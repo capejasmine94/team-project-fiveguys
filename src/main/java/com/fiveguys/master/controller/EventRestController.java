@@ -122,12 +122,14 @@ public class EventRestController {
     //대댓글
     @RequestMapping("updateMasterReply")
     public Map<String,Object> updateMasterReply(@RequestBody EventCommentDto eventCommentDto) {
+        System.out.println();
         Map<String,Object> map = new HashMap<>();
         eventService.updateEventCommentMasterReply(eventCommentDto);
-        map.put("success", "success");
+        map.put("eventNumber", eventCommentDto.getEventNumber());
         return map;
 
     }
 
+    
     
 }

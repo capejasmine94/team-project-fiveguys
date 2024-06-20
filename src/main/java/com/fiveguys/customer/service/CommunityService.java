@@ -1,10 +1,7 @@
 package com.fiveguys.customer.service;
 
 import com.fiveguys.customer.mapper.CommunitySqlMapper;
-import com.fiveguys.dto.CommunityCommentDto;
-import com.fiveguys.dto.CommunityDto;
-import com.fiveguys.dto.CommunityLikeDto;
-import com.fiveguys.dto.CustomerDto;
+import com.fiveguys.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,8 +14,15 @@ public class CommunityService {
     @Autowired
     private CommunitySqlMapper communitySqlMapper;
 
-    public void insertCommunityWrite(CommunityDto params) {
+    public void insertCommunityWrite(CommunityDto params, List<CommunityDetailImageDto> communityDetailImageDtoList) {
         communitySqlMapper.insertCommunityWrite(params);
+        for(CommunityDetailImageDto communityDetailImageDto : communityDetailImageDtoList){
+//            System.out.println(params.getCommunityNumber() + "넘버");
+            communityDetailImageDto.setCommunityId(params.getCommunityNumber());
+
+            communitySqlMapper.communityDetailImageDtoList(communityDetailImageDto);
+        }
+
     }
 
     public List<Map<String, Object>> selectCommunityList() {
@@ -37,12 +41,18 @@ public class CommunityService {
             //댓글 카운트
             int commentCount = communitySqlMapper.selectCountCommentNumber(communiyNumber);
 
+            //이미지 처리
+            List<CommunityDetailImageDto> communityImageDtoFile = communitySqlMapper.selectCommunityDatailImageDtoList(communiyNumber);
+
             Map<String, Object> map = new HashMap<>();
 
             map.put("communityDto", communityDto);
             map.put("customerDto", customerDto);
             map.put("likeCount", likeCount);
             map.put("commentCount", commentCount);
+            map.put("communityImageDtoFile", communityImageDtoFile);
+
+            System.out.println("이미지파일서비스서비스서시버삳기" + communityImageDtoFile);
 
             result.add(map);
         }
@@ -116,6 +126,14 @@ public class CommunityService {
     public int selectCountCommunityLike(int communityNumber){
         return communitySqlMapper.selectCountCommunityLike(communityNumber);
     }
+
+    //이미지
+    public List<CommunityDetailImageDto> selectCommunityDatailImageDtoList(int cummunityId){
+        return communitySqlMapper.selectCommunityDatailImageDtoList(cummunityId);
+
+    }
+
+
 
 
 }

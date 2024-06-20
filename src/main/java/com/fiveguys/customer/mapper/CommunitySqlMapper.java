@@ -1,9 +1,6 @@
 package com.fiveguys.customer.mapper;
 
-import com.fiveguys.dto.CommunityCommentDto;
-import com.fiveguys.dto.CommunityDto;
-import com.fiveguys.dto.CommunityLikeDto;
-import com.fiveguys.dto.CustomerDto;
+import com.fiveguys.dto.*;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -21,6 +18,9 @@ public interface CommunitySqlMapper {
     //글 삭제,수정
     public void deleteCommunityPage(int communityNumber);
     public void updateCommunityPage(CommunityDto communityDto);
+    //이미지
+    public void communityDetailImageDtoList(CommunityDetailImageDto communityDetailImageDto);
+    public List<CommunityDetailImageDto> selectCommunityDatailImageDtoList(int communityId);
 
     //댓글
     public void insertCommunityComment(CommunityCommentDto communityCommentDto);

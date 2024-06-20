@@ -29,30 +29,47 @@
 
         <div class="row mx-1 my-1 border border-danger bg-white rounded-4 shadow" th:each = "communityData : ${selectCommunityList}"  >
             <div class="col ps-4 pe-4">
-                <div class="row pt-2 pb-1">
-                    <div class="col-auto pe-0">
-                        <input name="communityNumber" type="hidden" th:value="${communityData.communityDto.communityNumber}">
-                        <span class="me-1">
-<!--                아이콘-->
-                            <i class="bi bi-person-circle"></i>
-                        </span>
-                    </div>
-                    <div class="col-auto p-0 me-1" style="font-size : 0.9rem">
-<!--                닉네임-->
-                        <span><span th:text="${communityData.customerDto.customerName}"></span> • </span>
-                    </div>
-                    <div class="col-auto p-0 text-secondary" style="font-size : 0.9rem">
-                        <span th:text="${communityData.communityDto.communityCreatedAt}"></span>
-                    </div>
-                </div>
                 <div class="row">
-                    <div class="col">
-<!--                글제목:-->
+                    <div class="col p-1">
+                        <div class="row pt-2 pb-1">
+                            <div class="col-auto pe-0">
+                                <input name="communityNumber" type="hidden" th:value="${communityData.communityDto.communityNumber}">
+                                <span class="me-1">
+                <!--                아이콘-->
+                                    <i class="bi bi-person-circle"></i>
+                                </span>
+                            </div>
+                            <div class="col-auto p-0 me-1" style="font-size : 0.9rem">
+                <!--                닉네임-->
+                                <span><span th:text="${communityData.customerDto.customerName}"></span> • </span>
+                            </div>
+                            <div class="col-auto p-0 text-secondary" style="font-size : 0.9rem">
+<!--                                작성시간-->
+                                <span th:text="${communityData.communityDto.communityCreatedAt}"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+        <!--                글제목:-->
+                                <span>
+                                    <a class="text-decoration-none text-black fs-5"
+                                       th:href="@{./communityReadPage(communityNumber=${communityData.communityDto.communityNumber})}"
+                                       th:text="${communityData.communityDto.communityTitle}">
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+<!--                    대표 이미지-->
+                    <div class="col-4 p-1">
                         <span>
-                            <a class="text-decoration-none text-black fs-5" th:href="@{./communityReadPage(communityNumber=${communityData.communityDto.communityNumber})}" th:text="${communityData.communityDto.communityTitle}"></a>
+                            <span th:if="${communityData.communityDto.communityImage != null && !communityData.communityDto.communityImage.isEmpty()}">
+                                <img class="img-fluid rounded-5" th:src="@{|/images/${communityData.communityDto.communityImage}|}">
+                            </span>
                         </span>
                     </div>
                 </div>
+
                 <div class="row justify-content-end pt-2 pb-2">
                     <div class="col-auto p-1 d-flex">
 <!--                 조회수-->
@@ -65,10 +82,11 @@
                         <span th:text="${communityData.commentCount}"></span>
                     </div>
                     <div class="col-auto p-1 d-flex">
-<!--                좋아요카운트-->
+<!--                    좋아요카운트-->
                         <span class="text-danger"><i class="bi bi-heart"></i></span>
                         <span th:text="${communityData.likeCount}"></span>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -100,7 +118,9 @@
         </div>
 
 
-            <div class="col text-end">
+
+
+        <div class="col text-end">
                 <!--                글쓰기버튼-->
                 <th:block th:if="${session.customerDto} != null">
                     <span class="text-end"><button class="btn btn-dark rounded-4" onclick="location.href='./communityWritePage'">작성하기</button></span>

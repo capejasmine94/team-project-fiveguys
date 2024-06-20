@@ -1,19 +1,18 @@
 package com.fiveguys.customer.controller;
 
 import com.fiveguys.customer.service.CommunityService;
-import com.fiveguys.dto.CommunityCommentDto;
-import com.fiveguys.dto.CommunityDto;
-import com.fiveguys.dto.CommunityLikeDto;
-import com.fiveguys.dto.CustomerDto;
+import com.fiveguys.dto.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-import java.util.Map;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Controller
 @RequestMapping("customer")
@@ -25,8 +24,6 @@ public class CommunityController {
     @RequestMapping("communityPage")
     public String communityPage(Model model){
         List<Map<String, Object>> selectCommunityList = communityService.selectCommunityList();
-
-        // System.out.println(selectCommunityList + "리스트출력");
 
         model.addAttribute("selectCommunityList", selectCommunityList);
 
@@ -41,16 +38,70 @@ public class CommunityController {
 
     //자유게시판 글쓰기프로세스
     @RequestMapping("communityWriteProcess")
-    public String communityWriteProcess(HttpSession session, CommunityDto params){
+    public String communityWriteProcess(HttpSession session, CommunityDto params, MultipartFile[] uploadFiles, MultipartFile uploadFileMain){
 
         CustomerDto customerDto = (CustomerDto)session.getAttribute("customerDto");
         int userPk = customerDto.getCustomerNumber();
 
+        List<CommunityDetailImageDto> communityDetailImageDtoList = new ArrayList<>();
+
+        // 대표 이미지 처리
+        if(uploadFiles != null){
+            for(MultipartFile multipartFile : uploadFiles){
+                if(multipartFile.isEmpty()){
+                    continue;
+                }
+                String imagePath = saveFile(multipartFile);
+
+                //DB 작업용 Dto 생성
+                CommunityDetailImageDto communityDetailImageDto = new CommunityDetailImageDto();
+                communityDetailImageDto.setMultipleImage(imagePath);
+
+                communityDetailImageDtoList.add(communityDetailImageDto);
+            }
+        }
+
+        //멀티 이미지
+        if (!uploadFileMain.isEmpty()) {
+            String mainImagePath = saveFile(uploadFileMain);
+            params.setCommunityImage(mainImagePath);
+        }
+
         params.setCustomerNumber(userPk);
 
-        communityService.insertCommunityWrite(params);
+        communityService.insertCommunityWrite(params,communityDetailImageDtoList);
 
         return "redirect:./communityPage";
+    }
+
+    private String saveFile(MultipartFile file) {
+        // 경로 설정, 폴더 위치
+        String rootPath = "C:/fiveguys_image/";
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd/");
+        String directory = sdf.format(new Date());
+        File createDirectory = new File(rootPath + directory);
+
+        if (!createDirectory.exists()) {
+            createDirectory.mkdirs();
+        }
+
+        // 파일명 조작
+
+        String originalFileName = file.getOriginalFilename();
+        String userId = UUID.randomUUID().toString();
+
+        long addMilliTime = System.currentTimeMillis();
+        String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+        String filename = userId + "_" + addMilliTime + fileExtension;
+
+        // 파일 저장
+        try {
+            file.transferTo(new File(rootPath + directory + filename));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return directory + filename;
     }
 
     //자유게시판 상세글보기 페이지
@@ -77,6 +128,9 @@ public class CommunityController {
 
         int likeCount = communityService.selectCountCommunityLike(communityNumber);
         model.addAttribute("likeCount", likeCount);
+
+        List<CommunityDetailImageDto> communityImageDtoFile = communityService.selectCommunityDatailImageDtoList(communityNumber);
+        model.addAttribute("communityImageDtoFile", communityImageDtoFile);
 
         return "customer/communityReadPage";
     }

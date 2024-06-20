@@ -4,12 +4,31 @@
 <mapper namespace="com.fiveguys.customer.mapper.CommunitySqlMapper">
 
     <insert id="insertCommunityWrite">
+        <selectKey order="AFTER" keyProperty="communityNumber" resultType="int">
+            select max(communityNumber)
+            from fc_community
+        </selectKey>
         insert into fc_community(
-            customerNumber, communityTitle, communityContent, communityVisitCount
+            customerNumber, communityTitle, communityContent, communityVisitCount, communityImage
         ) values(
-             #{customerNumber} , #{communityTitle}, #{communityContent} , 0
+             #{customerNumber} , #{communityTitle}, #{communityContent} , 0 , #{communityImage}
         )
     </insert>
+
+    <insert id="communityDetailImageDtoList">
+        insert into fc_communityDetailImage(
+            communityId, multipleImage
+        ) values(
+            #{communityId}, #{multipleImage}
+        )
+    </insert>
+
+<!--    이미지 삽입-->
+    <select id="selectCommunityDatailImageDtoList" resultType="CommunityDetailImageDto">
+        select *
+        from fc_communityDetailImage
+        where communityId = #{communityId}
+    </select>
 
 <!--    게시글 전체리스트 역순으로 정렬-->
     <select id="selectCommunityList" resultType="CommunityDto">
@@ -19,14 +38,15 @@
              communityTitle,
              communityContent,
              communityVisitCount,
-
         CASE
             WHEN FLOOR(TIMESTAMPDIFF(MONTH, communityCreatedAt, NOW()) / 12) >= 1 THEN CONCAT(FLOOR(TIMESTAMPDIFF(MONTH, communityCreatedAt, NOW()) / 12), '년전')
             WHEN TIMESTAMPDIFF(MONTH, communityCreatedAt, NOW()) >= 1 THEN CONCAT(TIMESTAMPDIFF(MONTH, communityCreatedAt, NOW()), '달전')
             WHEN DATEDIFF(CURRENT_DATE, communityCreatedAt) >= 1 THEN CONCAT(DATEDIFF(CURRENT_DATE, communityCreatedAt), '일전')
             WHEN TIMESTAMPDIFF(HOUR, communityCreatedAt, NOW()) >= 1 THEN CONCAT(TIMESTAMPDIFF(HOUR, communityCreatedAt, NOW()), '시간전')
             ELSE CONCAT(TIMESTAMPDIFF(MINUTE, communityCreatedAt, NOW()), '분전')
-        end as communityCreatedAt
+        end as communityCreatedAt,
+
+        communityImage
 
         from fc_community
         order by communityNumber desc
@@ -39,7 +59,23 @@
 
 
     <select id="selectCommunityNumber" resultType="CommunityDto">
-        select * from fc_community where communityNumber = #{communityNumber}
+        select
+            communityNumber,
+            customerNumber,
+            communityTitle,
+            communityContent,
+            communityVisitCount,
+        CASE
+            WHEN FLOOR(TIMESTAMPDIFF(MONTH, communityCreatedAt, NOW()) / 12) >= 1 THEN CONCAT(FLOOR(TIMESTAMPDIFF(MONTH, communityCreatedAt, NOW()) / 12), '년전')
+            WHEN TIMESTAMPDIFF(MONTH, communityCreatedAt, NOW()) >= 1 THEN CONCAT(TIMESTAMPDIFF(MONTH, communityCreatedAt, NOW()), '달전')
+            WHEN DATEDIFF(CURRENT_DATE, communityCreatedAt) >= 1 THEN CONCAT(DATEDIFF(CURRENT_DATE, communityCreatedAt), '일전')
+            WHEN TIMESTAMPDIFF(HOUR, communityCreatedAt, NOW()) >= 1 THEN CONCAT(TIMESTAMPDIFF(HOUR, communityCreatedAt, NOW()), '시간전')
+            ELSE CONCAT(TIMESTAMPDIFF(MINUTE, communityCreatedAt, NOW()), '분전')
+            end as communityCreatedAt,
+
+            communityImage
+
+        from fc_community where communityNumber = #{communityNumber}
     </select>
 
 <!--    조회수 증가-->

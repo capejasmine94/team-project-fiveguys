@@ -13,4 +13,5 @@ public class CommunityDto {
     private String communityContent;
     private int communityVisitCount;
     private String communityCreatedAt;
+    private String communityImage;
 }

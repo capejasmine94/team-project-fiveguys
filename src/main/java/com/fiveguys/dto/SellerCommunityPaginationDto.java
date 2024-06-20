@@ -2,6 +2,8 @@ package com.fiveguys.dto;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class SellerCommunityPaginationDto {
 
@@ -9,7 +11,7 @@ public class SellerCommunityPaginationDto {
     private int startPage; //시작 페이지
     private int endPage; //마지막 페이지
     private int paginationPage; //페이징 처리후 총 페이지
-    private String selectOption; //선택한 페이지
+    private String sortedOption; //선택한 페이지
     private String searchWord; //검색한 검색어
     private int itemsPerPage;
 

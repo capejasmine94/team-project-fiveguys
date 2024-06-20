@@ -30,7 +30,7 @@ public class SellerCommunityService {
         }
     }
 
-    public List<Map<String,Object>> selectSellerCommunityList(SellerCommunityPaginationDto sellerCommunityPaginationDto,int sellerNumber){
+    public List<Map<String,Object>> selectSellerCommunityList(SellerCommunityPaginationDto sellerCommunityPaginationDto, int sellerNumber){
         List<Map<String,Object>> result = new ArrayList<>();
         List<SellerCommunityDto> sellerCommunityDtoList = sellerCommunitySqlMapper.selectSellerCommunityList(sellerCommunityPaginationDto);
         for (SellerCommunityDto sellerCommunityDto : sellerCommunityDtoList) {
@@ -182,8 +182,8 @@ public class SellerCommunityService {
         return sellerCommunitySqlMapper.selectImageListById(sellerCommunityNumber);
     }
 
-    public int selectSellerCommunityCount(){
-        return sellerCommunitySqlMapper.selectSellerCommunityCount();
+    public int selectSellerCommunityCount(String searchWord){
+        return sellerCommunitySqlMapper.selectSellerCommunityCount(searchWord);
     }
 
     //댓글삽입

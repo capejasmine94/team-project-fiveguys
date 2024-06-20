@@ -1,13 +1,62 @@
 window.addEventListener("DOMContentLoaded",()=>{
-    getSellerCommunityList();
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentPage = urlParams.get('currentPage') || 1;
+    const searchWord = urlParams.get("searchWord")|| "";
+    const sortedOption = urlParams.get("sortedOption")||"recent";
+
+    getSellerCommunityList(currentPage,searchWord,sortedOption);
 });
 
-function getSellerCommunityList(){
+function searchWord(){
 
-    const url="/api/seller/getSellerCommunityList";
+    const searchWord = document.querySelector("#searchWord").value;
+    const sortedOption = document.querySelector("#sortedOption").value;
+
+
+    const url= "/api/seller/getSellerCommunityList";
+
+    fetch(url)
+        .then(response=>response.json())
+        .then(response=> {
+            if (response.login === false) {
+                window.location.href = "/login/sellerLogin";
+            }
+
+            getSellerCommunityList(1,searchWord,sortedOption);
+        });
+}
+
+function sortedOption(){
+    const sortedOption = document.querySelector("#sortedOption").value;
+    const searchWord = document.querySelector("#searchWord").value;
+
+    const url= "/api/seller/getSellerCommunityList";
+    fetch(url)
+        .then(response=>response.json())
+        .then(response=> {
+            if (response.login === false) {
+                window.location.href = "/login/sellerLogin";
+            }
+
+
+            getSellerCommunityList(1,searchWord,sortedOption);
+        });
+
+}
+
+function getSellerCommunityList(currentPage,searchWord,sortedOption){
+
+    const url= `/api/seller/getSellerCommunityList?currentPage=${currentPage}&searchWord=${searchWord}&sortedOption=${sortedOption}`;
+
     fetch(url)
         .then(response=>response.json())
         .then(response=>{
+            if(response.login===false){
+                window.location.href="/login/sellerLogin";
+            }
+
+            const sellerInfo = document.querySelector("#sellerInfo");
+            sellerInfo.innerText=response.sellerDto.sellerName;
 
             const sellerCommunityBox = document.getElementById("sellerCommunityBox");
             const sellerCommentWrapper = document.querySelector(".sellerCommentWrapper");
@@ -77,9 +126,39 @@ function getSellerCommunityList(){
                 newSellerCommentWrapper.classList.remove("d-none");
                 sellerCommunityBox.appendChild(newSellerCommentWrapper);
             }
-            //페이징
+
+            //페이징 위쪽
+            const topCurrentPage = document.querySelector("#topCurrentPage");
+            topCurrentPage.innerText=response.sellerCommunityPaginationDto.currentPage;
+
+            const topTotalPage = document.querySelector("#topTotalPage");
+            topTotalPage.innerText=response.sellerCommunityPaginationDto.paginationPage;
+
+            const topPreviousPage = document.querySelector("#topPreviousPage");
+            topPreviousPage.setAttribute("onclick",`movePage(${response.sellerCommunityPaginationDto.currentPage-1})`)
+
+            if(response.sellerCommunityPaginationDto.currentPage ===1){
+                topPreviousPage.classList.add("text-black-50");
+                topPreviousPage.onclick=null;
+            }else{
+                topPreviousPage.classList.remove("text-black-50");
+            }
+
+            const topNextPage = document.querySelector("#topNextPage");
+            topNextPage.setAttribute("onclick",`movePage(${response.sellerCommunityPaginationDto.currentPage+1})`)
+
+            if(response.sellerCommunityPaginationDto.currentPage ===response.sellerCommunityPaginationDto.paginationPage){
+                topNextPage.classList.add("text-black-50");
+                topNextPage.onclick=null;
+            }else{
+                topNextPage.classList.remove("text-black-50");
+            }
+
+            //페이징 아래쪽
             const previousPage = document.querySelector("#previousPage");
             const previousPageContainer = document.querySelector("#previousPageContainer");
+
+            previousPage.setAttribute("onclick","movePage(1)");
 
 
             if(response.sellerCommunityPaginationDto.startPage ===1){
@@ -87,8 +166,13 @@ function getSellerCommunityList(){
                 previousPage.onclick=null;
             }
 
+
+
+
+
             const firstPageContainer = document.querySelector("#firstPageContainer");
             const firstPage = document.querySelector("#firstPage");
+            firstPageContainer.setAttribute("onclick",`movePage(${response.sellerCommunityPaginationDto.startPage})`);
             firstPage.innerText=response.sellerCommunityPaginationDto.startPage;
 
             if(response.sellerCommunityPaginationDto.currentPage !==1 || response.sellerCommunityPaginationDto.startPage !==1){
@@ -97,11 +181,10 @@ function getSellerCommunityList(){
                 firstPageContainer.classList.add("d-none");
             }
 
-
             const pageNumbers = document.querySelector("#numberSequenceContainer");
             const pageList = document.querySelector(".pageList");
 
-            pageList.innerHTML="";
+            pageNumbers.innerHTML="";
 
 
             for(let e=1; e<=response.sellerCommunityPaginationDto.endPage; e++){
@@ -109,7 +192,7 @@ function getSellerCommunityList(){
                 const newPageNumbers = pageList.cloneNode(true);
 
 
-                newPageNumbers.setAttribute("onclick",`numberSequence(${e})`)
+                newPageNumbers.setAttribute("onclick",`movePage(${e})`)
                 newPageNumbers.innerText=e;
 
                 if(response.sellerCommunityPaginationDto.currentPage ===e){
@@ -131,26 +214,57 @@ function getSellerCommunityList(){
             const endPage = document.querySelector("#endPage");
             endPage.innerText=response.sellerCommunityPaginationDto.paginationPage;
 
+
+
+            endPage.setAttribute("onclick",`movePage(${response.sellerCommunityPaginationDto.endPage})`);
+
             if(response.sellerCommunityPaginationDto.currentPage !== response.sellerCommunityPaginationDto.paginationPage){
                 endPageContainer.classList.remove("d-none");
             }else{
                 endPageContainer.classList.add("d-none");
             }
 
-            const nextPage = document.querySelector("#NextPage");
-            console.log(response.sellerCommunityPaginationDto.endPage);
-            console.log(response.sellerCommunityPaginationDto.paginationPage);
+            const nextPageContainer = document.querySelector("#nextPageContainer");
+            const nextPage = document.querySelector("#nextPage");
+
+
+            nextPage.setAttribute("onclick",`movePage(${response.sellerCommunityPaginationDto.paginationPage})`)
+
             if(response.sellerCommunityPaginationDto.endPage < response.sellerCommunityPaginationDto.paginationPage){
-                nextPage.classList.remove("text-black-50");
+                nextPageContainer.classList.remove("text-black-50");
             }else{
                 nextPage.onclick=null;
-                nextPage.classList.add("text-black-50");
+                nextPageContainer.classList.add("text-black-50");
             }
+
+            const newUrl = `${window.location.pathname}?currentPage=${currentPage}&searchWord=${searchWord}&sortedOption=${sortedOption}`;
+            window.history.pushState({ path: newUrl }, '', newUrl);
 
         });
 }
+
+function movePage(currentPage){
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchWord = urlParams.get("searchWord")|| "";
+    const sortedOption = urlParams.get("sortedOption")||"recent";
+
+    const url="/api/seller/getSellerCommunityList?currentPage="+currentPage;
+    fetch(url)
+        .then(response=>response.json())
+        .then(response=>{
+            if(response.success===false){
+                window.location.href = "/login/sellerLogin";
+            }
+            getSellerCommunityList(currentPage,searchWord,sortedOption);
+        });
+}
+
 function sellerCommunityLike(){
     const target=event.target;
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentPage = urlParams.get('currentPage') || 1;
+    const searchWord = urlParams.get("searchWord")|| "";
+    const sortedOption = urlParams.get("sortedOption")||"recent";
    let findClosestSellerCommentWrapper = target.closest(".sellerCommentWrapper");
    let sellerCommunityNumber = findClosestSellerCommentWrapper.querySelector(".sellerCommunityNumber").value;
     const url="/api/seller/sellerCommunityLike?sellerCommunityNumber="+sellerCommunityNumber;
@@ -160,10 +274,13 @@ function sellerCommunityLike(){
             if(response.success===false){
                 window.location.href = "/login/sellerLogin";
             }
-            getSellerCommunityList();
+            getSellerCommunityList(currentPage,searchWord,sortedOption);
         });
 
 }
+
+
+
 
 function sellerCommunityDetailPage(sellerCommunityNumber,sellerCommunityCommentNumberInputInput){
 
@@ -283,11 +400,9 @@ function sellerCommunityDetailPage(sellerCommunityNumber,sellerCommunityCommentN
                 replyContainer.innerHTML="";
 
                 const showBox = newChatContainer.querySelector(".addReply");
-                console.log(sellerCommunityCommentNumberInputInput);
+
                 if(sellerCommunityCommentNumberInputInput!==undefined){
                     if(showBox.querySelector(".sellerCommunityCommentNumberInput").value===sellerCommunityCommentNumberInputInput){
-                        console.log(showBox);
-                        console.log("실행됨");
                         showBox.classList.remove("d-none");
                     }else{
                         showBox.classList.add("d-none");
@@ -416,6 +531,7 @@ function submitSellerCommunity(event){
 }
 
 function sellerCommunityLikeProcess(){
+
 
     const sellerCommunityNumber = document.querySelector("#sellerCommunityNumber").value;
     const sellerNumber = document.querySelector("#sellerNumber").value;

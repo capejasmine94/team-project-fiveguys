@@ -35,23 +35,44 @@
         on fs.sellerNumber =fsc.sellerNumber
         where fsc.sellerCommunityNumber=#{sellerCommunityNumber}
     </select>
-    <select id="selectSellerCommunityList">
+    <select id="selectSellerCommunityList" >
         <bind name="offset" value="(currentPage - 1) * itemsPerPage"/>
         select
-            sellerCommunityNumber,
-            sellerNumber,
-            sellerCommunityImage,
-            sellerCommunityTitle,
-            sellerCommunityContent,
-            sellerCommunityVisitCount,
+        s.sellerCommunityNumber,
+        s.sellerNumber,
+        s.sellerCommunityImage,
+        s.sellerCommunityTitle,
+        s.sellerCommunityContent,
+        s.sellerCommunityVisitCount,
             CASE
-                WHEN FLOOR(TIMESTAMPDIFF(MONTH, sellerCommunityCreatedAt, NOW()) / 12) >= 1 THEN CONCAT(FLOOR(TIMESTAMPDIFF(MONTH, sellerCommunityCreatedAt, NOW()) / 12), '년전')
-                WHEN TIMESTAMPDIFF(MONTH, sellerCommunityCreatedAt, NOW()) >= 1 THEN CONCAT(TIMESTAMPDIFF(MONTH, sellerCommunityCreatedAt, NOW()), '달전')
-                WHEN DATEDIFF(CURRENT_DATE, sellerCommunityCreatedAt) >= 1 THEN CONCAT(DATEDIFF(CURRENT_DATE, sellerCommunityCreatedAt), '일전')
-                WHEN TIMESTAMPDIFF(HOUR, sellerCommunityCreatedAt, NOW()) >= 1 THEN CONCAT(TIMESTAMPDIFF(HOUR, sellerCommunityCreatedAt, NOW()), '시간전')
-                ELSE CONCAT(TIMESTAMPDIFF(MINUTE, sellerCommunityCreatedAt, NOW()), '분전')
-                end as sellerCommunityCreatedAt
-        from fc_sellerCommunity
+            WHEN FLOOR(TIMESTAMPDIFF(MONTH, s.sellerCommunityCreatedAt, NOW()) / 12) >= 1 THEN CONCAT(FLOOR(TIMESTAMPDIFF(MONTH, s.sellerCommunityCreatedAt, NOW()) / 12), '년전')
+            WHEN TIMESTAMPDIFF(MONTH, s.sellerCommunityCreatedAt, NOW()) >= 1 THEN CONCAT(TIMESTAMPDIFF(MONTH, s.sellerCommunityCreatedAt, NOW()), '달전')
+            WHEN DATEDIFF(CURRENT_DATE, s.sellerCommunityCreatedAt) >= 1 THEN CONCAT(DATEDIFF(CURRENT_DATE, s.sellerCommunityCreatedAt), '일전')
+            WHEN TIMESTAMPDIFF(HOUR, s.sellerCommunityCreatedAt, NOW()) >= 1 THEN CONCAT(TIMESTAMPDIFF(HOUR, s.sellerCommunityCreatedAt, NOW()), '시간전')
+            ELSE CONCAT(TIMESTAMPDIFF(MINUTE, s.sellerCommunityCreatedAt, NOW()), '분전')
+            end as sellerCommunityCreatedAt,
+        (select count(*) from fc_sellerCommunityLike fsc where fsc.sellerCommunityNumber=s.sellerCommunityNumber) as heart
+        from fc_sellerCommunity s
+        <where>
+            <if test="searchWord!=null">
+                s.sellerCommunityTitle like concat('%',#{searchWord},'%')
+            </if>
+        </where>
+        order by
+            <choose>
+                <when test="sortedOption =='recent'">
+                    s.sellerCommunityCreatedAt desc
+                </when>
+                <when test="sortedOption =='view'">
+                    s.sellerCommunityVisitCount desc
+                </when>
+                <when test="sortedOption =='like'">
+                    heart desc
+                </when>
+                <otherwise>
+                    s.sellerCommunityCreatedAt DESC
+                </otherwise>
+            </choose>
         limit #{offset},#{itemsPerPage}
     </select>
     <select id="selectSellerCommunityById">
@@ -75,6 +96,11 @@
 
     <select id="selectSellerCommunityCount">
         select coalesce(count(*),0) from fc_sellerCommunity
+        <where>
+            <if test="searchWord!=null">
+                sellerCommunityTitle like concat('%',#{searchWord},'%')
+            </if>
+        </where>
     </select>
 
     <select id="selectImageListById">

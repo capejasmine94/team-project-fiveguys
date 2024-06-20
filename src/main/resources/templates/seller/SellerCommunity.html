@@ -80,7 +80,7 @@
                     <div class="card border-danger h-60 bg-danger">
                         <img src="/img/userIcon.jpg" class="card-img-top" alt="...">
                         <div class="card-body text-center">
-                            <span class="fs-5 text-white fw-bold" th:text="${session.sellerDto.sellerName}"></span>
+                            <span id="sellerInfo" class="fs-5 text-white fw-bold"></span>
                         </div>
                     </div>
                 </div>
@@ -103,52 +103,52 @@
                                 <div class="col-2 text-end pe-0 ">
                                     <div class="row position-relative">
                                         <div class="col">
-                                            <span><i class="bi bi-list-ul fs-5 position-absolute"
-                                                     style="top:5px; left:22px;"></i></span>
-                                            <select class="form-select" aria-label="Large select example"
-                                                    style="padding-left:40px; ">
-                                                <option selected>최신순</option>
-                                                <option value="1">인기순</option>
-                                                <option value="2">조회순</option>
-                                                <option value="3">좋아요순</option>
-                                            </select>
+                                            <div class="row">
+                                                <div class="col-2"></div>
+                                                <div class="col text-center">
+                                                     <span><i class="bi bi-list-ul fs-5 position-absolute"
+                                                              style="top:4px; left:53px;"></i></span>
+                                                    <select onchange="sortedOption();" id="sortedOption" class="form-select " aria-label="Large select example" style="padding-left:40px; ">
+                                                        <option value="recent" selected>최신순</option>
+                                                        <option value="view">조회순</option>
+                                                        <option value="like">추천순</option>
+                                                    </select>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="row pt-2 pb-1">
                                 <div class="col-4">
-                                    <a href="/seller/sellerCommunity" class="fs-4"><i
-                                            class="bi bi-arrow-counterclockwise"></i></a>
+                                    <a href="/seller/sellerCommunity" class="fs-4"><i class="bi bi-arrow-counterclockwise"></i></a>
                                 </div>
                                 <div class="col-4 ps-0 ms-3 ">
                                     <div class="row position-relative">
                                         <div class="col">
                                             <span><i class="position-absolute bi bi-search"
                                                      style="top:7px; left:23px;"></i></span>
-                                            <input type="text" name="" class="form-control ps-5" placeholder="커뮤니티내 검색">
+                                            <input oninput="searchWord();" type="text" id="searchWord" class="form-control ps-5" placeholder="커뮤니티내 검색">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col text-end" style="margin-top:0.3%;">
-                                    <span th:text="${sellerCommunityPaginationDto.currentPage}">1</span> / <span
-                                        th:text="${sellerCommunityPaginationDto.paginationPage}">7312</span><span>페이지</span>
+                                    <span id="topCurrentPage">1</span>
+                                    <span>/</span>
+                                    <span id="topTotalPage"></span>
+                                    <span>페이지</span>
 
-                                    <a th:if="${sellerCommunityPaginationDto.currentPage !=1}"
-                                       th:href="@{./sellerCommunity(currentPage=${sellerCommunityPaginationDto.currentPage -1})}">
-                                        <i class="bi bi-arrow-left fs-5 ms-3"></i>
-                                    </a>
-                                    <span class="text-black-50" th:if="${sellerCommunityPaginationDto.currentPage ==1}">
-                                        <i class="bi bi-arrow-left fs-5 ms-3"></i>
+                                    <span id="topPreviousPage">
+                                        <i  class="bi bi-arrow-left fs-5 ms-3"></i>
                                     </span>
-                                    <a th:if="${sellerCommunityPaginationDto.currentPage < sellerCommunityPaginationDto.paginationPage}"
-                                       th:href="@{./sellerCommunity(currentPage=${sellerCommunityPaginationDto.currentPage +1})}">
-                                        <i class="bi bi-arrow-right fs-5 ms-3"></i>
-                                    </a>
-                                    <span class="text-black-50"
-                                          th:if="${sellerCommunityPaginationDto.currentPage ==sellerCommunityPaginationDto.paginationPage}">
-                                         <i class="bi bi-arrow-right fs-5 ms-3"></i>
+                                    <span id="topNextPage">
+                                        <i  class="bi bi-arrow-right fs-5 ms-3"></i>
                                     </span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <input onchange="myBoard();" class="form-check-input me-2" type="checkbox"  id="myBoard">내가쓴 게시물 보기
                                 </div>
                             </div>
                             <div class="row">
@@ -160,25 +160,29 @@
                                 <div class="col pt-3">
                                     <div class="row">
                                         <div class="col-3 text-start ps-0 " id="previousPageContainer">
-                                            <i onclick="previousPage();" id="previousPage" class=" bi-arrow-left me-2" style="cursor:pointer;"></i>
-                                            <span>Previous</span>
+                                            <span id="previousPage">
+                                                <i class=" bi-arrow-left me-2" style="cursor:pointer;"></i>
+                                                <span>Previous</span>
+                                            </span>
                                         </div>
                                         <div class="col text-center">
-                                            <span onclick="firstPage();" id="firstPageContainer" style="cursor:pointer;"   class="px-3 pt-3">
+                                            <span id="firstPageContainer" style="cursor:pointer;"   class="px-3 pt-3">
                                                 <span id="firstPage"></span>
                                                 <span>...</span>
                                             </span>
 
                                             <span style="cursor:pointer;" id="numberSequenceContainer"></span>
 
-                                            <span style="cursor:pointer;" id="endPageContainer" onclick="endPage();" class="px-3 pt-3">
+                                            <span style="cursor:pointer;" id="endPageContainer" class="px-3 pt-3">
                                                 <span>...</span>
                                                 <span id="endPage"></span>
                                             </span>
                                         </div>
-                                        <div class="col-3 text-end pe-0 text-black-50" id="nextPageContainer">
-                                            <span>Next</span>
-                                            <i style="cursor:pointer;" onclick="nextPage();" id="NextPage" class="bi bi-arrow-right ms-2"></i>
+                                        <div class="col-3 text-end pe-0" id="nextPageContainer">
+                                            <span style="cursor:pointer;"  id="nextPage">
+                                                <span>Next</span>
+                                                <i class="bi bi-arrow-right ms-2"></i>
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -239,59 +243,6 @@
         </div>
     </a>
 </div>
-
-
-<div class="row">
-    <div class="col pt-3">
-        <div class="row">
-            <div class="col-3 text-start ps-0">
-                <a th:if="${sellerCommunityPaginationDto.startPage !=1}"
-                   th:href="@{./sellerCommunity(currentPage=${sellerCommunityPaginationDto.startPage -1})}">
-                    <i class="bi bi-arrow-left me-2"></i>
-                    <span>Previous</span>
-                </a>
-                <span class="text-black-50" th:if="${sellerCommunityPaginationDto.startPage ==1}">
-                    <i class="bi bi-arrow-left me-2"></i>
-                    <span>Previous</span>
-                </span>
-            </div>
-            <div class="col text-center">
-                <a th:href="@{./sellerCommunity(currentPage=${1})}"
-                   th:if="${sellerCommunityPaginationDto.currentPage!=1 || sellerCommunityPaginationDto.startPage !=1}"
-                   class="px-3 pt-3">
-                    <span>1</span>
-                    <span>...</span>
-                </a>
-                <a th:each="i : ${#numbers.sequence(sellerCommunityPaginationDto.startPage,sellerCommunityPaginationDto.endPage)}"
-                   th:href="@{./sellerCommunity(currentPage=${i})}"
-                   th:classappend="${sellerCommunityPaginationDto.currentPage == i ? 'border-top border-3 border-primary':''}"
-                   class="px-3 pt-3">
-                    <span th:classappend="${sellerCommunityPaginationDto.currentPage == i ? 'text-primary':''}"
-                          th:text="${i}"></span>
-                </a>
-                <a th:if="${sellerCommunityPaginationDto.currentPage != sellerCommunityPaginationDto.paginationPage}"
-                   th:href="@{./sellerCommunity(currentPage=${sellerCommunityPaginationDto.paginationPage})}"
-                   class="px-3 pt-3">
-                    <span>...</span>
-                    <span th:text="${sellerCommunityPaginationDto.paginationPage}"></span>
-                </a>
-            </div>
-            <div class="col-3 text-end pe-0">
-                <a th:if="${sellerCommunityPaginationDto.endPage < sellerCommunityPaginationDto.paginationPage}"
-                   th:href="@{./sellerCommunity(currentPage=${sellerCommunityPaginationDto.endPage +1})}">
-                    <span>Next</span>
-                    <i class="bi bi-arrow-right ms-2"></i>
-                </a>
-                <span class="text-black-50"
-                      th:if="${sellerCommunityPaginationDto.endPage ==sellerCommunityPaginationDto.paginationPage}">
-                    <span>Next</span>
-                     <i class="bi bi-arrow-right ms-2"></i>
-                </span>
-            </div>
-        </div>
-    </div>
-</div>
-
 
 <!-- Modal -->
 <div class="modal fade" id="sellerCommunityDetail" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -369,7 +320,7 @@
                                   onsubmit="sellerCommunityCommentInsertProcess(event)" method="post" class="row mt-2">
                                 <input id="sellerCommunityNumber" type="hidden" name="sellerCommunityNumber">
                                 <input id="sellerNumber" type="hidden" name="sellerNumber">
-                                <div class="col-10">
+                                <div class="col-11">
                                     <textarea class="form-control py-1" id="sellerCommunityCommentContent"
                                               name="sellerCommunityCommentContent" placeholder="댓글쓰기"></textarea>
                                 </div>
@@ -437,7 +388,7 @@
                     <input class="sellerCommunityNumberInput" type="hidden" name="sellerCommunityNumber">
                     <input class="sellerCommunityCommentNumberInput" type="hidden" name="sellerCommunityCommentNumber">
                     <input class="sellerNumberInput" type="hidden" name="sellerNumber">
-                    <div class="col-10">
+                    <div class="col-11">
                         <textarea class="form-control py-1 sellerCommunityReplyContent"
                                   name="sellerCommunityReplyContent" placeholder="대댓글쓰기"></textarea>
 

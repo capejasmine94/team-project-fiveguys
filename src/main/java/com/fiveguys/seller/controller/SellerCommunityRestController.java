@@ -2,17 +2,14 @@ package com.fiveguys.seller.controller;
 
 import com.fiveguys.dto.*;
 import com.fiveguys.seller.service.SellerCommunityService;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.IOException;
+
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -24,11 +21,13 @@ public class SellerCommunityRestController {
     SellerCommunityService sellerCommunityService;
 
     @RequestMapping("getSellerCommunityList")
-    public Map<String, Object> getSellerCommunityList(HttpSession session, SellerCommunityPaginationDto sellerCommunityPaginationDto) {
-        Map<String, Object> result = new HashMap<String, Object>();
+    public Map<String, Object> getSellerCommunityList(
+            HttpSession session,
+            SellerCommunityPaginationDto sellerCommunityPaginationDto) {
 
+        Map<String, Object> result = new HashMap<>();
         //페이지네이션 처리
-        int totalPage = sellerCommunityService.selectSellerCommunityCount();
+        int totalPage = sellerCommunityService.selectSellerCommunityCount(sellerCommunityPaginationDto.getSearchWord());
 
         int lastPageNumber=0;
 
@@ -45,18 +44,20 @@ public class SellerCommunityRestController {
             endPage = lastPageNumber;
         }
 
-
         sellerCommunityPaginationDto.setStartPage(startPage);
         sellerCommunityPaginationDto.setEndPage(endPage);
         sellerCommunityPaginationDto.setPaginationPage(lastPageNumber);
 
-        System.out.println(sellerCommunityPaginationDto);
-
         result.put("sellerCommunityPaginationDto", sellerCommunityPaginationDto);
 
         SellerDto sellerDto = (SellerDto) session.getAttribute("sellerDto");
-        result.put("sellerCommunity", sellerCommunityService.selectSellerCommunityList(sellerCommunityPaginationDto,sellerDto.getSellerNumber()));
-
+        if(sellerDto!=null){
+            result.put("login", true);
+            result.put("sellerDto", sellerDto);
+            result.put("sellerCommunity", sellerCommunityService.selectSellerCommunityList(sellerCommunityPaginationDto, sellerDto.getSellerNumber()));
+        }else{
+            result.put("login", false);
+        }
         return result;
     }
 
@@ -84,6 +85,8 @@ public class SellerCommunityRestController {
 
         Map<String, Object> response = new HashMap<>();
         SellerDto sellerDto = (SellerDto) session.getAttribute("sellerDto");
+
+        sellerCommunityService.updateSellerCommunityVisitCount(sellerCommunityLikeDto.getSellerCommunityNumber());
 
         sellerCommunityLikeDto.setSellerNumber(sellerDto.getSellerNumber());
 

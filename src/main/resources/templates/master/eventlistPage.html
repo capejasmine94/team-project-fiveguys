@@ -9,6 +9,221 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
+    <script>
+        function masterEventListPage(){
+            const url = "/api/event/eventListPage";
+
+            console.log(url);
+            fetch(url)
+            .then(response => response.json())
+            .then(response => {
+                const runningEventCount = document.getElementById("runningEventCount");
+                runningEventCount.textContent = response.selectRunningEvent;
+
+                const endEventCount = document.getElementById("endEventCount");
+                endEventCount.textContent = response.selectEndEvent;
+
+                const winnerEventCount = document.getElementById("winnerEventCount");
+                winnerEventCount.textContent = response.selectWinnerEventCount;
+                
+                const runningEventLocation = document.getElementById("runningEventLocation");
+                runningEventLocation.innerHTML="";
+                const runningEventTempleteLocation = document.getElementById("runningEventTempleteLocation");
+                const runningEventTemplete = runningEventTempleteLocation.querySelector(".runningEventTemplete")
+                
+                for(runningEvent of response.runningEventInfoList){
+                    const newRunningEventTemplete = runningEventTemplete.cloneNode(true);
+                    
+                    const runningOnclick = newRunningEventTemplete.querySelector(".runningOnclick");
+                    runningOnclick.src = "/images/"+runningEvent.eventBoardDto.eventMainImage;
+                    runningOnclick.style.cursor = 'pointer';
+                    runningOnclick.onclick =() =>{
+                        showDetailPage(runningEvent.eventBoardDto.eventNumber);
+                    }
+
+                    const runningEventNumber =  newRunningEventTemplete.querySelector(".runningEventNumber");
+                    runningEventNumber.textContent = runningEvent.eventBoardDto.eventNumber;
+
+                    const runningEventTitle = newRunningEventTemplete.querySelector(".runningEventTitle");
+                    runningEventTitle.textContent = runningEvent.eventBoardDto.eventTitle;
+
+                    runningEventLocation.appendChild(newRunningEventTemplete);
+                }
+
+                const endEventLocation = document.getElementById("endEventLocation");
+                endEventLocation.innerHTML="";           
+                const endEventTempleteLocation = document.getElementById("endEventTempleteLocation");
+                const endEventTemplete = endEventTempleteLocation.querySelector(".endEventTemplete");
+                for(endEvent of response.endEventInfoList){
+                    const newEndEventTemplete = endEventTemplete.cloneNode(true);
+
+                    const endOnclick = newEndEventTemplete.querySelector(".endOnclick");
+                    endOnclick.src = "/images/"+endEvent.eventBoardDto.eventMainImage;
+                    endOnclick.style.cursor = 'pointer';
+                    endOnclick.onclick =() =>{
+                        showDetailPage(endEvent.eventBoardDto.eventNumber);
+                    }
+
+                    const endEventNumber =  newEndEventTemplete.querySelector(".endEventNumber");
+                    endEventNumber.textContent = endEvent.eventBoardDto.eventNumber;
+
+                    const endEventTitle = newEndEventTemplete.querySelector(".endEventTitle");
+                    endEventTitle.textContent = endEvent.eventBoardDto.eventTitle;  
+                    
+                    endEventLocation.appendChild(newEndEventTemplete);
+                }
+
+
+                const winnerLocation = document.getElementById("winnerLocation");
+                winnerLocation.innerHTML="";
+                const winnerTempleteLocation = document.getElementById("winnerTempleteLocation");
+                const winnerTemplete = winnerTempleteLocation.querySelector(".winnerTemplete")
+                
+                for(winnerEvent of response.eventWinnerList){
+                    const newWinnerTemplete = winnerTemplete.cloneNode(true);
+                    const winnerNumber = newWinnerTemplete.querySelector(".winnerNumber");
+                    const winnerTitle = newWinnerTemplete.querySelector(".winnerTitle");
+                    
+                    winnerTitle.style.cursor = 'pointer';
+                    winnerTitle.onclick =() =>{
+                        showWinnerDetailPage(winnerEvent.winnerNumber);
+                    }
+                    winnerNumber.textContent = winnerEvent.winnerNumber;
+                    winnerTitle.textContent = winnerEvent.winnerTitle;  
+                    winnerLocation.appendChild(newWinnerTemplete);
+
+                }
+            })
+        }
+
+        function showDetailPage(eventNumber){
+            console.log(showDetailPage);
+            const url = "/api/event/eventDetailPage?eventNumber="+eventNumber;
+            fetch(url)
+            .then(response => response.json())
+            .then(response=>{
+                const modal = bootstrap.Modal.getOrCreateInstance("#exampleModal");
+                const location = document.querySelector("#exampleModalLabel");
+                const startDaylocation = document.getElementById("eventStartDay");
+                const endDaylocation = document.getElementById("eventEndDay");
+                location.textContent = response.eventBoardDtoAndDetail.eventBoardDto.eventTitle;
+                
+                console.log(response.eventBoardDtoAndDetail.eventBoardDto.eventStartDay);
+                startDaylocation.textContent = response.eventBoardDtoAndDetail.eventBoardDto.eventStartDay;
+                endDaylocation.textContent = response.eventBoardDtoAndDetail.eventBoardDto.eventEndDay;
+                
+                const detailImageListLocation = location.querySelector("#detailImageListLocation")             
+                const detailImageListTempleteLocation = document.getElementById("detailImageListTempleteLocation");
+                const detailImageListTemplete = detailImageListTempleteLocation.querySelector(".detailImageListTemplete");
+
+
+
+                for(boardDetailImage of response.eventBoardDtoAndDetail.eventDetailImageDtoList){
+                    const newDetailImageListTemplete = detailImageListTemplete.cloneNode(true);
+                    const detailImage = newDetailImageListTemplete.querySelector(".detailImage");
+                    detailImage.src = "/images/"+boardDetailImage.eventDetailImage;
+
+                    detailImageListTempleteLocation.appendChild(newDetailImageListTemplete);
+                }
+
+                const commentListLocation = location.querySelector("#commentListLocation");
+                const commentListTempleteLocation = document.getElementById("commentListTempleteLocation");
+                const commentListTemplete = commentListTempleteLocation.querySelector(".commentListTemplete");
+                for(comments of response.eventBoardCommentList){
+                    const newCommentListTemplete = commentListTemplete.cloneNode(true);
+                    const customerName = newCommentListTemplete.querySelector(".newCommentListTemplete");
+                    customerName.textContent = comments.customerDto.customerName;
+
+                    const eventCommentContent = newCommentListTemplete.querySelector(".eventCommentContent");
+                    eventCommentContent.textContent = comments.eventCommentDto.eventCommentContent;
+
+                    const eventCommentCreatedAt = newCommentListTemplete.querySelector(".eventCommentCreatedAt");
+                    eventCommentCreatedAt.textContent = comments.eventCommentDto.eventCommentCreatedAt;
+
+                    const masterReplyLocation = newCommentListTemplete.querySelector(".masterReplyLocation");
+
+
+                    // 마스터로그인 성공 댓글 없음
+                    if(comments.eventCommentDto.masterReply != null && response.masterDto === null){
+                        const yesMasterNoReplyTempleteLocation = document.getElementById("yesMasterNoReplyTempleteLocation");
+                        const yesMasterNoReplyTemplete = yesMasterNoReplyTempleteLocation.querySelector("yesMasterNoReplyTemplete");
+                        const newYesMasterNoReplyTemplete = yesMasterNoReplyTemplete.cloneNode(true);
+
+                        const writebutton = newYesMasterNoReplyTemplete.querySelector(".writebutton");
+                        const masterReply = newYesMasterNoReplyTemplete.querySelector(".masterReply");
+
+                        masterReplyLocation.appendChild(newYesMasterNoReplyTemplete);
+
+                        writebutton.onclick = () =>{
+                            writeprocess(masterReply.value,comments.eventCommentDto.eventCommentNumber,eventNumber)
+                        }
+
+                    }
+
+                    // 마스터 로그인 실패 댓글 있음
+                    if(comments.eventCommentDto.masterReply === null && response.masterDto != null){
+                        const noMasteYesReplyTempleteLocation = document.getElementById("noMasteYesReplyTempleteLocation");
+                        const noMasteYesReplyTemplete = noMasteYesReplyTempleteLocation.querySelector("noMasteYesReplyTemplete");
+                        const newNoMasteYesReplyTemplete = noMasteYesReplyTemplete.cloneNode(true);
+
+                        const masterReply = newYesMasterNoReplyTemplete.querySelector(".masterReply");
+                        masterReply.textContent = comments.eventCommentDto.masterReply;
+                        masterReplyLocation.appendChild(newYesMasterNoReplyTemplete);
+
+                    }
+
+                    // 마스터 로그인 성공 댓글 확인
+                    if(comments.eventCommentDto.masterReply === null && response.masterDto === null){
+                        const yesMasterYesReplyTempleteLocation = document.getElementById("yesMasterYesReplyTempleteLocation");
+                        const yesMasterYesReplyTemplete = yesMasterYesReplyTempleteLocation.querySelector("yesMasterYesReplyTemplete");
+                        const newYesMasterYesReplyTemplete = yesMasterYesReplyTemplete.cloneNode(true);
+
+                        const masterReply = newYesMasterYesReplyTemplete.querySelector(".masterReply");
+                        const masterReplyCreatedAt = newYesMasterYesReplyTemplete.querySelector(".masterReplyCreatedAt");
+
+                        masterReply.textContent = comments.eventCommentDto.masterReply;
+                        masterReplyCreatedAt.textContent = comments.eventCommentDto.masterReplyCreatedAt;
+                        masterReplyLocation.appendChild(newYesMasterNoReplyTemplete);
+
+                    }
+
+
+                    commentListTempleteLocation.appendChild(newCommentListTemplete);
+                    
+                }
+
+                modal.show();
+            });
+        }
+
+        function showWinnerDetailPage(eventNumber){
+
+        }
+
+        function writeprocess(masterReply,eventCommentNumber,eventNumber){
+            const url = "/api/event/updateMasterReply";
+            fetch(url,{
+                method : "post",
+                headers : {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    eventNumber: eventNumber,
+                    masterReply: masterReply,
+                    eventCommentNumber:eventCommentNumber
+                })
+            })
+            .then(response => response.json())
+            .then(response => {
+                showDetailPage(eventNumber)
+            })
+
+        }
+
+        window.addEventListener("DOMContentLoaded", () => {
+            masterEventListPage();
+        });
+    </script>
 </head>
 <body>
 <div class="container">
@@ -81,7 +296,7 @@
                                     <div class="row">
                                         <div class="col-auto">진행중인 이벤트</div>
                                         <div class="col">
-                                            <span>Total</span><span th:text="${selectRunningEvent}"></span>
+                                            <span>Total</span><span id="runningEventCount"></span>
                                         </div>
                                     </div>
                                     <div class="row bg-secondary text-center">
@@ -90,19 +305,9 @@
                                         <div class="col">이벤트명</div>
                                         <div class="col-2">관리</div>
                                     </div>
-                                    <div class="row align-items-center text-center mt-1" th:each="eventBoardDto : ${eventDtoList}">
-                                        <div class="col-2">
-                                            <span th:text="${eventBoardDto.eventNumber}"></span>
-                                        </div>
-                                        <div class="col-3">
-                                            <a th:href="@{./eventDetailPage(eventNumber=${eventBoardDto.eventNumber})}"><img style="height: 5em;" class="img-fluid" th:src="|/images/${eventBoardDto.eventMainImage}|"></a>
-                                        </div>
-                                        <div class="col">
-                                            <span th:text="${eventBoardDto.eventTitle}"></span>
-                                        </div>
-                                        <div class="col-2">
-                                            <a class="btn btn-secondary btn-sm" th:href="@{updateEventPage(eventNumber=${eventBoardDto.eventNumber})}">수정</a>
-                                            <a class="btn btn-secondary btn-sm" th:href="@{deleteEventProcess(eventNumber=${eventBoardDto.eventNumber})}">삭제</a>
+                                    <div class="row">
+                                        <div class="col" id="runningEventLocation">
+                                            <!-- 진행중인 이벤트 -->
                                         </div>
                                     </div>
                                 </div>
@@ -112,7 +317,7 @@
                                     <div class="row">
                                         <div class="col-auto">종료된 이벤트</div>
                                         <div class="col">
-                                            <span>Total</span><span th:text="${selectEndEvent}"></span>
+                                            <span>Total</span><span id="endEventCount"></span>
                                         </div>
                                     </div>
                                     <div class="row bg-secondary text-center">
@@ -121,19 +326,9 @@
                                         <div class="col">이벤트명</div>
                                         <div class="col-2">관리</div>
                                     </div>
-                                    <div class="row align-items-center text-center mt-1" th:if="${eventEndDtoList} != null" th:each="eventEndBoardDto : ${eventEndDtoList}">
-                                        <div class="col-2">
-                                            <span th:text="${eventEndBoardDto.eventNumber}"></span>
-                                        </div>
-                                        <div class="col-3">
-                                            <a th:href="@{./eventDetailPage(eventNumber=${eventEndBoardDto.eventNumber})}"><img style="height: 5em;"  class="img-fluid" th:src="|/images/${eventEndBoardDto.eventMainImage}|"></a>
-                                        </div>
-                                        <div class="col">
-                                            <span th:text="${eventEndBoardDto.eventTitle}"></span>
-                                        </div>
-                                        <div class="col-2">
-                                            <a class="btn btn-secondary btn-sm" th:href="@{updateEventPage(eventNumber=${eventEndBoardDto.eventNumber})}">수정</a>
-                                            <a class="btn btn-secondary btn-sm" th:href="@{deleteEventProcess(eventNumber=${eventEndBoardDto.eventNumber})}">삭제</a>
+                                    <div class="row">
+                                        <div class="col" id="endEventLocation">
+                                            <!-- 종료된 이벤트 -->
                                         </div>
                                     </div>
                                 </div>
@@ -143,7 +338,7 @@
                                     <div class="row">
                                         <div class="col-auto">이벤트 당첨안내</div>
                                         <div class="col">
-                                            <span>Total</span><span th:text="${selectWinnerEventCount}"></span>
+                                            <span>Total</span><span id="winnerEventCount"></span>
                                         </div>
                                     </div>
                                     <div class="row bg-secondary text-center">
@@ -151,16 +346,9 @@
                                         <div class="col">이벤트명</div>
                                         <div class="col-2">관리</div>
                                     </div>
-                                    <div class="row align-items-center text-center mt-1" th:if="${eventEndDtoList} != null" th:each="eventWinnerdDto : ${eventWinnerList}">
-                                        <div class="col-2">
-                                            <span th:text="${eventWinnerdDto.winnerNumber}"></span>
-                                        </div>
-                                        <div class="col">
-                                            <span th:text="${eventWinnerdDto.winnerTitle}"></span>
-                                        </div>
-                                        <div class="col-2">
-                                            <a class="btn btn-secondary btn-sm" th:href="@{updateWinnerPage(winnerNumber=${eventWinnerdDto.winnerNumber})}">수정</a>
-                                            <a class="btn btn-secondary btn-sm" th:href="@{deleteWinnerProcess(winnerNumber=${eventWinnerdDto.winnerNumber})}">삭제</a>
+                                    <div class="row">
+                                        <div class="col" id="winnerLocation">
+                                            <!-- 당첨자 이벤트 -->
                                         </div>
                                     </div>
                                 </div>
@@ -173,6 +361,257 @@
     </div>
 </div>
 
+<!-- 진행중인 이벤트 템플릿 -->
+<div class="d-none" id="runningEventTempleteLocation">
+    <div class="runningEventTemplete row align-items-center text-center mt-1">
+        <div class="col-2">
+            <span class="runningEventNumber"></span>
+        </div>
+        <div class="col-3">
+            <img style="height: 5em;" class="runningOnclick img-fluid">
+        </div>
+        <div class="col">
+            <span class="runningEventTitle"></span>
+        </div>
+        <div class="col-2">
+            <!-- <a class="btn btn-secondary btn-sm" th:href="@{updateEventPage(eventNumber=${eventBoardDto.eventNumber})}">수정</a> -->
+            <!-- <a class="btn btn-secondary btn-sm" th:href="@{deleteEventProcess(eventNumber=${eventBoardDto.eventNumber})}">삭제</a> -->
+        </div>
+    </div>
+</div>
+
+<!-- 종료된 이벤트 템플릿 -->
+<div class="d-non" id="endEventTempleteLocation">
+    <div class="endEventTemplete row align-items-center text-center mt-1">
+        <div class="col-2">
+            <span class="endEventNumber"></span>
+        </div>
+        <div class="col-3">
+           <img style="height: 5em;"  class="endOnclick img-fluid">
+        </div>
+        <div class="col">
+            <span class="endEventTitle"></span>
+        </div>
+        <div class="col-2">
+            <!-- <a class="btn btn-secondary btn-sm" th:href="@{updateEventPage(eventNumber=${eventEndBoardDto.eventNumber})}">수정</a>
+            <a class="btn btn-secondary btn-sm" th:href="@{deleteEventProcess(eventNumber=${eventEndBoardDto.eventNumber})}">삭제</a> -->
+        </div>
+    </div>
+</div>
+
+<!-- 당첨자 이벤트 템플릿 -->
+<div class="d-none" id="winnerTempleteLocation">
+    <div class="winnerTemplete row align-items-center text-center mt-1">
+        <div class="col-2">
+            <span class="winnerNumber"></span>
+        </div>
+        <div class="col">
+            <span class="winnerTitle"></span>
+        </div>
+        <div class="col-2">
+            <!-- <a class="btn btn-secondary btn-sm" th:href="@{updateWinnerPage(winnerNumber=${eventWinnerdDto.winnerNumber})}">수정</a>
+            <a class="btn btn-secondary btn-sm" th:href="@{deleteWinnerProcess(winnerNumber=${eventWinnerdDto.winnerNumber})}">삭제</a> -->
+        </div>
+    </div>
+</div>
+
+<!-- 상세페이지 모달 -->
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="container">
+                <div class="row" style="margin-bottom:82px;">
+                    <div class="col mt-2 px-5">
+                        <div class="row">
+                            <div class="col">
+                                <div class="row mt-4">
+                                    <div class="col text-center px-0">
+                                        <span class="fw-bold text-secondary" style="font-size:0.8em;">이벤트</span>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col px-0">
+                                        <span class=" fw-bolder fs-5" id="eventTitle"></span>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col">
+                                        <div class="row border border-black"></div>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col px-0">
+                                        <span class="fw-bold text-secondary" style="font-size:0.8em;">기간 :</span>
+                                        <span class="fw-bold text-secondary" id="eventStartDay" style="font-size:0.8em;"></span>
+                                        <span class="fw-bold text-secondary" style="font-size:0.8em;">~</span>
+                                        <span class="fw-bold text-secondary" id="eventEndDay"></span>
+                                    </div>
+                                    <div class="col-auto pe-0 text-end">
+                                        <a class="link-underline link-underline-opacity-0">
+                                            <i class="bi bi-hand-thumbs-up"></i>
+                                        </a>
+                                        <span id="eventBoardLikeCount"></span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="bi bi-eye"></i>
+                                        <span id="eventVisitCount"></span>
+                                    </div>
+                                </div>
+                                <div class="row mt-4" >
+                                    <div class="col px-0" id="detailImageListLocation">
+                                        <!-- 이미지 리스트 -->
+                                    </div>
+                                </div>
+                                <div class="row" >
+            
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col">
+                                        <div class="row border border-black"></div>
+                                    </div>
+                                </div>
+                                <!-- 코멘트 리스트 -->
+                                <div class="row">
+                                    <div class="col" id="commentListLocation">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- 이게 이미지 리스트 -->
+<div class="d-none" id="detailImageListTempleteLocation">
+    <div class="detailImageListTemplete row">
+        <div class="col">
+            <img class="detailImage img-fluid">
+        </div>
+    </div>    
+</div>
+
+<!-- 코멘트 리스트 템플릿 -->
+<div class="d-none" id="commentListTempleteLocation">
+    <div class="commentListTemplete row border-bottom py-3">
+        <div class="col">
+            <div class="row">
+                <div class="col">
+                    <div class="row">
+                        <div class="col">
+                            <span class="customerName fw-bolder" style="font-size:0.9em;" ></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <span class="eventCommentContent"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <span style="font-size:0.8em;" class="eventCommentCreatedAt"></span>
+                </div>
+            </div>
+            <div class="row mt-4 mb-4" >
+                <div class="col">
+                    <div class="row">
+                        <div class="col">
+                            <div class="masterReplyLocation row border">
+                                <!-- 마스터 댓글 -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 마스터 로그인 성공/ 댓글 없음 -->
+<div class="d-none" id="yesMasterNoReplyTempleteLocation">
+    <div class="yesMasterNoReplyTemplete col">
+        <div class="row mt-3">
+            <div class="col">
+                <textarea class="masterReply form-control" ></textarea>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col text-end mb-3">
+                <span class="writebutton btn btn-primary">댓글쓰기</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 마스터 로그인 실패 댓글 있음 -->
+<div class="d-none" id="noMasteYesReplyTempleteLocation" >
+    <div class="noMasteYesReplyTemplete col">
+        <div class="row">
+            <div class="col">
+                <div class="row">
+                    <div class="col">
+                        <span class="fw-bolder" style="font-size:0.9em;" >운영자</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <span class="masterReply"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <span style="font-size:0.8em;" class="masterReplyCreatedAt"></span>
+            </div>
+        </div>
+    </div>   
+</div>
+
+<!-- 마스터 로그인 성공 댓글 확인 -->
+<div class="d-none" id="yesMasterYesReplyTempleteLocation" >
+    <div class="yesMasterYesReplyTemplete col" >
+        <div class="row">
+            <div class="col">
+                <div class="row">
+                    <div class="col">
+                        <span class="fw-bolder" style="font-size:0.9em;" >운영자</span>
+                    </div>
+                    <div class="col">
+                        수정
+                    </div>
+                    <div class="col">
+                        삭제
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <span class="masterReply"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <span style="font-size:0.8em;" class="masterReplyCreatedAt"></span>
+            </div>
+        </div>
+    </div>   
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

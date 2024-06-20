@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="/css/style.css">
     <script>
-        function reloadEventList(eventNumber) {
+        function reloadEventList() {
             const url = "/api/event/eventListPage";
 
             fetch(url)
@@ -92,7 +92,7 @@
         }
 
 
-        function likeDislike(eventBoardLikeCount,eventNumber){
+        function likeDislike(eventNumber){
               const url = "/api/event/insertDeleteLikeProcess?eventNumber="+eventNumber;
 
               fetch(url)
@@ -106,8 +106,23 @@
               reloadEventList();
         }
 
+        function detailLikeDislike(eventNumber){
+              const url = "/api/event/insertDeleteLikeProcess?eventNumber="+eventNumber;
 
-        function likeDislikeTwo(eventBoardLikeCount,eventNumber){
+              fetch(url)
+              .then(response => response.json())
+              .then(response => {
+                  const likeCount = document.querySelector("likeCount");
+                  if(response.loginSuccess === "false"){
+                    window.location.href="/login/customerLogin";
+                  }
+              })
+              reloadEventList()
+              showDetailModal(eventNumber);
+        }
+
+
+        function likeDislikeTwo(eventNumber){
                 const url = "/api/event/insertDeleteLikeProcess?eventNumber="+eventNumber;
 
                 fetch(url)
@@ -162,10 +177,25 @@
                 
                 
                 const loginInfo = response.loginInfo;
+                const modalLocation = document.getElementById("exampleModal");
 
                 if(loginInfo === "loginSuccess"){
                     const loginSuccess = document.querySelector(".loginSuccess");
                     LoginMotion.appendChild(loginSuccess);
+                    
+                    const detailThumbsUp = modalLocation.querySelector(".detailThumbsUp");
+                    console.log(response.selectLikeCheck);
+                    console.log(location);
+                    console.log(detailThumbsUp);
+                    if(response.selectLikeCheck == 1 ){
+                        detailThumbsUp.classList.remove("bi-hand-thumbs-up");
+                        detailThumbsUp.classList.add("bi-hand-thumbs-up-fill");
+                    }
+                    else{
+                        detailThumbsUp.classList.remove("bi-hand-thumbs-up-fill");
+                        detailThumbsUp.classList.add("bi-hand-thumbs-up");
+                    }
+
                 }else{
                     const loginFail = document.querySelector(".loginFail");
                     LoginMotion.appendChild(loginFail);
@@ -218,13 +248,45 @@
                         newCommentListTemplete.appendChild(newReplyCommentTemplete);
 
                     }
+                    
 
                     commentListLocation.appendChild(newCommentListTemplete);
                 }
-
+                
+                const eventPageNumber = document.getElementById("eventPageNumber");
+                eventPageNumber.value = response.eventBoardDtoAndDetail.eventBoardDto.eventNumber;
+                
                 modal.show();
+                
+                })
+        }
 
+        function writeComment(eventNumber){
+            const inputcomment = document.getElementById("inputcomment");
+
+            const url = "/api/event/insertEventComment"
+            fetch(url,{
+                method: "post",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    eventNumber: eventNumber,
+                    eventCommentContent: inputcomment.value
+                })
             })
+            .then(response => response.json())
+            .then(response =>{
+                inputcomment.value = "";
+                showDetailModal(eventNumber)
+            })
+
+        }
+        
+        function writeProcess(){
+            const detailPageNumber = document.getElementById("eventPageNumber").value;
+            console.log(detailPageNumber);
+            writeComment(detailPageNumber)
         }
 
         function likeDisLikeProcess(target){
@@ -232,17 +294,23 @@
             const eventBoardLikeCount = location.querySelector(".eventBoardLikeCount");
             const detailPageNumber = location.querySelector(".detailPageNumber").value;
 
-            likeDislike(eventBoardLikeCount,detailPageNumber)
+            likeDislike(detailPageNumber)
 
         }
+        
 
         function likeDisLikeProcessTwo(target){
             const location = target.closest(".endEventList");
             const eventBoardLikeCount = location.querySelector(".eventBoardLikeCount");
             const detailPageNumber = location.querySelector(".detailPageNumber").value;
 
-            likeDislikeTwo(eventBoardLikeCount,detailPageNumber)
+            likeDislikeTwo(detailPageNumber)
 
+        }
+        function detailLikeDislikeProcess(){
+            const detailPageNumber = document.getElementById("eventPageNumber").value;
+            
+            detailLikeDislike(detailPageNumber)
         }
 
         function detailPageProcess(target){
@@ -252,10 +320,17 @@
             showDetailModal(detailPageNumber);
         }
 
+        function detailEndPageProcess(target){
+            const location = target.closest(".endEventList");
+            const detailPageNumber = location.querySelector(".detailPageNumber").value;
+
+            showDetailModal(detailPageNumber);
+        }
+
        
         window.addEventListener("DOMContentLoaded", () => {
                 reloadEventList();
-            });
+        });
     </script>
 </head>
 <div th:replace="common/customerNavi::bottomNavi"></div>
@@ -328,7 +403,7 @@
         <div class="col">
             <div class="row">
                 <div class="col">
-                    <img onclick="detailPageProcess(this)" class="mainImg img-fluid">
+                    <img onclick="detailEndPageProcess(this)" class="mainImg img-fluid">
                 </div>
             </div>
             <div class="row">
@@ -362,6 +437,11 @@
                                             <span class="fw-bold text-secondary" style="font-size:0.8em;"></span>
                                         </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <input type="hidden" id="eventPageNumber">
+                                        </div>
+                                    </div>
                                     <div class="row mt-2">
                                         <div class="col px-0">
                                             <span class="fw-bold text-secondary" style="font-size:0.8em;">기간 :</span>
@@ -370,7 +450,7 @@
                                             <span class="eventEndtDay text-secondary" style="font-size:0.8em;"></span>
                                         </div>
                                         <div class="col-auto pe-0 text-end">
-                                            <i class="thumbsUp bi bi-hand-thumbs-up"></i>
+                                            <i onclick="detailLikeDislikeProcess()" class="detailThumbsUp bi bi-hand-thumbs-up"></i>
                                             <span class="eventBoardDetailLikeCount" ></span>
                                         </div>
                                         <div class="col-auto">
@@ -379,7 +459,7 @@
                                         </div>
                                     </div>
                                     <div class="row mt-4" >
-                                        <div class="col px-0"  id="boardDetailImageLocation">
+                                        <div class="col px-0" id="boardDetailImageLocation">
 
                                         </div>
                                     </div>
@@ -412,7 +492,6 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
             </div>
         </div>
     </div>
@@ -445,18 +524,16 @@
 <!-- 로그인 모션 -->
 <div class="d-none">
     <div class="loginSuccess col">
-        <form method="post">
-            <div class="row mt-3">
-                <div class="col">
-                    <textarea class="form-control" name="eventCommentContent" ></textarea>
-                </div>
+        <div class="row mt-3">
+            <div class="col">
+                <textarea class="form-control" id="inputcomment" name="eventCommentContent" ></textarea>
             </div>
-            <div class="row mt-2">
-                <div class="col text-end mb-3">
-                    <input type="submit" onclick="writeProcess()"  class="btn btn-primary" value="댓글쓰기" ></input>
-                </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col text-end mb-3">
+                <input onclick="writeProcess()" class=" btn btn-primary" value="댓글쓰기" ></input>
             </div>
-        </form>
+        </div>
     </div>
 </div>
 <!-- 코멘트 템플릿 -->

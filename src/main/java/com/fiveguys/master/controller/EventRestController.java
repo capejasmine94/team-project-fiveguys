@@ -5,6 +5,7 @@ import com.fiveguys.master.service.EventService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,11 +28,21 @@ public class EventRestController {
         CustomerDto customerDto = (CustomerDto)session.getAttribute("customerDto");
 
         List<Map<String,Object>> runningEventInfoList = eventService.selectRunningEventInfoList(customerDto);
+        int selectRunningEvent = eventService.selectRunningEvent();
+        map.put("selectRunningEvent", selectRunningEvent);
         map.put("runningEventInfoList",runningEventInfoList);
 
 
         List<Map<String,Object>> endEventInfoList = eventService.selectEndEventInfoList(customerDto);
+        int selectEndEvent = eventService.selectEndEvent();
+        map.put("selectEndEvent", selectEndEvent);
         map.put("endEventInfoList",endEventInfoList);
+
+        //이벤트 당첨자
+        List<WinnerDto> eventWinnerList = eventService.selectWinnerList();
+        int selectWinnerEventCount = eventService.selectWinnerEventCount();
+        map.put("eventWinnerList", eventWinnerList);
+        map.put("selectWinnerEventCount", selectWinnerEventCount);
 
 
         return map;
@@ -53,6 +64,7 @@ public class EventRestController {
         
         MasterDto masterDto = (MasterDto) session.getAttribute("masterDto");
         map.put("eventBoardCommentList",eventBoardCommentList);
+        map.put("masterDto",masterDto);
 
         int selectLikeCheck =0;
         CustomerDto customerDto = (CustomerDto) session.getAttribute("customerDto");
@@ -93,6 +105,28 @@ public class EventRestController {
         }
 
         return map;
+    }
+
+    // 댓글 기능
+    @RequestMapping("insertEventComment")
+    public Map<String,Object> insertEventComment(HttpSession session,@RequestBody EventCommentDto eventCommentDto){
+        Map<String,Object> map = new HashMap<>();
+        CustomerDto customerDto =  (CustomerDto) session.getAttribute("customerDto");
+        eventCommentDto.setCustomerNumber(customerDto.getCustomerNumber());
+        eventService.insertEventComment(eventCommentDto);
+        map.put("pageNumber", eventCommentDto.getEventNumber());
+
+        return  map;
+    }
+    
+    //대댓글
+    @RequestMapping("updateMasterReply")
+    public Map<String,Object> updateMasterReply(@RequestBody EventCommentDto eventCommentDto) {
+        Map<String,Object> map = new HashMap<>();
+        eventService.updateEventCommentMasterReply(eventCommentDto);
+        map.put("success", "success");
+        return map;
+
     }
 
     

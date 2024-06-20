@@ -1,11 +1,14 @@
 package com.fiveguys.master.controller;
 
 import com.fiveguys.dto.MasterReplyDto;
+import com.fiveguys.dto.SellerOrderDto;
 import com.fiveguys.master.service.MasterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Map;
@@ -47,7 +50,62 @@ public class MasterController {
     public String insertMasterReply(MasterReplyDto masterReplyDto) {
         masterService.insertMasterReply(masterReplyDto);
 
-        return "redirect:/master/mainPage";
+        return "/master/mainPage";
     }
+
+
+    @RequestMapping("orderPage")
+    public String orderPage(Model model, int id) {
+        List<Map<String, Object>> sellerOrderInform = masterService.selectAllSellerOrder(id);
+
+        model.addAttribute("sellerOrderInform", sellerOrderInform);
+
+        return "/master/orderPage";
+    }
+
+
+    @RequestMapping("orderDetailPage")
+    public String orderDetailPage(Model model, SellerOrderDto sellerOrderDto, int id) {
+
+
+        SellerOrderDto sellerOrderDtos = masterService.selectSellerOrder(id);
+
+        List<Map<String, Object>> sellerOrderInform = masterService.selectSameSellerOrder(sellerOrderDto, id);
+
+        model.addAttribute("sellerOrderInform", sellerOrderInform);
+        model.addAttribute("sellerOrderDto", sellerOrderDtos);
+
+        return "/master/orderDetailPage";
+    }
+
+
+
+    @RequestMapping("updateOrderStatusProcessingShipment")
+    public String updateOrderStatusProcessingShipment(@RequestParam("id") int id) {
+
+        masterService.updateOrderStatusProcessingShipment(id);
+
+        return "/master/mainPage";
+    }
+
+    @RequestMapping("updateOrderStatusDelivery")
+    public String updateOrderStatusDelivery(@RequestParam("id") int id) {
+
+        masterService.updateOrderStatusDelivery(id);
+
+        return "/master/mainPage";
+    }
+
+
+    @RequestMapping("updateOrderStatusDeliveryCompleted")
+    public String updateOrderStatusDeliveryCompleted(@RequestParam("id") int id) {
+
+        masterService.updateOrderStatusDeliveryCompleted(id);
+
+        return "/master/mainPage";
+    }
+
+
+
 
 }

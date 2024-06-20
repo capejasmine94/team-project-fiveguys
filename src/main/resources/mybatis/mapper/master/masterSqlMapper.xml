@@ -41,6 +41,57 @@
 
 
 
+    <select id="selectAllSellerOrder">
+        SELECT *
+        FROM fc_sellerOrder
+        WHERE sellerNumber = #{sellerNumber}
+        GROUP BY sellerOrderCreatedAt
+        ORDER BY sellerOrderCreatedAt DESC
+    </select>
+
+
+    <select id="selectSameSellerOrder">
+        select * from fc_sellerOrder WHERE
+        sellerOrderCreatedAt = #{sellerOrderCreatedAt} and sellerNumber = #{sellerNumber}
+    </select>
+
+
+    <select id="selectMaterialInform">
+        select * from fc_material
+        where materialNumber = #{materialNumber}
+    </select>
+
+
+    <update id="updateOrderStatusProcessingShipment">
+        UPDATE fc_sellerOrder
+        set sellerOrderStatus = '출고처리 중'
+        where sellerNumber = #{sellerNumber} and sellerOrderCreatedAt = #{sellerOrderCreatedAt}
+    </update>
+
+
+    <update id="updateOrderStatusDelivery">
+        UPDATE fc_sellerOrder
+        set sellerOrderStatus = '배송중'
+        where sellerNumber = #{sellerNumber} and sellerOrderCreatedAt = #{sellerOrderCreatedAt}
+    </update>
+
+
+    <update id="updateOrderStatusDeliveryCompleted">
+        UPDATE fc_sellerOrder
+        set sellerOrderStatus = '배송완료'
+        where sellerNumber = #{sellerNumber} and sellerOrderCreatedAt = #{sellerOrderCreatedAt}
+    </update>
+
+
+
+
+
+
+
+
+
+
+
 
 
 

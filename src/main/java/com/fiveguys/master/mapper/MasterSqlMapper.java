@@ -1,9 +1,6 @@
 package com.fiveguys.master.mapper;
 
-import com.fiveguys.dto.MasterReplyDto;
-import com.fiveguys.dto.SellerDto;
-import com.fiveguys.dto.SellerOrderDto;
-import com.fiveguys.dto.SellerReviewDto;
+import com.fiveguys.dto.*;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -22,6 +19,20 @@ public interface MasterSqlMapper {
     public void insertMasterReply(MasterReplyDto masterReplyDto);
 
     public MasterReplyDto selectMasterReply(int sellerReviewNumber);
+
+    public List<SellerOrderDto> selectAllSellerOrder(int sellerNumber);
+
+    public List<SellerOrderDto> selectSameSellerOrder(SellerOrderDto sellerOrderDto);
+
+    public MaterialDto selectMaterialInform(int materialNumber);
+
+    public void updateOrderStatusProcessingShipment(SellerOrderDto sellerOrderDto);
+
+    public void updateOrderStatusDelivery(SellerOrderDto sellerOrderDto);
+
+    public void updateOrderStatusDeliveryCompleted(SellerOrderDto sellerOrderDto);
+
+
 
 
 }

@@ -34,6 +34,8 @@ public interface MasterSqlMapper {
 
     public List<SellerReviewImageDto> selectReviewImage(int sellerReviewNumber);
 
+    public void insertMaterialCategory(String materialCategoryName);
+
 
 
 

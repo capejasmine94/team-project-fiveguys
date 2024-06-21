@@ -84,10 +84,18 @@
     </update>
 
 
+
     <select id="selectReviewImage">
         select * from fc_sellerReviewImage
         where sellerReviewNumber = #{sellerReviewNumber}
     </select>
+
+
+
+    <insert id="insertMaterialCategory">
+        INSERT INTO fc_materialCategory (materialCategoryName)
+        VALUES (#{materialCategoryName});
+    </insert>
 
 
 

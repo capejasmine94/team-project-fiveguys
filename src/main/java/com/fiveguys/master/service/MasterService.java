@@ -149,5 +149,10 @@ public class MasterService {
     }
 
 
+    public void insertMaterialCategory(String materialCategoryName) {
+        masterSqlMapper.insertMaterialCategory(materialCategoryName);
+    }
+
+
 
 }

@@ -116,6 +116,32 @@ public class MasterController {
     }
 
 
+    @RequestMapping("materialRegisterPage")
+    public String materialRegisterPage() {
+
+        return "/master/materialRegisterPage";
+    }
+
+
+
+
+
+
+    @RequestMapping("materialCategoryRegisterPage")
+    public String materialCategoryRegisterPage() {
+
+        return "/master/materialCategoryRegisterPage";
+    }
+
+    @RequestMapping("insertMaterialCategory")
+    public String insertMaterialCategory(String materialCategoryName) {
+
+        masterService.insertMaterialCategory(materialCategoryName);
+
+        return "redirect:/master/materialCategoryRegisterPage";
+    }
+
+
 
 
 }

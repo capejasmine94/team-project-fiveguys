@@ -182,8 +182,8 @@ public class SellerCommunityService {
         return sellerCommunitySqlMapper.selectImageListById(sellerCommunityNumber);
     }
 
-    public int selectSellerCommunityCount(String searchWord){
-        return sellerCommunitySqlMapper.selectSellerCommunityCount(searchWord);
+    public int selectSellerCommunityCount(SellerCommunityPaginationDto sellerCommunityPaginationDto){
+        return sellerCommunitySqlMapper.selectSellerCommunityCount(sellerCommunityPaginationDto);
     }
 
     //댓글삽입
@@ -246,5 +246,13 @@ public class SellerCommunityService {
     //대댓글 좋아요 싫어요 업데이트
     public void updateSellerReplyLikeStatus(SellerCommunityReplyLikeStatusDto sellerCommunityReplyLikeStatusDto){
         sellerCommunitySqlMapper.updateSellerReplyLikeStatus(sellerCommunityReplyLikeStatusDto);
+    }
+
+    public List<Map<String,Object>> getChartRegisterCount(){
+        return sellerCommunitySqlMapper.getChartRegisterCount();
+    }
+
+    public List<Map<String,Object>> getPieRegisterCount(){
+        return sellerCommunitySqlMapper.getPieRegisterCount();
     }
 }

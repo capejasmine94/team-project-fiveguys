@@ -20,7 +20,7 @@ public interface SellerCommunitySqlMapper {
     public List<SellerCommunityImageDetailDto> selectImageListById(int sellerCommunityNumber);
 
     //전체 게시물 개수 가져오기, 검색된 후의 게시물도 포함
-    public Integer selectSellerCommunityCount(String searchWord);
+    public Integer selectSellerCommunityCount(SellerCommunityPaginationDto sellerCommunityPaginationDto);
 
     //댓글삽입
     public void insertSellerCommunityComment(SellerCommunityCommentDto sellerCommunityCommentDto);
@@ -60,4 +60,9 @@ public interface SellerCommunitySqlMapper {
     public Integer selectSellerReplyLikeCount(int sellerCommunityReplyNumber);
     public Integer selectSellerReplyDisLikeCount(int sellerCommunityReplyNumber);
     public void updateSellerReplyLikeStatus(SellerCommunityReplyLikeStatusDto sellerCommunityReplyLikeStatusDto);
+
+    //차트
+    public List<Map<String,Object>> getChartRegisterCount();
+
+    public List<Map<String,Object>> getPieRegisterCount();
 }

@@ -26,16 +26,12 @@ public class SellerCommunityRestController {
             SellerCommunityPaginationDto sellerCommunityPaginationDto) {
 
         Map<String, Object> result = new HashMap<>();
+
         //페이지네이션 처리
-        int totalPage = sellerCommunityService.selectSellerCommunityCount(sellerCommunityPaginationDto.getSearchWord());
+        int totalPage = sellerCommunityService.selectSellerCommunityCount(sellerCommunityPaginationDto);
 
-        int lastPageNumber=0;
+        int lastPageNumber = (int)Math.ceil((double)totalPage/sellerCommunityPaginationDto.getItemsPerPage());
 
-        if(totalPage % sellerCommunityPaginationDto.getItemsPerPage()==0){
-            lastPageNumber = (int)Math.ceil((double)totalPage/sellerCommunityPaginationDto.getItemsPerPage())-1;
-        }else{
-            lastPageNumber = (int)Math.ceil((double)totalPage/sellerCommunityPaginationDto.getItemsPerPage());
-        }
 
         int startPage =((sellerCommunityPaginationDto.getCurrentPage()-1)/5)*5+1;
         int endPage =((sellerCommunityPaginationDto.getCurrentPage()-1)/5+1)*5;
@@ -49,11 +45,15 @@ public class SellerCommunityRestController {
         sellerCommunityPaginationDto.setPaginationPage(lastPageNumber);
 
         result.put("sellerCommunityPaginationDto", sellerCommunityPaginationDto);
+        System.out.println(totalPage);
+        System.out.println(sellerCommunityPaginationDto);
+
 
         SellerDto sellerDto = (SellerDto) session.getAttribute("sellerDto");
         if(sellerDto!=null){
             result.put("login", true);
             result.put("sellerDto", sellerDto);
+            result.put("totalPage", totalPage);
             result.put("sellerCommunity", sellerCommunityService.selectSellerCommunityList(sellerCommunityPaginationDto, sellerDto.getSellerNumber()));
         }else{
             result.put("login", false);
@@ -314,6 +314,19 @@ public class SellerCommunityRestController {
         }else{
             response.put("success", false);
         }
+        return response;
+    }
+
+    @RequestMapping("getChartRegisterCount")
+    public Map<String, Object> getChartRegisterCount(HttpSession session){
+        Map<String, Object> response = new HashMap<>();
+        response.put("getChartRegisterCount",sellerCommunityService.getChartRegisterCount());
+        return response;
+    }
+    @RequestMapping("getPieRegisterCount")
+    public Map<String, Object> getPieRegisterCount(HttpSession session){
+        Map<String, Object> response = new HashMap<>();
+        response.put("getPieRegisterCount",sellerCommunityService.getPieRegisterCount());
         return response;
     }
 }

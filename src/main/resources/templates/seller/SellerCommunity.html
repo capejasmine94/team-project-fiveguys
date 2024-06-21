@@ -28,6 +28,7 @@
             list-style: none;
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 <div style="width:1920px;">
@@ -82,6 +83,14 @@
                         <div class="card-body text-center">
                             <span id="sellerInfo" class="fs-5 text-white fw-bold"></span>
                         </div>
+
+                    </div>
+                    <!--차트 들어가는 부분-->
+                    <div class="row mt-2" style="height:350px;">
+                        <canvas id="myChart"></canvas>
+                    </div>
+                    <div class="row mt-2" style="height:350px;">
+                        <canvas id="myPieChart"></canvas>
                     </div>
                 </div>
                 <!--커뮤니티게시판 삽입부분-->
@@ -138,17 +147,54 @@
                                     <span id="topTotalPage"></span>
                                     <span>페이지</span>
 
-                                    <span id="topPreviousPage">
+                                    <span id="topPreviousPage" style="cursor: pointer">
                                         <i  class="bi bi-arrow-left fs-5 ms-3"></i>
                                     </span>
-                                    <span id="topNextPage">
+                                    <span id="topNextPage" style="cursor: pointer">
                                         <i  class="bi bi-arrow-right fs-5 ms-3"></i>
                                     </span>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row py-1">
                                 <div class="col">
-                                    <input onchange="myBoard();" class="form-check-input me-2" type="checkbox"  id="myBoard">내가쓴 게시물 보기
+                                    <span onclick="dropDown()" style="cursor: pointer;">
+                                        <span>점포별 보기</span>
+                                        <i id="triangle" class=" bi bi-caret-down-fill"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <div id="sortBySeller" class="row py-1 d-none border-top pt-2">
+                                <div class="col">
+                                    <input class="sellerSort form-check-input mx-2" type="checkbox"   value="1">강남점
+                                    <input class="sellerSort form-check-input mx-2" type="checkbox"   value="2">강동점
+                                    <input class="sellerSort form-check-input mx-2" type="checkbox"   value="3">강북점
+                                    <input class="sellerSort form-check-input ms-4 me-2" type="checkbox"   value="4">강서점
+                                    <input class="sellerSort form-check-input mx-2" type="checkbox"   value="5">관악점
+                                    <input class="sellerSort form-check-input mx-2" type="checkbox"   value="6">광진점
+                                    <input class="sellerSort form-check-input mx-2" type="checkbox"   value="7">구로점
+                                    <input class="sellerSort form-check-input mx-2" type="checkbox"   value="8">금천점
+                                    <input class="sellerSort form-check-input mx-2" type="checkbox"   value="9">노원점
+                                    <input class="sellerSort form-check-input ms-4 me-2" type="checkbox"   value="10">도봉점
+                                    <input class="sellerSort form-check-input mx-2" type="checkbox"   value="11">동대문점<br>
+                                    <input class="sellerSort form-check-input mx-2" type="checkbox"   value="12">동작점
+                                    <input class="sellerSort form-check-input mx-2" type="checkbox"   value="13">마포점
+                                    <input class="sellerSort form-check-input mx-2" type="checkbox"   value="14">서대문점
+                                    <input class="sellerSort form-check-input mx-2" type="checkbox"   value="15">서초점
+                                    <input class="sellerSort form-check-input mx-2" type="checkbox"   value="16">성동점
+                                    <input class="sellerSort form-check-input mx-2" type="checkbox"   value="17">성북점
+                                    <input class="sellerSort form-check-input mx-2" type="checkbox"   value="18">송파점
+                                    <input class="sellerSort form-check-input mx-2" type="checkbox"   value="19">양천점
+                                    <input class="sellerSort form-check-input mx-2" type="checkbox"   value="20">영등포점
+                                    <input class="sellerSort form-check-input mx-2" type="checkbox"   value="21">용산점
+                                    <input class="sellerSort form-check-input mx-2" type="checkbox"   value="22">은평점<br>
+                                    <input class="sellerSort form-check-input mx-2" type="checkbox"   value="23">종로점
+                                    <input class="sellerSort form-check-input mx-2" type="checkbox"   value="24">중구점
+                                    <input class="sellerSort form-check-input mx-2" type="checkbox"   value="25">중랑점
+                                </div>
+                            </div>
+                            <div class="row text-center">
+                                <div class="col">
+                                    <span id="noResultMessage" class="fs-4 fw-bold"></span>
                                 </div>
                             </div>
                             <div class="row">
@@ -158,7 +204,7 @@
                             </div>
                             <div class="row">
                                 <div class="col pt-3">
-                                    <div class="row">
+                                    <div class="row" id="paginationContainer">
                                         <div class="col-3 text-start ps-0 " id="previousPageContainer">
                                             <span id="previousPage">
                                                 <i class=" bi-arrow-left me-2" style="cursor:pointer;"></i>

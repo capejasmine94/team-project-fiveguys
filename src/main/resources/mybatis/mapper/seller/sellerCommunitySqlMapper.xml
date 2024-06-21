@@ -54,8 +54,14 @@
         (select count(*) from fc_sellerCommunityLike fsc where fsc.sellerCommunityNumber=s.sellerCommunityNumber) as heart
         from fc_sellerCommunity s
         <where>
-            <if test="searchWord!=null">
-                s.sellerCommunityTitle like concat('%',#{searchWord},'%')
+            <if test="searchWord!=null and searchWord != ''">
+                and s.sellerCommunityTitle like concat('%',#{searchWord},'%')
+            </if>
+            <if test="sellerSort !=null and sellerSort.size() > 0">
+                and s.sellerNumber in
+                <foreach collection="sellerSort" item="seller" open="(" close=")" separator=",">
+                    #{seller}
+                </foreach>
             </if>
         </where>
         order by
@@ -98,7 +104,13 @@
         select coalesce(count(*),0) from fc_sellerCommunity
         <where>
             <if test="searchWord!=null">
-                sellerCommunityTitle like concat('%',#{searchWord},'%')
+                and sellerCommunityTitle like concat('%',#{searchWord},'%')
+            </if>
+            <if test="sellerSort !=null and sellerSort.size() > 0">
+                and sellerNumber in
+                <foreach collection="sellerSort" item="seller" open="(" close=")" separator=",">
+                    #{seller}
+                </foreach>
             </if>
         </where>
     </select>
@@ -272,5 +284,36 @@
     <select id="selectSellerReplyDisLikeCount">
         select coalesce(count(*),0) from fc_sellerCommunityReplyLikeStatus
         where sellerCommunityReplyNumber=#{sellerCommunityReplyNumber} and sellerCommunityReplyLikeStatus='dislike'
+    </select>
+
+    <select id="getChartRegisterCount">
+        SELECT
+            CASE
+                WHEN DAYNAME(sellerCommunityCreatedAt) = 'Sunday' THEN '일'
+                WHEN DAYNAME(sellerCommunityCreatedAt) = 'Monday' THEN '월'
+                WHEN DAYNAME(sellerCommunityCreatedAt) = 'Tuesday' THEN '화'
+                WHEN DAYNAME(sellerCommunityCreatedAt) = 'Wednesday' THEN '수'
+                WHEN DAYNAME(sellerCommunityCreatedAt) = 'Thursday' THEN '목'
+                WHEN DAYNAME(sellerCommunityCreatedAt) = 'Friday' THEN '금'
+                WHEN DAYNAME(sellerCommunityCreatedAt) = 'Saturday' THEN '토'
+                END AS day_name_korean,
+            COUNT(*) AS count_per_day
+        FROM
+            fc_sellerCommunity
+        GROUP BY
+            DAYNAME(sellerCommunityCreatedAt);
+    </select>
+
+    <select id="getPieRegisterCount">
+        SELECT
+            (
+                (SELECT COUNT(*) FROM fc_sellerCommunity WHERE sellerNumber = fs.sellerNumber)
+                    + (SELECT COUNT(*) FROM fc_sellerCommunityComment WHERE sellerNumber = fs.sellerNumber)
+                    + (SELECT COUNT(*) FROM fc_sellerCommunityReply WHERE sellerNumber = fs.sellerNumber)
+                ) as counts,
+            fs.sellerName
+        FROM fc_seller fs
+        ORDER BY counts DESC
+            LIMIT 3;
     </select>
 </mapper>

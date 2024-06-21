@@ -3,14 +3,50 @@ window.addEventListener("DOMContentLoaded",()=>{
     const currentPage = urlParams.get('currentPage') || 1;
     const searchWord = urlParams.get("searchWord")|| "";
     const sortedOption = urlParams.get("sortedOption")||"recent";
+    const sellerSort = urlParams.get("sellerSort")||[];
 
-    getSellerCommunityList(currentPage,searchWord,sortedOption);
+
+    const sellerSorts = document.querySelectorAll(".sellerSort");
+
+    for(let e of sellerSorts){
+        e.addEventListener('change',sortSeller);
+    }
+
+
+    getSellerCommunityList(currentPage,searchWord,sortedOption,sellerSort);
+
+    dayChart();
+    pieChart();
 });
 
-function searchWord(){
 
+function sortSeller(){
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchWord = urlParams.get("searchWord")|| "";
+    const sortedOption = urlParams.get("sortedOption")||"recent";
+
+    const sellerSorts = document.querySelectorAll(".sellerSort");
+    const selectedValues = Array.from(sellerSorts).filter(checkbox => checkbox.checked).map(checkbox => checkbox.value);
+
+
+    const url= "/api/seller/getSellerCommunityList?sellerSort="+selectedValues;
+
+    fetch(url)
+        .then(response=>response.json())
+        .then(response=> {
+            if (response.login === false) {
+                window.location.href = "/login/sellerLogin";
+            }
+
+            getSellerCommunityList(1,searchWord,sortedOption,selectedValues);
+        });
+}
+
+function searchWord(){
+    const urlParams = new URLSearchParams(window.location.search);
     const searchWord = document.querySelector("#searchWord").value;
     const sortedOption = document.querySelector("#sortedOption").value;
+    const sellerSort = urlParams.get("sellerSort")||[];
 
 
     const url= "/api/seller/getSellerCommunityList";
@@ -22,13 +58,29 @@ function searchWord(){
                 window.location.href = "/login/sellerLogin";
             }
 
-            getSellerCommunityList(1,searchWord,sortedOption);
+            getSellerCommunityList(1,searchWord,sortedOption,sellerSort);
         });
+}
+
+function dropDown(){
+    const sortBySeller = document.querySelector("#sortBySeller");
+    const triangle = document.querySelector("#triangle");
+    if(sortBySeller.classList.contains("d-none")){
+        triangle.classList.add("bi-caret-up-fill");
+        triangle.classList.remove("bi-caret-down-fill");
+        sortBySeller.classList.remove("d-none");
+    }else{
+        triangle.classList.add("bi-caret-down-fill");
+        triangle.classList.remove("bi-caret-up-fill");
+        sortBySeller.classList.add("d-none");
+    }
 }
 
 function sortedOption(){
+    const urlParams = new URLSearchParams(window.location.search);
     const sortedOption = document.querySelector("#sortedOption").value;
     const searchWord = document.querySelector("#searchWord").value;
+    const sellerSort = urlParams.get("sellerSort")||[];
 
     const url= "/api/seller/getSellerCommunityList";
     fetch(url)
@@ -39,14 +91,14 @@ function sortedOption(){
             }
 
 
-            getSellerCommunityList(1,searchWord,sortedOption);
+            getSellerCommunityList(1,searchWord,sortedOption,sellerSort);
         });
 
 }
 
-function getSellerCommunityList(currentPage,searchWord,sortedOption){
+function getSellerCommunityList(currentPage,searchWord,sortedOption,sellerSort){
 
-    const url= `/api/seller/getSellerCommunityList?currentPage=${currentPage}&searchWord=${searchWord}&sortedOption=${sortedOption}`;
+    const url= `/api/seller/getSellerCommunityList?currentPage=${currentPage}&searchWord=${searchWord}&sortedOption=${sortedOption}&sellerSort=${sellerSort}`;
 
     fetch(url)
         .then(response=>response.json())
@@ -54,6 +106,9 @@ function getSellerCommunityList(currentPage,searchWord,sortedOption){
             if(response.login===false){
                 window.location.href="/login/sellerLogin";
             }
+            console.log(response.totalPage);
+
+
 
             const sellerInfo = document.querySelector("#sellerInfo");
             sellerInfo.innerText=response.sellerDto.sellerName;
@@ -132,12 +187,16 @@ function getSellerCommunityList(currentPage,searchWord,sortedOption){
             topCurrentPage.innerText=response.sellerCommunityPaginationDto.currentPage;
 
             const topTotalPage = document.querySelector("#topTotalPage");
-            topTotalPage.innerText=response.sellerCommunityPaginationDto.paginationPage;
+            if(response.totalPage===0){
+                topTotalPage.innerText=1;
+            }else{
+                topTotalPage.innerText=response.sellerCommunityPaginationDto.paginationPage;
+            }
 
             const topPreviousPage = document.querySelector("#topPreviousPage");
             topPreviousPage.setAttribute("onclick",`movePage(${response.sellerCommunityPaginationDto.currentPage-1})`)
 
-            if(response.sellerCommunityPaginationDto.currentPage ===1){
+            if(response.sellerCommunityPaginationDto.currentPage ===1 || response.totalPage===0){
                 topPreviousPage.classList.add("text-black-50");
                 topPreviousPage.onclick=null;
             }else{
@@ -147,7 +206,7 @@ function getSellerCommunityList(currentPage,searchWord,sortedOption){
             const topNextPage = document.querySelector("#topNextPage");
             topNextPage.setAttribute("onclick",`movePage(${response.sellerCommunityPaginationDto.currentPage+1})`)
 
-            if(response.sellerCommunityPaginationDto.currentPage ===response.sellerCommunityPaginationDto.paginationPage){
+            if(response.sellerCommunityPaginationDto.currentPage ===response.sellerCommunityPaginationDto.paginationPage || response.totalPage===0){
                 topNextPage.classList.add("text-black-50");
                 topNextPage.onclick=null;
             }else{
@@ -212,9 +271,12 @@ function getSellerCommunityList(currentPage,searchWord,sortedOption){
 
             const endPageContainer = document.querySelector("#endPageContainer");
             const endPage = document.querySelector("#endPage");
-            endPage.innerText=response.sellerCommunityPaginationDto.paginationPage;
 
-
+            if(response.totalPage!==0){
+                endPage.innerText=response.sellerCommunityPaginationDto.paginationPage;
+            }else{
+                endPage.innerText="";
+            }
 
             endPage.setAttribute("onclick",`movePage(${response.sellerCommunityPaginationDto.endPage})`);
 
@@ -237,7 +299,17 @@ function getSellerCommunityList(currentPage,searchWord,sortedOption){
                 nextPageContainer.classList.add("text-black-50");
             }
 
-            const newUrl = `${window.location.pathname}?currentPage=${currentPage}&searchWord=${searchWord}&sortedOption=${sortedOption}`;
+            const noResultMessage = document.querySelector("#noResultMessage");
+            const paginationContainer = document.querySelector("#paginationContainer");
+            if(response.totalPage===0){
+                noResultMessage.innerText="조회된 결과가 없습니다";
+                paginationContainer.classList.add("d-none");
+            }else{
+                noResultMessage.innerText="";
+                paginationContainer.classList.remove("d-none");
+            }
+
+            const newUrl = `${window.location.pathname}?currentPage=${currentPage}&searchWord=${searchWord}&sortedOption=${sortedOption}&sellerSort=${sellerSort}`;
             window.history.pushState({ path: newUrl }, '', newUrl);
 
         });
@@ -247,6 +319,8 @@ function movePage(currentPage){
     const urlParams = new URLSearchParams(window.location.search);
     const searchWord = urlParams.get("searchWord")|| "";
     const sortedOption = urlParams.get("sortedOption")||"recent";
+    const sellerSort = urlParams.get("sellerSort")||[];
+
 
     const url="/api/seller/getSellerCommunityList?currentPage="+currentPage;
     fetch(url)
@@ -255,7 +329,7 @@ function movePage(currentPage){
             if(response.success===false){
                 window.location.href = "/login/sellerLogin";
             }
-            getSellerCommunityList(currentPage,searchWord,sortedOption);
+            getSellerCommunityList(currentPage,searchWord,sortedOption,sellerSort);
         });
 }
 
@@ -265,6 +339,8 @@ function sellerCommunityLike(){
     const currentPage = urlParams.get('currentPage') || 1;
     const searchWord = urlParams.get("searchWord")|| "";
     const sortedOption = urlParams.get("sortedOption")||"recent";
+    const sellerSort = urlParams.get("sellerSort")||[];
+
    let findClosestSellerCommentWrapper = target.closest(".sellerCommentWrapper");
    let sellerCommunityNumber = findClosestSellerCommentWrapper.querySelector(".sellerCommunityNumber").value;
     const url="/api/seller/sellerCommunityLike?sellerCommunityNumber="+sellerCommunityNumber;
@@ -274,7 +350,7 @@ function sellerCommunityLike(){
             if(response.success===false){
                 window.location.href = "/login/sellerLogin";
             }
-            getSellerCommunityList(currentPage,searchWord,sortedOption);
+            getSellerCommunityList(currentPage,searchWord,sortedOption,sellerSort);
         });
 
 }
@@ -496,6 +572,7 @@ function submitSellerCommunity(event){
     const multipleSellerCommunityImageList = document.querySelector("#multipleSellerCommunityImageList").files;
     const sellerCommunityContentInput = document.querySelector("#sellerCommunityContentInput").value;
 
+
     const formData = new FormData();
     formData.append('sellerCommunityTitle', sellerCommunityTitleInput);
     formData.append('sellerCommunityContent', sellerCommunityContentInput);
@@ -509,6 +586,12 @@ function submitSellerCommunity(event){
 
 
     const url="/api/seller/sellerCommunityWriteProcess";
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentPage = urlParams.get('currentPage') || 1;
+    const searchWord = urlParams.get("searchWord")|| "";
+    const sortedOption = urlParams.get("sortedOption")||"recent";
+    const sellerSort = urlParams.get("sellerSort")||[];
 
     fetch(url,{
         method:"post",
@@ -526,7 +609,9 @@ function submitSellerCommunity(event){
                 inputSuccessMessage.classList.add("text-danger");
                 sellerCommunityForm.reset();
             }
-            getSellerCommunityList();
+            getSellerCommunityList(currentPage,searchWord,sortedOption,sellerSort);
+            dayChart();
+            pieChart();
         });
 }
 
@@ -813,4 +898,206 @@ function addReply(target) {
     }else {
         showEditBox.classList.add("d-none");
     }
+}
+
+let myChart = null;
+
+function dayChart(){
+    const myCharts= document.getElementById('myChart').getContext('2d');
+
+    if (myChart !== null) {
+        myChart.destroy();
+        myChart = null; // 변수를 null로 설정하여 참조를 제거
+    }
+
+    const url="/api/seller/getChartRegisterCount";
+
+    fetch(url)
+        .then(response=>response.json())
+        .then(response=>{
+
+
+
+            const labels = ['일', '월', '화', '수', '목', '금', '토'];
+            const data = {
+                labels: labels,
+                datasets: [{
+                    label: '일별 게시글 등록 수',
+                    data: [0, 0, 0, 0, 0, 0, 0],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                        'rgba(255, 205, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(201, 203, 207, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(255, 159, 64)',
+                        'rgb(255, 205, 86)',
+                        'rgb(75, 192, 192)',
+                        'rgb(54, 162, 235)',
+                        'rgb(153, 102, 255)',
+                        'rgb(201, 203, 207)'
+                    ],
+                    borderWidth: 1
+                }]
+            };
+
+            for(let e of response.getChartRegisterCount){
+
+
+                if(e.day_name_korean==="일"){
+                    data.datasets[0].data[0]=e.count_per_day;
+                }
+                if(e.day_name_korean==="월"){
+                    data.datasets[0].data[1]=e.count_per_day;
+                }
+                if(e.day_name_korean==="화"){
+                    data.datasets[0].data[2]=e.count_per_day;
+                }
+                if(e.day_name_korean==="수"){
+                    data.datasets[0].data[3]=e.count_per_day;
+                }
+                if(e.day_name_korean==="목"){
+                    data.datasets[0].data[4]=e.count_per_day;
+                }
+                if(e.day_name_korean==="금"){
+                    data.datasets[0].data[5]=e.count_per_day;
+                }
+                if(e.day_name_korean==="토"){
+                    data.datasets[0].data[6]=e.count_per_day;
+                }
+            }
+
+
+            const config = {
+                type: 'bar',
+                data: data,
+                options: {
+                    plugins: {
+                        legend: {
+                            labels: {
+                                font: {
+                                    weight: 'bold'
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks:{
+                                stepSize:5
+                            },
+                            max: 100 // y축 최대값 설정
+                        }
+                    },
+                    responsive: true,  // 반응형 디자인 활성화
+                    maintainAspectRatio: false // 비율 유지 비활성화
+                }
+            };
+
+            myChart = new Chart(myCharts,config);
+
+
+
+            function updateChart() {
+                myChart.data.datasets.forEach((dataset, i) => {
+                    dataset.data = data.datasets[i].data;
+                });
+                myChart.update();
+            }
+
+            // 초기 차트 업데이트
+            updateChart();
+        });
+}
+
+let myPieChart = null;
+
+function pieChart(){
+    if (myPieChart !== null) {
+        myPieChart.destroy();
+        myPieChart = null; // 변수를 null로 설정하여 참조를 제거
+    }
+
+    const myPieCharts= document.getElementById("myPieChart");
+
+    const url="/api/seller/getPieRegisterCount";
+
+    fetch(url)
+        .then(response=>response.json())
+        .then(response=>{
+
+
+            const data = {
+                labels: [
+                    '',
+                    '',
+                    ''
+                ],
+                datasets: [{
+                    label: '가장 많이 활동한 점주',
+                    data: [0, 0, 0],
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 205, 86)',
+                    ],
+                    hoverOffset: 4
+                }]
+            };
+            for (let i = 0; i < response.getPieRegisterCount.length; i++) {
+                if(response.getPieRegisterCount[i].counts===0){
+                    data.labels.filter(label => label !== '')
+                }else{
+                    data.datasets[0].data[i] = response.getPieRegisterCount[i].counts;
+                    data.labels[i] = response.getPieRegisterCount[i].sellerName;
+                }
+            }
+
+            const config = {
+                type: 'pie',
+                data: data,
+                options: {
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: '가장 많이 활동한 점주', // 제목 설정
+                            font: {
+                                size: 12 // 폰트 크기 설정
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = '댓글 : ';
+                                    label += context.raw + '개'; // 소수점 2자리까지 표시
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            myPieChart = new Chart(myPieCharts,config);
+
+
+
+            function updateChart() {
+                myPieChart.data.datasets.forEach((dataset, i) => {
+                    dataset.data = data.datasets[i].data;
+                });
+                myPieChart.update();
+            }
+
+            // 초기 차트 업데이트
+            updateChart();
+        });
+
+
 }

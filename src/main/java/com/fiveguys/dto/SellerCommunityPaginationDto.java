@@ -13,6 +13,7 @@ public class SellerCommunityPaginationDto {
     private int paginationPage; //페이징 처리후 총 페이지
     private String sortedOption; //선택한 페이지
     private String searchWord; //검색한 검색어
+    private List<String> sellerSort;
     private int itemsPerPage;
 
     public SellerCommunityPaginationDto() {

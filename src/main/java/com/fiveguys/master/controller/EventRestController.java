@@ -1,14 +1,20 @@
 package com.fiveguys.master.controller;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
 import com.fiveguys.dto.*;
 import com.fiveguys.master.service.EventService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +30,7 @@ public class EventRestController {
     @RequestMapping("eventListPage")
     public Map<String,Object> eventListPage(HttpSession session){
         Map<String,Object> map = new HashMap<>();
+
 
         CustomerDto customerDto = (CustomerDto)session.getAttribute("customerDto");
 
@@ -121,6 +128,7 @@ public class EventRestController {
     
     //대댓글
     @RequestMapping("updateMasterReply")
+    // 하나의 데이터 객체를 받을 때 잘 작동되는 것 같음
     public Map<String,Object> updateMasterReply(@RequestBody EventCommentDto eventCommentDto) {
         System.out.println();
         Map<String,Object> map = new HashMap<>();
@@ -128,6 +136,106 @@ public class EventRestController {
         map.put("eventNumber", eventCommentDto.getEventNumber());
         return map;
 
+    }
+    @RequestMapping("insertEventProcess")
+    public Map<String,Object> insertEventProcess(HttpSession session, EventBoardDto eventBoardDto, 
+    @RequestParam("uploadFile") MultipartFile uploadFile, @RequestParam("uploadFiles") MultipartFile[] uploadFiles){
+
+        Map<String,Object> map = new HashMap<>();
+        String mainImage = mainImageRemake(uploadFile);
+        eventBoardDto.setEventMainImage(mainImage);
+        List<EventDetailImageDto> eventDetailImageList = detailImageReName(uploadFiles);
+        
+        eventService.insertEventProcess(eventBoardDto,eventDetailImageList);
+
+        map.put("result", "success");
+
+        return map;
+    }
+
+    public List<EventDetailImageDto> detailImageReName(MultipartFile[] uploadFiles){
+        List<EventDetailImageDto> eventDetailImageList = new ArrayList<>();
+        //파일 처리 시작
+        if(uploadFiles != null){
+            for(MultipartFile multipartFile : uploadFiles){
+                if(multipartFile.isEmpty()){
+                    continue;
+                }
+
+                String rootPath = "C:/fiveguys_image/";
+
+                //날짜별 폴더 생성
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd/");
+                String todaypath = sdf.format(new Date());
+
+                File todayFolderForCreate = new File(rootPath + todaypath);
+
+                if(!todayFolderForCreate.exists()){
+                    todayFolderForCreate.mkdirs();
+                }
+
+                // 파일명 충돌 회피 - 랜덤, 시간조합
+                String originalFilename = multipartFile.getOriginalFilename();
+
+                String uuid = UUID.randomUUID().toString();
+                long currentTime = System.currentTimeMillis();
+
+                String filename = uuid + "_" + currentTime;
+
+                //확장자명 추출
+                String ext = originalFilename.substring(originalFilename.lastIndexOf("."));
+
+                filename += ext;
+
+                try {
+                    multipartFile.transferTo(new File(rootPath + todaypath + filename));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                //DB 작업용 Dto 생성
+                EventDetailImageDto eventDetailImageDto = new EventDetailImageDto();
+                eventDetailImageDto.setEventDetailImage(todaypath + filename);
+                eventDetailImageList.add(eventDetailImageDto);
+
+            }
+        }
+        //파일 처리 끝
+        return eventDetailImageList;
+    }
+
+    public String mainImageRemake(MultipartFile pp_mainImgLink){
+
+        String rootPath = "C:/fiveguys_image/";
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd/");
+        String todaypath = sdf.format(new Date());
+
+        File todayFolderForCreate = new File(rootPath + todaypath);
+
+        if(!todayFolderForCreate.exists()){
+            todayFolderForCreate.mkdirs();
+        }
+
+        String originalFilename = pp_mainImgLink.getOriginalFilename();
+
+        String uuid = UUID.randomUUID().toString();
+        long currentTime = System.currentTimeMillis();
+
+        String filename = uuid + "_" + currentTime;
+
+        String ext = originalFilename.substring(originalFilename.lastIndexOf("."));
+
+        filename += ext;
+
+        try {
+            pp_mainImgLink.transferTo(new File(rootPath + todaypath + filename));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String reLocation = todaypath + filename;
+        return reLocation;
     }
 
     

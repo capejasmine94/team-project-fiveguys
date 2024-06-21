@@ -125,7 +125,7 @@
                 startDaylocation.textContent = response.eventBoardDtoAndDetail.eventBoardDto.eventStartDay;
                 endDaylocation.textContent = response.eventBoardDtoAndDetail.eventBoardDto.eventEndDay;
                 
-                const detailImageListLocation = document.querySelector("#detailImageListLocation")             
+                const detailImageListLocation = document.getElementById("detailImageListLocation")             
                 const detailImageListTempleteLocation = document.getElementById("detailImageListTempleteLocation");
                 const detailImageListTemplete = detailImageListTempleteLocation.querySelector(".detailImageListTemplete");
 
@@ -136,7 +136,7 @@
                     const detailImage = newDetailImageListTemplete.querySelector(".detailImage");
                     detailImage.src = "/images/"+boardDetailImage.eventDetailImage;
 
-                    detailImageListTempleteLocation.appendChild(newDetailImageListTemplete);
+                    detailImageListLocation.appendChild(newDetailImageListTemplete);
                 }
                 const commentListLocation = document.querySelector("#commentListLocation");
                 const commentListTempleteLocation = document.getElementById("commentListTempleteLocation");
@@ -166,8 +166,13 @@
                         const writebutton = newYesMasterNoReplyTemplete.querySelector(".writebutton");
                         const masterReply = newYesMasterNoReplyTemplete.querySelector(".masterReply");
 
+                        console.log(masterReply.value+"@@@@@@@@@@@@@@@@@@@@@@@@@");
+
                         writebutton.onclick =(function(masterReply,ceventCommentNumber,eventNumber){
                             return function(){
+                                console.log(masterReply.value+"!!!!!!!!!!!!!!!!!!!!");
+                                console.log(ceventCommentNumber+"!!!!!!!!!!!!!!!!!!!!");
+                                console.log(eventNumber+"!!!!!!!!!!!!!!!!!!!!");
                                 writeprocess(masterReply,ceventCommentNumber,eventNumber);
                             }
                         })(masterReply.value,comments.eventCommentDto.eventCommentNumber,eventNumber);
@@ -240,150 +245,266 @@
 
         }
 
+        function insertEventPage(){
+            const offcanvas = bootstrap.Offcanvas.getOrCreateInstance('#offcanvasBottom');
+
+            offcanvas.show();
+        }
+
+        function insertEventProcess(){
+            document.getElementById('uploadData').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const offcanvas = bootstrap.Offcanvas.getOrCreateInstance('#offcanvasBottom');
+
+            
+            // FormData 객체 생성
+            const formData = new FormData();
+
+            // 추가 데이터 추가
+            const offcanvasEventTitle = document.getElementById("offcanvasEventTitle").value;
+            formData.append('eventTitle', offcanvasEventTitle);
+
+            const offcanvasEventStartDay = document.getElementById("offcanvasEventStartDay").value;
+            formData.append('eventStartDay', offcanvasEventStartDay);
+
+            const offcanvasEventEndDay = document.getElementById("offcanvasEventEndDay").value;
+            formData.append('eventEndDay', offcanvasEventEndDay);
+
+            const offcanvasContent = document.getElementById("offcanvasContent").value;
+            formData.append('content', offcanvasContent);
+
+            // 이미지 파일 추가
+            const offcanvasUploadFile = document.getElementById("offcanvasUploadFile").files;
+            formData.append("uploadFile",offcanvasUploadFile[0]);
+            const offcanvasUploadFiles = document.getElementById('offcanvasUploadFiles').files;
+            for (const image of offcanvasUploadFiles) {
+                formData.append('uploadFiles', image);
+            }
+
+            const url = "/api/event/insertEventProcess"
+            // Fetch API를 사용하여 데이터 전송
+            fetch(url, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+
+                masterEventListPage();
+                document.getElementById("offcanvasEventTitle").value = "";
+                document.getElementById("offcanvasEventStartDay").value = "";
+                document.getElementById("offcanvasEventEndDay").value = "";
+                document.getElementById("offcanvasContent").value = "";
+                document.getElementById("offcanvasUploadFile").value = "";
+                document.getElementById("offcanvasUploadFiles").value = "";
+                offcanvas.hide();
+
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+            
+            });
+            
+
+
+        }
+
         window.addEventListener("DOMContentLoaded", () => {
             masterEventListPage();
         });
     </script>
 </head>
 <body>
-<div class="container">
-    <div class="row">
-        <div class="col">
-            <div class="row">
-                <div class="col">
-                    <span class="fs-3">이벤트 관리</span>
+    <div class="container-fluid">
+
+        <div class="row">
+    
+            <div class="col-1"></div>
+    
+            <div class="col-10">
+    
+                <div class="row pt-4">
+                    <span class="col px-0 text-end fw-bold fs-4">
+                        <span th:text="${session.masterDto.masterNickName}"></span>
+                        <span class="fs-5">님으로 접속 중</span>
+                        <a href="" class="col-2 pt-1 bi bi-box-arrow-right text-decoration-none text-secondary fst-normal fs-5">Logout</a>
+                    </span>
+    
                 </div>
-            </div>
-            <div class="row mt-3 border">
-                <div class="col py-3">
-                    <div class="row">
-                        <div class="col-2">
-                            이벤트 분류
-                        </div>
-                        <div class="col-2">
-                            <select class="form-select form-select-sm" name="haha">
-                                <option selected>선택</option>
-                                <option value="1">진행중인 이벤트</option>
-                                <option value="2">종료된 이벤트</option>
-                                <option value="3">당첨자</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mt-1">
-                        <div class="col-2">
-                            등록일
-                        </div>
-                        <div class="col">
-                            <input type="date">
-                            <span>~</span>
-                            <input type="date">
-                        </div>
-                    </div>
-                    <div class="row mt-1">
-                        <div class="col-2">
-                            검색어
-                        </div>
-                        <div class="col-2">
-                            <select class="form-select form-select-sm" name="hehe">
-                                <option selected>이벤트명</option>
-                                <option value="1">이벤트 내용</option>
-                            </select>
-                        </div>
-                        <div class="col ps-0 pe-0">
-                            <input class="form-control form-control-sm" type="text">
-                        </div>
-                        <div class="col-auto">
-                            <a class="btn btn-danger btn-sm">검색하기</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row mt-3 border py-3 px-1">
-                <div class="col">
-                    <div class="row">
-                        <div class="col-9"></div>
-                        <div class="col d-grid pe-0">
-                            
-                        </div><button class="btn btn-danger btn-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom">이벤트 등록</button>
-                        <div class="col d-grid">
-                            <a href="./winnerInsertPage" class="btn btn btn-danger btn-sm">당첨자 등록</a>
-                        </div>
-                    </div>
-                    <div class="row mt-1">
-                        <div class="col">
-                            <div class="row border-bottom pb-3">
-                                <div class="col">
-                                    <div class="row">
-                                        <div class="col-auto">진행중인 이벤트</div>
-                                        <div class="col">
-                                            <span>Total</span><span id="runningEventCount"></span>
-                                        </div>
-                                    </div>
-                                    <div class="row bg-danger text-center text-white">
-                                        <div class="col-2">번호</div>
-                                        <div class="col-3">이미지</div>
-                                        <div class="col">이벤트명</div>
-                                        <div class="col-2">관리</div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col" id="runningEventLocation">
-                                            <!-- 진행중인 이벤트 -->
-                                        </div>
-                                    </div>
+    
+    
+                <div class="row pt-3">
+    
+                    <nav class="navbar navbar-expand-lg bg-danger">
+                        <div class="container-fluid">
+                            <a class="navbar-brand fs-2 text-white fw-bold text-center col-2" href="/master/mainPage">F.Guys</a>
+                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+                            <div class="collapse navbar-collapse" id="navbar">
+                                <div class="navbar-nav">
+                                    <a class="nav-link fs-5 text-white fw-bold text-start" href="#">메뉴등록</a>
+                                    <a class="nav-link fs-5 text-white fw-bold text-start" href="/master/orderPage?id=1">주문확인</a>
+                                    <a class="nav-link fs-5 text-white fw-bold text-start" href="/master/reviewPage">리뷰확인</a>
+                                    <a class="nav-link fs-5 text-white fw-bold text-start" href="/event/eventlistPage">이벤트</a>
+                                    <a class="nav-link fs-5 text-white fw-bold text-start" href="#">매출</a>
                                 </div>
                             </div>
-                            <div class="row mt-3 border-bottom pb-3">
-                                <div class="col">
-                                    <div class="row">
-                                        <div class="col-auto">종료된 이벤트</div>
-                                        <div class="col">
-                                            <span>Total</span><span id="endEventCount"></span>
-                                        </div>
+                        </div>
+                    </nav>
+    
+                </div>
+    
+                <div class="row">
+                    <div class="col">
+                        <div class="row">
+                            <div class="col">
+                                <span class="fs-3">이벤트 관리</span>
+                            </div>
+                        </div>
+                        <div class="row mt-3 border">
+                            <div class="col py-3">
+                                <div class="row">
+                                    <div class="col-2">
+                                        이벤트 분류
                                     </div>
-                                    <div class="row bg-danger text-center text-white">
-                                        <div class="col-2">번호</div>
-                                        <div class="col-3">이미지</div>
-                                        <div class="col">이벤트명</div>
-                                        <div class="col-2">관리</div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col" id="endEventLocation">
-                                            <!-- 종료된 이벤트 -->
-                                        </div>
+                                    <div class="col-2">
+                                        <select class="form-select form-select-sm" name="haha">
+                                            <option selected>선택</option>
+                                            <option value="1">진행중인 이벤트</option>
+                                            <option value="2">종료된 이벤트</option>
+                                            <option value="3">당첨자</option>
+                                        </select>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row mt-3">
-                                <div class="col">
-                                    <div class="row">
-                                        <div class="col-auto">이벤트 당첨안내</div>
-                                        <div class="col">
-                                            <span>Total</span><span id="winnerEventCount"></span>
-                                        </div>
+                                <div class="row mt-1">
+                                    <div class="col-2">
+                                        등록일
                                     </div>
-                                    <div class="row bg-danger text-center text-white">
-                                        <div class="col-2">번호</div>
-                                        <div class="col">이벤트명</div>
-                                        <div class="col-2">관리</div>
+                                    <div class="col">
+                                        <input type="date">
+                                        <span>~</span>
+                                        <input type="date">
                                     </div>
-                                    <div class="row">
-                                        <div class="col" id="winnerLocation">
-                                            <!-- 당첨자 이벤트 -->
-                                        </div>
+                                </div>
+                                <div class="row mt-1">
+                                    <div class="col-2">
+                                        검색어
+                                    </div>
+                                    <div class="col-2">
+                                        <select class="form-select form-select-sm" name="hehe">
+                                            <option selected>이벤트명</option>
+                                            <option value="1">이벤트 내용</option>
+                                        </select>
+                                    </div>
+                                    <div class="col ps-0 pe-0">
+                                        <input class="form-control form-control-sm" type="text">
+                                    </div>
+                                    <div class="col-auto">
+                                        <a class="btn btn-danger btn-sm">검색하기</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <div class="row mt-3 border py-3 px-1">
+                            <div class="col">
+                                <div class="row">
+                                    <div class="col-9"></div>
+                                    <div class="col d-grid pe-0">
+                                        <button class="btn btn-danger btn-sm" type="button" onclick="insertEventPage()">이벤트 등록</button>
+                                    </div>
+                                    <div class="col d-grid">
+                                        <a href="./winnerInsertPage" class="btn btn btn-danger btn-sm">당첨자 등록</a>
+                                    </div>
+                                </div>
+                                <div class="row mt-1">
+                                    <div class="col">
+                                        <div class="row border-bottom pb-3">
+                                            <div class="col">
+                                                <div class="row">
+                                                    <div class="col-auto fw-bolder">진행중인 이벤트</div>
+                                                    <div class="col">
+                                                        <span>Total</span><span id="runningEventCount"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="row bg-danger text-center text-white">
+                                                    <div class="col-2">번호</div>
+                                                    <div class="col-3">이미지</div>
+                                                    <div class="col">이벤트명</div>
+                                                    <div class="col-2">관리</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col" id="runningEventLocation">
+                                                        <!-- 진행중인 이벤트 -->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-3 border-bottom pb-3">
+                                            <div class="col">
+                                                <div class="row">
+                                                    <div class="col-auto fw-bolder">종료된 이벤트</div>
+                                                    <div class="col">
+                                                        <span>Total</span><span id="endEventCount"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="row bg-danger text-center text-white">
+                                                    <div class="col-2">번호</div>
+                                                    <div class="col-3">이미지</div>
+                                                    <div class="col">이벤트명</div>
+                                                    <div class="col-2">관리</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col" id="endEventLocation">
+                                                        <!-- 종료된 이벤트 -->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-3">
+                                            <div class="col">
+                                                <div class="row">
+                                                    <div class="col-auto fw-bolder">이벤트 당첨안내</div>
+                                                    <div class="col">
+                                                        <span>Total</span><span id="winnerEventCount"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="row bg-danger text-center text-white">
+                                                    <div class="col-2">번호</div>
+                                                    <div class="col">이벤트명</div>
+                                                    <div class="col-2">관리</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col" id="winnerLocation">
+                                                        <!-- 당첨자 이벤트 -->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+    
+    
+    
+    
             </div>
+    
+            <div class="col-1"></div>
+    
         </div>
+    
     </div>
-</div>
+
 
 <!-- 진행중인 이벤트 템플릿 -->
 <div class="d-none" id="runningEventTempleteLocation">
-    <div class="runningEventTemplete row align-items-center text-center mt-1">
+    <div class="runningEventTemplete row align-items-center text-center mt-1 border-bottom pb-1">
         <div class="col-2">
             <span class="runningEventNumber"></span>
         </div>
@@ -402,7 +523,7 @@
 
 <!-- 종료된 이벤트 템플릿 -->
 <div class="d-non" id="endEventTempleteLocation">
-    <div class="endEventTemplete row align-items-center text-center mt-1">
+    <div class="endEventTemplete row align-items-center text-center mt-1 border-bottom pb-1">
         <div class="col-2">
             <span class="endEventNumber"></span>
         </div>
@@ -421,7 +542,7 @@
 
 <!-- 당첨자 이벤트 템플릿 -->
 <div class="d-none" id="winnerTempleteLocation">
-    <div class="winnerTemplete row align-items-center text-center mt-1">
+    <div class="winnerTemplete row align-items-center text-center mt-1 border-bottom py-3">
         <div class="col-2">
             <span class="winnerNumber"></span>
         </div>
@@ -551,7 +672,7 @@
 </div>
 <!-- 마스터 로그인 성공/ 댓글 없음 -->
 <div class="d-none" id="yesMasterNoReplyTempleteLocation">
-    <div class="yesMasterNoReplyTemplete col">
+    <div class="yesMasterNoReplyTemplete col ">
         <div class="row mt-3">
             <div class="col">
                 <textarea class="masterReply form-control" ></textarea>
@@ -622,28 +743,23 @@
 </div>
 
 
-<div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
+<div class="offcanvas offcanvas-bottom" style="height: 80%;" tabindex="-1" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
     <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasBottomLabel">Offcanvas bottom</h5>
+        <h5 class="offcanvas-title" id="offcanvasBottomLabel">이벤트 등록</h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body small">
         <div class="container">
             <div class="row">
                 <div class="col">
-                    <form class="row mt-3" action="./insertEventProcess" method="post" enctype="multipart/form-data">
+                    <form class="row mt-3" id="uploadData">
                         <div class="col">
-                            <div class="row">
-                                <div class="col">
-                                    닉네임: <span th:text="${session.masterDto.masterId}"></span>
-                                </div>
-                            </div>
                             <div class="row mt-2">
                                 <div class="col-auto text-center">
                                     <span>이벤트 제목</span> 
                                 </div>
                                 <div class="col">
-                                    <input class="form-control" name="eventTitle" type="text">
+                                    <input class="form-control" id="offcanvasEventTitle" type="text">
                                 </div>
                             </div>
                             <div class="row mt-2">
@@ -651,7 +767,7 @@
                                     <span>대표이미지</span>
                                 </div>
                                 <div class="col-4">
-                                    <input name="uploadFile" type="file" accept="image/*">
+                                    <input id="offcanvasUploadFile" type="file" accept="image/*">
                                 </div>
                             </div>
                             <div class="row mt-2">
@@ -659,27 +775,33 @@
                                     <span>상세이미지</span>
                                 </div>
                                 <div class="col">
-                                    <input name="uploadFiles" type="file" multiple accept="image/*">
+                                    <input id="offcanvasUploadFiles" type="file" multiple accept="image/*">
                                 </div>
                             </div>
                             <div class="row mt-2">
-                                <div class="col">
-                                    <span>시작일</span>
+                                <div class="col-auto">
+                                    <div class="row">
+                                        <div class="col">
+                                            <span>시작일</span>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col">
+                                            <input id="offcanvasEventStartDay" type="date">
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row mt-2">
                                 <div class="col">
-                                    <input name="eventStartDay" type="date">
-                                </div>
-                            </div>
-                            <div class="row mt-2">
-                                <div class="col">
-                                    <span>종료일</span>
-                                </div>
-                            </div>
-                            <div class="row mt-2">
-                                <div class="col">
-                                    <input name="eventEndDay" type="date">
+                                    <div class="row">
+                                        <div class="col">
+                                            <span>종료일</span>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col">
+                                            <input id="offcanvasEventEndDay" type="date">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row mt-2">
@@ -689,12 +811,12 @@
                             </div>
                             <div class="row">
                                 <div class="col">
-                                    <textarea name="content" class="form-control"></textarea>
+                                    <textarea id="offcanvasContent" class="form-control"></textarea>
                                 </div>
                             </div>
                             <div class="row mt-2">
                                 <div class="col text-end">
-                                    <button id=> 이벤트 등록</button>
+                                    <button type="submit" class="btn btn-danger small" onclick="insertEventProcess()"> 이벤트 등록</button>
                                 </div>
                             </div>
                         </div>

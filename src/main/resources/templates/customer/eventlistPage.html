@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" >
+<html lang="en" xmlns:th="http://www.thymeleaf.org" style="background-color: #B41E30;">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -11,6 +11,12 @@
     <link rel="stylesheet" href="/css/style.css">
     <script>
         function reloadEventList() {
+            const runningEventLine = document.getElementById("runningEventLine");
+            runningEventLine.classList.add("active")
+
+            const endEventLine = document.getElementById("endEventLine");
+            endEventLine.classList.remove("active");
+            
             const url = "/api/event/eventListPage";
 
             fetch(url)
@@ -52,6 +58,13 @@
         }
 
         function endEventList(){
+
+            const runningEventLine = document.getElementById("runningEventLine");
+            runningEventLine.classList.remove("active")
+
+            const endEventLine = document.getElementById("endEventLine");
+            endEventLine.classList.add("active");
+
             const url = "/api/event/eventListPage";
 
             fetch(url)
@@ -333,24 +346,20 @@
         });
     </script>
 </head>
+<div th:replace="common/eventNavi::topNavi" style="background-color: #B41E30;"></div>
 <div th:replace="common/customerNavi::bottomNavi"></div>
 
-<div class="container">
-    <div class="row" style="margin-bottom:82px;">
+<div class="container" style="background-color: #B41E30;">
+    <div class="row" style="margin-bottom:82px; ">
         <div class="col mt-3">
-            <div class="row">
-                <div class="col text-center">
-                    <span class="fw-bolder">이벤트</span>
-                </div>
-            </div>
-            <div class="row">
+            <div class="row mt-4">
                 <div class="col">
                     <ul class="nav nav-underline">
                         <li class="nav-item col-6 text-center">
-                            <a onclick="reloadEventList()" class="reload link-underline link-underline-opacity-0 text-black nav-link">진행중인 이벤트</a>
+                            <a onclick="reloadEventList()" id="runningEventLine" class="reload link-underline link-underline-opacity-0 text-black nav-link text-white">진행중인 이벤트</a>
                         </li>
                         <li class="nav-item col-5 text-center">
-                            <a onclick="endEventList()" class="link-underline link-underline-opacity-0 text-black nav-link">종료된 이벤트</a>
+                            <a onclick="endEventList()" id="endEventLine" class="link-underline link-underline-opacity-0 text-black nav-link text-white">종료된 이벤트</a>
                         </li>
                     </ul>
                 </div>
@@ -380,15 +389,15 @@
 </div>
 <!--이벤트 목록 나오도록-->
 <div class="d-none">
-    <div class="EventList row mb-2 ">
-        <div class="col">
+    <div class="EventList row mb-2 mx-3 pt-4 bg-white border rounded">
+        <div class="col px-4">
             <div class="row">
-                <div class="col">
+                <div class="col py-2">
                     <img onclick="detailPageProcess(this)" class="mainImg img-fluid">
                 </div>
             </div>
             <div class="row">
-                <div class="col">
+                <div class="col text-end">
                     <input type="hidden" class="detailPageNumber">
                     <i onclick="likeDisLikeProcess(this)" class="thumbsUp bi bi-hand-thumbs-up"></i>
                     <span class="eventBoardLikeCount"></span>
@@ -399,15 +408,15 @@
 </div>
 <!-- 종료된 이벤트 목록 -->
 <div class="d-none">
-    <div class="endEventList row mb-2 ">
-        <div class="col">
+    <div class="endEventList row mb-2 mx-3 pt-4 bg-white border rounded">
+        <div class="col px-4">
             <div class="row">
-                <div class="col">
+                <div class="col py-2">
                     <img onclick="detailEndPageProcess(this)" class="mainImg img-fluid">
                 </div>
             </div>
             <div class="row">
-                <div class="col">
+                <div class="col text-end">
                     <input type="hidden" class="detailPageNumber">
                     <i onclick="likeDisLikeProcessTwo(this)" class="thumbsUp bi bi-hand-thumbs-up"></i>
                     <span class="eventBoardLikeCount"></span>

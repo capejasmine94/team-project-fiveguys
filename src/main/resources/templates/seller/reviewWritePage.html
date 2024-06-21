@@ -24,12 +24,17 @@
                 <div class="col fs-1 fw-bold text-center">리뷰작성</div>
             </div>
 
-            <form action="/seller/insertSellerReview">
+            <form action="/seller/insertSellerReview" method="post" enctype="multipart/form-data">
 
             <input type="hidden" name="sellerOrderNumber" th:value="${sellerOrderInform.sellerOrderNumber}">
 
             <div class="row pt-3">
                 <textarea class="form-control" name="sellerReviewContent" placeholder="리뷰 내용을 입력해주세요." rows="7"></textarea>
+            </div>
+
+
+            <div class="row pt-2">
+                <input class="col form-control" type="file" name="uploadFiles" multiple accept="image/*">
             </div>
 
             <div class="row pt-4">

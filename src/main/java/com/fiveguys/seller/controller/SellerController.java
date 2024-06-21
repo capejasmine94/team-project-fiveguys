@@ -3,6 +3,7 @@ package com.fiveguys.seller.controller;
 import com.fiveguys.dto.SellerDto;
 import com.fiveguys.dto.SellerOrderDto;
 import com.fiveguys.dto.SellerReviewDto;
+import com.fiveguys.dto.SellerReviewImageDto;
 import com.fiveguys.seller.service.SellerService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +11,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-import java.util.Map;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Controller
 @RequestMapping("seller")
@@ -198,9 +201,55 @@ public class SellerController {
 
 
     @RequestMapping("insertSellerReview")
-    public String insertSellerReview(SellerReviewDto sellerReviewDto) {
+    public String insertSellerReview(SellerReviewDto sellerReviewDto, MultipartFile[] uploadFiles) {
 
-        sellerService.insertSellerReview(sellerReviewDto);
+        List<SellerReviewImageDto> sellerReviewImageDtoList = new ArrayList<>();
+
+        if (uploadFiles != null) {
+            for (MultipartFile multipartFile : uploadFiles) {
+                if (multipartFile.isEmpty()) {
+                    continue;
+                }
+
+                String rootPath = "/Users/fiveguys_image/";
+
+                //날짜 별 폴더 생성
+
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy//MM/dd/");
+                String todayPath = sdf.format(new Date());
+
+                File todayFolderForCreate = new File(rootPath + todayPath);
+
+                if (!todayFolderForCreate.exists()) {
+                    todayFolderForCreate.mkdirs();
+                }
+
+                String originalFilename = multipartFile.getOriginalFilename();
+
+                String uuid = UUID.randomUUID().toString();
+                long currentTime = System.currentTimeMillis();
+
+                String fileName = uuid + "_" + currentTime;
+
+                String ext = originalFilename.substring(originalFilename.lastIndexOf("."));
+                fileName += ext;
+
+                try{
+                    multipartFile.transferTo(new File(rootPath + todayPath + fileName));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+                SellerReviewImageDto sellerReviewImageDto = new SellerReviewImageDto();
+                sellerReviewImageDto.setOriginal_filename(originalFilename);
+                sellerReviewImageDto.setLocation(todayPath + fileName);
+
+                sellerReviewImageDtoList.add(sellerReviewImageDto);
+
+            }
+        }
+
+        sellerService.insertSellerReview(sellerReviewDto, sellerReviewImageDtoList);
 
         return "/seller/mainPage";
     }
@@ -209,6 +258,7 @@ public class SellerController {
 
     @RequestMapping("reviewDetailPage")
     public String reviewDetailPage(Model model, int id) {
+
 
 
         Map<String, Object> reviewInform = sellerService.selectSellerReview(id);

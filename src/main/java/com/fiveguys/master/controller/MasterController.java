@@ -3,6 +3,7 @@ package com.fiveguys.master.controller;
 import com.fiveguys.dto.MasterReplyDto;
 import com.fiveguys.dto.SellerOrderDto;
 import com.fiveguys.master.service.MasterService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,6 +24,15 @@ public class MasterController {
     @RequestMapping("mainPage")
     public String mainPage() {
         return "/master/mainPage";
+    }
+
+
+    @RequestMapping("logout")
+    public String logout(HttpSession session) {
+
+        session.invalidate();
+
+        return "redirect:/login/masterLogin";
     }
 
 
@@ -85,7 +95,7 @@ public class MasterController {
 
         masterService.updateOrderStatusProcessingShipment(id);
 
-        return "/master/mainPage";
+        return "redirect:/master/orderDetailPage?id=" + id;
     }
 
     @RequestMapping("updateOrderStatusDelivery")
@@ -93,7 +103,7 @@ public class MasterController {
 
         masterService.updateOrderStatusDelivery(id);
 
-        return "/master/mainPage";
+        return "redirect:/master/orderDetailPage?id=" + id;
     }
 
 
@@ -102,7 +112,7 @@ public class MasterController {
 
         masterService.updateOrderStatusDeliveryCompleted(id);
 
-        return "/master/mainPage";
+        return "redirect:/master/orderDetailPage?id=" + id;
     }
 
 

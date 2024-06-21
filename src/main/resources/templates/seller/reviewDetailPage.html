@@ -32,9 +32,21 @@
                 <span class="col-3 fs-4 fw-bolder">게시일 : <span class="fs-5 fw-bold" th:text="${#dates.format(reviewInform.sellerReviewDto.sellerReviewCreatedAt, 'yyyy-MM-dd')}"></span></span>
             </div>
 
+            <div class="row text-center pt-3">
+                <div class="col-6" th:each="reviewImageDtoList : ${reviewInform.sellerReviewImageDtoList}">
+                    <div class="row pt-3">
+                        <img class="col-6 image-fluid" th:src="@{|/images/${reviewImageDtoList.location}|}">
+                    </div>
+                </div>
+            </div>
+
+
+
+
             <div class="row pt-3">
                 <div class="fs-3 fw-bold" th:text="${reviewInform.sellerReviewDto.sellerReviewContent}"></div>
             </div>
+
 
 
             <div class="row pt-5 mt-5">

@@ -145,8 +145,17 @@ public class SellerService {
     }
 
 
-    public void insertSellerReview(SellerReviewDto sellerReviewDto) {
+    public void insertSellerReview(SellerReviewDto sellerReviewDto, List<SellerReviewImageDto> reviewImageDtoList) {
         sellerSqlMapper.insertSellerReview(sellerReviewDto);
+
+        for (SellerReviewImageDto reviewImageDto : reviewImageDtoList) {
+
+            reviewImageDto.setSellerReviewNumber(sellerReviewDto.getSellerReviewNumber());
+
+
+            sellerSqlMapper.insertReviewImage(reviewImageDto);
+        }
+
     }
 
 
@@ -181,12 +190,15 @@ public class SellerService {
         SellerDto sellerDto = sellerSqlMapper.selectSellerInform(sellerOrderDto.getSellerNumber());
         MasterReplyDto masterReplyDto = sellerSqlMapper.selectMasterReply(sellerReviewDto.getSellerReviewNumber());
 
+        List<SellerReviewImageDto> sellerReviewImageDtoList = sellerSqlMapper.selectReviewImage(id);
+
 
         Map<String, Object> map = new HashMap<>();
         map.put("sellerDto", sellerDto);
         map.put("sellerOrderDto", sellerOrderDto);
         map.put("sellerReviewDto", sellerReviewDto);
         map.put("masterReplyDto", masterReplyDto);
+        map.put("sellerReviewImageDtoList", sellerReviewImageDtoList);
 
         return map;
     }

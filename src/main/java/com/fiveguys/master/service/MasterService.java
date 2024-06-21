@@ -43,6 +43,7 @@ public class MasterService {
         SellerOrderDto sellerOrderDto = masterSqlMapper.selectSellerOrder(sellerReviewDto.getSellerOrderNumber());
         SellerDto sellerDto = masterSqlMapper.selectSeller(sellerOrderDto.getSellerNumber());
         MasterReplyDto masterReplyDto = masterSqlMapper.selectMasterReply(sellerReviewDto.getSellerReviewNumber());
+        List<SellerReviewImageDto> sellerReviewImageDtoList = masterSqlMapper.selectReviewImage(sellerReviewDto.getSellerReviewNumber());
 
         Map<String, Object> map = new HashMap<>();
 
@@ -50,6 +51,7 @@ public class MasterService {
         map.put("sellerOrderDto", sellerOrderDto);
         map.put("sellerReviewDto", sellerReviewDto);
         map.put("masterReplyDto", masterReplyDto);
+        map.put("sellerReviewImageDtoList", sellerReviewImageDtoList);
 
         return map;
     }

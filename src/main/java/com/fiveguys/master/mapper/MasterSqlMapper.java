@@ -32,6 +32,8 @@ public interface MasterSqlMapper {
 
     public void updateOrderStatusDeliveryCompleted(SellerOrderDto sellerOrderDto);
 
+    public List<SellerReviewImageDto> selectReviewImage(int sellerReviewNumber);
+
 
 
 

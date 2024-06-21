@@ -6,6 +6,7 @@
 
     <select id="selectAllSellerReview">
         SELECT * from fc_sellerReview
+        order by sellerReviewNumber desc
     </select>
 
 
@@ -81,6 +82,12 @@
         set sellerOrderStatus = '배송완료'
         where sellerNumber = #{sellerNumber} and sellerOrderCreatedAt = #{sellerOrderCreatedAt}
     </update>
+
+
+    <select id="selectReviewImage">
+        select * from fc_sellerReviewImage
+        where sellerReviewNumber = #{sellerReviewNumber}
+    </select>
 
 
 

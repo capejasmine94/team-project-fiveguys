@@ -41,6 +41,10 @@ public interface SellerSqlMapper {
 
     public MasterReplyDto selectMasterReply(int sellerReviewNumber);
 
+    public void insertReviewImage(SellerReviewImageDto sellerReviewImageDto);
+
+    public List<SellerReviewImageDto> selectReviewImage(int sellerReviewNumber);
+
 
 
 

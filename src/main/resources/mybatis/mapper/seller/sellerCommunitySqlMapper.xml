@@ -81,6 +81,37 @@
             </choose>
         limit #{offset},#{itemsPerPage}
     </select>
+    <select id="selectSellerCommunityByPopularity">
+        select
+            s.sellerCommunityNumber,
+            s.sellerNumber,
+            s.sellerCommunityImage,
+            s.sellerCommunityTitle,
+            s.sellerCommunityContent,
+            s.sellerCommunityVisitCount,
+            CASE
+                WHEN FLOOR(TIMESTAMPDIFF(MONTH, s.sellerCommunityCreatedAt, NOW()) / 12) >= 1 THEN CONCAT(FLOOR(TIMESTAMPDIFF(MONTH, s.sellerCommunityCreatedAt, NOW()) / 12), '년전')
+                WHEN TIMESTAMPDIFF(MONTH, s.sellerCommunityCreatedAt, NOW()) >= 1 THEN CONCAT(TIMESTAMPDIFF(MONTH, s.sellerCommunityCreatedAt, NOW()), '달전')
+                WHEN DATEDIFF(CURRENT_DATE, s.sellerCommunityCreatedAt) >= 1 THEN CONCAT(DATEDIFF(CURRENT_DATE, s.sellerCommunityCreatedAt), '일전')
+                WHEN TIMESTAMPDIFF(HOUR, s.sellerCommunityCreatedAt, NOW()) >= 1 THEN CONCAT(TIMESTAMPDIFF(HOUR, s.sellerCommunityCreatedAt, NOW()), '시간전')
+                ELSE CONCAT(TIMESTAMPDIFF(MINUTE, s.sellerCommunityCreatedAt, NOW()), '분전')
+                end as sellerCommunityCreatedAt,
+            (select count(*) from fc_sellerCommunityLike fsc where fsc.sellerCommunityNumber=s.sellerCommunityNumber) as heart
+        from fc_sellerCommunity s
+        <where>
+            <if test="searchWord!=null and searchWord != ''">
+                and s.sellerCommunityTitle like concat('%',#{searchWord},'%')
+            </if>
+            <if test="sellerSort !=null and sellerSort.size() > 0">
+                and s.sellerNumber in
+                <foreach collection="sellerSort" item="seller" open="(" close=")" separator=",">
+                    #{seller}
+                </foreach>
+            </if>
+        </where>
+        order by heart desc
+        limit 2
+    </select>
     <select id="selectSellerCommunityById">
         select
             sellerCommunityNumber,
@@ -99,7 +130,18 @@
         from fc_sellerCommunity
         where sellerCommunityNumber=#{sellerCommunityNumber}
     </select>
-
+    <select id="selectPreviousSellerCommunity">
+        SELECT * FROM fc_sellerCommunity
+        WHERE sellerCommunityNumber &lt; #{sellerCommunityNumber}
+        ORDER BY sellerCommunityNumber desc
+        LIMIT 1;
+    </select>
+    <select id="selectNextSellerCommunity">
+        SELECT * FROM fc_sellerCommunity
+        WHERE sellerCommunityNumber &gt; #{sellerCommunityNumber}
+        ORDER BY sellerCommunityNumber ASC
+        LIMIT 1;
+    </select>
     <select id="selectSellerCommunityCount">
         select coalesce(count(*),0) from fc_sellerCommunity
         <where>

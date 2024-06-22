@@ -45,15 +45,22 @@ public class SellerCommunityRestController {
         sellerCommunityPaginationDto.setPaginationPage(lastPageNumber);
 
         result.put("sellerCommunityPaginationDto", sellerCommunityPaginationDto);
-        System.out.println(totalPage);
-        System.out.println(sellerCommunityPaginationDto);
 
 
         SellerDto sellerDto = (SellerDto) session.getAttribute("sellerDto");
         if(sellerDto!=null){
+
             result.put("login", true);
             result.put("sellerDto", sellerDto);
             result.put("totalPage", totalPage);
+
+            if(sellerCommunityPaginationDto.getCurrentPage()==1){
+                sellerCommunityPaginationDto.setItemsPerPage(3);
+                result.put("selectSellerCommunityByPopularity",sellerCommunityService.selectSellerCommunityByPopularity(sellerCommunityPaginationDto,sellerDto.getSellerNumber()));
+            }else{
+                result.put("selectSellerCommunityByPopularity",null);
+            }
+
             result.put("sellerCommunity", sellerCommunityService.selectSellerCommunityList(sellerCommunityPaginationDto, sellerDto.getSellerNumber()));
         }else{
             result.put("login", false);
@@ -91,6 +98,8 @@ public class SellerCommunityRestController {
         sellerCommunityLikeDto.setSellerNumber(sellerDto.getSellerNumber());
 
         response.put("sellerDto", sellerDto);
+        response.put("selectPreviousSellerCommunity",sellerCommunityService.selectPreviousSellerCommunity(sellerCommunityLikeDto.getSellerCommunityNumber()));
+        response.put("selectNextSellerCommunity",sellerCommunityService.selectNextSellerCommunity(sellerCommunityLikeDto.getSellerCommunityNumber()));
         response.put("checkIfSellerCommunityLikeExists",sellerCommunityService.checkIfSellerCommunityLikeExists(sellerCommunityLikeDto));
         response.put("sellerCommunityDetail", sellerCommunityService.selectSellerCommunityByIdWithSession(sellerCommunityLikeDto.getSellerCommunityNumber(),sellerDto.getSellerNumber()));
 

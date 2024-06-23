@@ -35,13 +35,13 @@
                         <div class="collapse navbar-collapse" id="navbarNav">
                             <ul class="navbar-nav row w-100">
                                 <li class="nav-item col-2">
-                                    <a class="nav-link active text-white fw-bold text-start" href="/seller/materialMenuPage1">재료메뉴</a>
+                                    <a class="nav-link active text-white fw-bold text-start" href="/seller/materialMenuPage">재료메뉴</a>
                                 </li>
                                 <li class="nav-item col-2">
                                     <a class="nav-link active text-white fw-bold text-start" href="/seller/orderPage">주문하기</a>
                                 </li>
                                 <li class="nav-item col-2">
-                                    <a class="nav-link active text-white fw-bold text-start" href="/seller/sellerReviewPage" >리뷰</a>
+                                    <a class="nav-link active text-white fw-bold text-start" href="/seller/sellerReviewPage">리뷰</a>
                                 </li>
                                 <li class="nav-item col-2">
                                     <a class="nav-link active text-white fw-bold text-start" href="/seller/sellerCommunity">커뮤니티</a>
@@ -117,195 +117,11 @@
                          style="height: 220px; overflow-y: auto;"
                          tabindex="0">
 
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="materialNumber" value="1">
-                            <label class="form-check-label">
-                                닭다리<span class="text-secondary" style="font-size: 0.9rem">(1Box)</span>
-                            </label>
+                        <div class="form-check" th:each="materialInform : ${materialInform}">
+                            <input class="form-check-input" type="checkbox" name="materialNumber" th:value="${materialInform.materialNumber}">
+                            <label class="form-check-label" th:text="${materialInform.materialName}"></label>
                         </div>
 
-
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="materialNumber" value="2">
-                            <label class="form-check-label">
-                                닭다리살<span class="text-secondary" style="font-size: 0.9rem">(1Box)</span>
-                            </label>
-                        </div>
-
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="materialNumber" value="3">
-                            <label class="form-check-label">
-                                닭윙<span class="text-secondary" style="font-size: 0.9rem">(1Box)</span>
-                            </label>
-                        </div>
-
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="materialNumber" value="4">
-                            <label class="form-check-label">
-                                통닭<span class="text-secondary" style="font-size: 0.9rem">(1Box)</span>
-                            </label>
-                        </div>
-
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="materialNumber" value="5">
-                            <label class="form-check-label">
-                                닭안심<span class="text-secondary" style="font-size: 0.9rem">(1Box)</span>
-                            </label>
-                        </div>
-
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="materialNumber" value="6">
-                            <label class="form-check-label">
-                                양념소스 순한맛
-                            </label>
-                        </div>
-
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="materialNumber" value="7">
-                            <label class="form-check-label">
-                                양념소스 매운맛
-                            </label>
-                        </div>
-
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="materialNumber" value="8">
-                            <label class="form-check-label">
-                                꼬지소스 순한맛
-                            </label>
-                        </div>
-
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="materialNumber" value="9">
-                            <label class="form-check-label">
-                                꼬지소스 매운맛
-                            </label>
-                        </div>
-
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="materialNumber" value="10">
-                            <label class="form-check-label">
-                                닭강정소스 매운맛
-                            </label>
-                        </div>
-
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="materialNumber" value="11">
-                            <label class="form-check-label">
-                                닭강정소스 순한맛
-                            </label>
-                        </div>
-
-
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="materialNumber" value="12">
-                            <label class="form-check-label">
-                                칠리소스
-                            </label>
-                        </div>
-
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="materialNumber" value="13">
-                            <label class="form-check-label">
-                                감자튀김
-                            </label>
-                        </div>
-
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="materialNumber" value="14">
-                            <label class="form-check-label">
-                                치즈스틱
-                            </label>
-                        </div>
-
-
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="materialNumber" value="15">
-                            <label class="form-check-label">
-                                떡볶이
-                            </label>
-                        </div>
-
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="materialNumber" value="16">
-                            <label class="form-check-label">
-                                치즈볼
-                            </label>
-                        </div>
-
-
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="materialNumber" value="17">
-                            <label class="form-check-label">
-                                코카콜라 1.25L<span class="text-secondary" style="font-size: 0.9rem">(1Box)</span>
-                            </label>
-                        </div>
-
-
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="materialNumber" value="18">
-                            <label class="form-check-label">
-                                펩시콜라 1.25L<span class="text-secondary" style="font-size: 0.9rem">(1Box)</span>
-                            </label>
-                        </div>
-
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="materialNumber" value="19">
-                            <label class="form-check-label">
-                                펩시제로 1.25L<span class="text-secondary" style="font-size: 0.9rem">(1Box)</span>
-                            </label>
-                        </div>
-
-
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="materialNumber" value="20">
-                            <label class="form-check-label">
-                                코카콜라 500ML<span class="text-secondary" style="font-size: 0.9rem">(1Box)</span>
-                            </label>
-                        </div>
-
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="materialNumber" value="21">
-                            <label class="form-check-label">
-                                펩시제로 500ML<span class="text-secondary" style="font-size: 0.9rem">(1Box)</span>
-                            </label>
-                        </div>
-
-
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="materialNumber" value="22">
-                            <label class="form-check-label">
-                                치킨박스<span class="text-secondary" style="font-size: 0.9rem">(소)</span>
-                            </label>
-                        </div>
-
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="materialNumber" value="23">
-                            <label class="form-check-label">
-                                치킨박스<span class="text-secondary" style="font-size: 0.9rem">(중)</span>
-                            </label>
-                        </div>
-
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="materialNumber" value="24">
-                            <label class="form-check-label">
-                                치킨박스<span class="text-secondary" style="font-size: 0.9rem">(대)</span>
-                            </label>
-                        </div>
-
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="materialNumber" value="25">
-                            <label class="form-check-label">
-                                비닐봉투<span class="text-secondary" style="font-size: 0.9rem">(대)</span>
-                            </label>
-                        </div>
-
-
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="materialNumber" value="26">
-                            <label class="form-check-label">
-                                비닐봉투<span class="text-secondary" style="font-size: 0.9rem">(소)</span>
-                            </label>
-                        </div>
 
                     </div>
 
@@ -313,9 +129,6 @@
                         <div class="col-9"></div>
                         <button type="submit" class="col-3 btn btn-dark fw-bold">주문서에 담기</button>
                     </div>
-
-
-
 
                 </form>
 

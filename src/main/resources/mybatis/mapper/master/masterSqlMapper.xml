@@ -98,6 +98,42 @@
     </insert>
 
 
+    <select id="selectMaterialCategory">
+        select * from fc_materialCategory;
+    </select>
+
+
+    <insert id="insertMaterial">
+        <selectKey resultType="int" keyProperty="materialNumber" order="AFTER">
+            select max(materialNumber) from fc_material
+        </selectKey>
+        INSERT INTO fc_material (materialCategoryNumber, materialName, materialPrice, materialInformation)
+        VALUES (#{materialCategoryNumber}, #{materialName}, #{materialPrice}, #{materialInformation});
+    </insert>
+
+
+    <insert id="insertMaterialImage">
+        INSERT INTO fc_materialImage (materialNumber, location, original_filename)
+        VALUES (#{materialNumber}, #{location}, #{original_filename})
+    </insert>
+
+
+    <select id="selectRecentMaterial">
+        SELECT * FROM fc_material
+        ORDER BY materialNumber DESC LIMIT 1;
+    </select>
+
+
+    <select id="selectRecentMaterialImage">
+        SELECT * FROM fc_materialImage
+        ORDER BY materialImageNumber DESC LIMIT 1;
+    </select>
+
+
+    <select id="selectSellerReviewInformByReviewNumber">
+        select * from fc_sellerReview
+        where sellerReviewNumber = #{sellerReviewNumber}
+    </select>
 
 
 

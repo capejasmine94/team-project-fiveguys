@@ -204,6 +204,14 @@ public class SellerService {
     }
 
 
+    public int selectRecentReviewNumber() {
+        int recentReviewNumber = sellerSqlMapper.selectRecentReviewNumber();
+
+        return recentReviewNumber;
+    }
+
+
+
     public List<Map<String, Object>> selectMyReview(int sellerNumber) {
 
         List<Map<String, Object>> sellerReviewList = new ArrayList<>();
@@ -224,6 +232,41 @@ public class SellerService {
 
         return sellerReviewList;
 
+    }
+
+
+    public List<MaterialDto> selectMaterial() {
+        List<MaterialDto> materialDtoList = sellerSqlMapper.selectMaterial();
+
+        return materialDtoList;
+    }
+
+    public List<MaterialCategoryDto> selectMaterialCategory() {
+        List<MaterialCategoryDto> materialCategoryDtoList = sellerSqlMapper.selectMaterialCategory();
+        
+        return materialCategoryDtoList;
+    }
+
+
+    public List<Map<String, Object>> selectMaterialByCategoryNumber(int materialCategoryNumber) {
+
+        List<Map<String, Object>> materialInform = new ArrayList<>();
+
+        List<MaterialDto> materialDtoList = sellerSqlMapper.selectMaterialByCategoryNumber(materialCategoryNumber);
+
+        for (MaterialDto materialDto : materialDtoList) {
+            int materialNumber = materialDto.getMaterialNumber();
+            MaterialImageDto materialImageDto = sellerSqlMapper.selectMaterialImage(materialNumber);
+
+            Map<String, Object> map = new HashMap<>();
+
+            map.put("materialDto", materialDto);
+            map.put("materialImageDto", materialImageDto);
+
+            materialInform.add(map);
+
+        }
+        return materialInform;
     }
 
 

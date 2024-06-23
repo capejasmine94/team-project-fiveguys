@@ -18,6 +18,7 @@
             <div class="row pt-3">
 
                 <a href="/seller/mainPage" class="col-2 fw-bold fs-1 text-danger text-decoration-none">F.Guys</a>
+
             </div>
 
 
@@ -34,7 +35,7 @@
                         <div class="collapse navbar-collapse" id="navbarNav">
                             <ul class="navbar-nav row w-100">
                                 <li class="nav-item col-2">
-                                    <a class="nav-link active text-white fw-bold text-start" href="/seller/materialMenuPage1">재료메뉴</a>
+                                    <a class="nav-link active text-white fw-bold text-start" href="/seller/materialMenuPage">재료메뉴</a>
                                 </li>
                                 <li class="nav-item col-2">
                                     <a class="nav-link active text-white fw-bold text-start" href="/seller/orderPage">주문하기</a>
@@ -101,64 +102,62 @@
                     <div class="row pt-2">
                         <div class="col border border-5 border-bottom border-danger"></div>
                     </div>
+
+
                 </div>
+
+
+
 
 
                 <div class="col-10">
 
-                    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-                        <div class="container-fluid">
-                            <a class="navbar-brand fw-bold">카테고리</a>
-                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                                <span class="navbar-toggler-icon"></span>
-                            </button>
-                            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                                <div class="navbar-nav">
-                                    <a class="nav-link active" href="/seller/materialMenuPage1">생닭</a>
-                                    <a class="nav-link active" href="/seller/materialMenuPage2">소스</a>
-                                    <a class="nav-link active" href="/seller/materialMenuPage3">사이드</a>
-                                    <a class="nav-link active" href="/seller/materialMenuPage4">음료</a>
-                                    <a class="nav-link active" href="/seller/materialMenuPage5">치킨박스</a>
-                                    <a class="nav-link active" href="/seller/materialMenuPage6">봉지</a>
+                    <form class="row" th:action="@{/seller/selectMaterialByCategoryNumber}" method="post">
+
+                        <div class="col">
+
+                            <select class="form-select form-select-lg" name="materialCategoryNumber" onchange="this.form.submit()">
+                                <option>카테고리 선택</option>
+                                <option th:each="materialCategoryInform : ${materialCategoryInform}"
+                                        th:value="${materialCategoryInform.materialCategoryNumber}"
+                                        th:text="${materialCategoryInform.materialCategoryName}">
+                                </option>
+                            </select>
+
+                        </div>
+
+
+                    </form>
+
+                    <div class="container">
+                        <div class="row pt-2">
+                            <div class="col-md-4 mb-4" th:each="materialInform : ${materialInform}">
+                                <div class="card">
+                                    <img class="card-img-top" th:src="@{|/images/${materialInform.materialImageDto.location}|}" alt="Material Image">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <span class="col card-title text-center fs-6 fw-bolder" th:text="${materialInform.materialDto.materialName}"></span>
+                                        </div>
+                                        <div class="row">
+                                            <span class="col card-text text-center" th:text="${materialInform.materialDto.materialPrice} + '₩'"></span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </nav>
-
-
-                    <div class="row pt-2">
-                        <img src="/img/sauce1.jpeg" class="col-4 img-fluid" alt="양념소스 순한맛">
-                        <img src="/img/sauce2.jpeg" class="col-4 img-fluid" alt="양념소스 매운맛">
-                        <img src="/img/sauce3.jpeg" class="col-4 img-fluid" alt="꼬지소스 순한맛">
                     </div>
 
-                    <div class="row">
-                        <span class="col-4 text-center fw-bold">양념소스 순한맛</span>
-                        <span class="col-4 text-center fw-bold">양념소스 매운맛</span>
-                        <span class="col-4 text-center fw-bold">꼬지소스 순한맛</span>
-                    </div>
 
-                    <div class="row pt-3">
-                        <img src="/img/sauce4.jpeg" class="col-4 img-fluid" alt="꼬지소스 매운맛">
-                        <img src="/img/sauce5.jpeg" class="col-4 img-fluid" alt="닭강정소스 매운맛">
-                        <img src="/img/sauce6.jpeg" class="col-4 img-fluid" alt="닭강정소스 순한맛">
-                    </div>
 
-                    <div class="row">
-                        <span class="col-4 text-center fw-bold">꼬지소스 매운맛</span>
-                        <span class="col-4 text-center fw-bold">닭강정소스 매운맛</span>
-                        <span class="col-4 text-center fw-bold">닭강정소스 순한맛</span>
-                    </div>
 
-                    <div class="row pt-3">
-                        <img src="/img/sauce7.jpeg" class="col-4 img-fluid" alt="칠리소스">
-                    </div>
 
-                    <div class="row">
-                        <span class="col-4 text-center fw-bold">칠리소스</span>
-                    </div>
+
 
                 </div>
+
+
+
+
 
             </div>
 

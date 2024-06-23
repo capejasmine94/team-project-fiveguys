@@ -39,7 +39,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbar">
               <div class="navbar-nav">
-                <a class="nav-link fs-5 text-white fw-bold text-start" href="/master/materialRegisterPage">메뉴등록</a>
+                <a class="nav-link fs-5 text-white fw-bold text-start" href="/master/materialRegisterPage">재료등록</a>
                 <a class="nav-link fs-5 text-white fw-bold text-start" href="/master/orderPage?id=1">주문확인</a>
                 <a class="nav-link fs-5 text-white fw-bold text-start" href="/master/reviewPage">리뷰확인</a>
                 <a class="nav-link fs-5 text-white fw-bold text-start" href="/event/eventlistPage">이벤트</a>
@@ -72,16 +72,28 @@
 
 
         <div class="row pt-3">
-          <div class="col-3"></div>
-          <input class="col-6 form-control form-control-lg" name="materialCategoryName" type="text" placeholder="카테고리 이름 입력">
-          <div class="col-3"></div>
+          <div class="col-2"></div>
+
+          <div class="col-8">
+
+            <div class="row">
+              <input class="form-control form-control-lg" name="materialCategoryName" type="text" placeholder="카테고리 이름 입력">
+            </div>
+
+
+            <div class="row pt-2">
+              <div class="col-10"></div>
+              <div class="col-2 px-0">
+                <button type="submit" class="btn btn-dark container-fluid">등록</button>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="col-2"></div>
         </div>
 
 
-        <div class="row pt-3">
-          <div class="col-10"></div>
-          <button type="submit" class="col-2 btn btn-dark">등록</button>
-        </div>
 
       </form>
 

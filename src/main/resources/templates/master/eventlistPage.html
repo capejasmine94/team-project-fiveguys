@@ -37,10 +37,26 @@
                     const runningOnclick = newRunningEventTemplete.querySelector(".runningOnclick");
                     runningOnclick.src = "/images/"+runningEvent.eventBoardDto.eventMainImage;
                     runningOnclick.style.cursor = 'pointer';
-                    console.log(runningEvent.eventBoardDto.eventNumber);
+                    
+
                     runningOnclick.onclick = (function(eventNumber) {
                         return function() {
                             showDetailPage(eventNumber);
+                        };
+                    })(runningEvent.eventBoardDto.eventNumber);
+
+
+                    const updateEventpage = newRunningEventTemplete.querySelector(".updateEventpage");
+                    updateEventpage.onclick = (function(eventNumber) {
+                        return function() {
+                            showUpdateEventpage(eventNumber);
+                        };
+                    })(runningEvent.eventBoardDto.eventNumber);
+
+                    const deleteEventPage = newRunningEventTemplete.querySelector(".deleteEventPage");
+                    deleteEventPage.onclick = (function(eventNumber) {
+                        return function() {
+                            deleteEventProcess(eventNumber);
                         };
                     })(runningEvent.eventBoardDto.eventNumber);
 
@@ -67,6 +83,20 @@
                         return function(){
                             showDetailPage(eventNumber);
                         }
+                    })(endEvent.eventBoardDto.eventNumber);
+
+                    const updateEndEventpage = newEndEventTemplete.querySelector(".updateEndEventpage");
+                    updateEndEventpage.onclick = (function(eventNumber) {
+                        return function() {
+                            showUpdateEventpage(eventNumber);
+                        };
+                    })(endEvent.eventBoardDto.eventNumber);
+
+                    const deleteEndEventPage = newEndEventTemplete.querySelector(".deleteEndEventPage");
+                    deleteEndEventPage.onclick = (function(eventNumber) {
+                        return function() {
+                            deleteEventProcess(eventNumber);
+                        };
                     })(endEvent.eventBoardDto.eventNumber);
                     
 
@@ -166,13 +196,8 @@
                         const writebutton = newYesMasterNoReplyTemplete.querySelector(".writebutton");
                         const masterReply = newYesMasterNoReplyTemplete.querySelector(".masterReply");
 
-                        console.log(masterReply.value+"@@@@@@@@@@@@@@@@@@@@@@@@@");
-
                         writebutton.onclick =(function(masterReply,ceventCommentNumber,eventNumber){
                             return function(){
-                                console.log(masterReply.value+"!!!!!!!!!!!!!!!!!!!!");
-                                console.log(ceventCommentNumber+"!!!!!!!!!!!!!!!!!!!!");
-                                console.log(eventNumber+"!!!!!!!!!!!!!!!!!!!!");
                                 writeprocess(masterReply,ceventCommentNumber,eventNumber);
                             }
                         })(masterReply.value,comments.eventCommentDto.eventCommentNumber,eventNumber);
@@ -224,6 +249,17 @@
 
         }
 
+        function deleteEventProcess(eventNumber){
+            const url = "/api/event/deleteEventProcess?eventNumber="+eventNumber;
+            fetch(url)
+            .then(response => response.json())
+            .then(response => {
+                masterEventListPage()
+            })
+
+
+        }
+
         function writeprocess(masterReply,eventCommentNumber,eventNumber){
             console.log(masterReply,eventCommentNumber,eventNumber);
             const url = "/api/event/updateMasterReply";
@@ -245,10 +281,94 @@
 
         }
 
+        function showUpdateEventpage(eventNumber){
+            
+            const url = "/api/event/updateEventPage?eventNumber="+eventNumber;
+            fetch(url)
+            .then(response => response.json())
+            .then(response =>{
+                
+                const offcanvas2 = bootstrap.Offcanvas.getOrCreateInstance('#offcanvasUpdateBottom');
+                const offcanvasUpdateEventTitle = document.getElementById("offcanvasUpdateEventTitle");
+                offcanvasUpdateEventTitle.value = response.eventBoardDto.eventTitle;
+
+                const offcanvasUpdateEventStartDay = document.getElementById("offcanvasUpdateEventStartDay");
+                offcanvasUpdateEventStartDay.value = response.eventBoardDto.eventStartDay;
+
+                const offcanvasUpdateEventEndDay = document.getElementById("offcanvasUpdateEventEndDay");
+                offcanvasUpdateEventEndDay.value = response.eventBoardDto.eventEndDay;
+
+                const offcanvasUpdateEventNumber = document.getElementById("offcanvasUpdateEventNumber");
+                offcanvasUpdateEventNumber.value = response.eventBoardDto.eventNumber;
+
+                offcanvas2.show();
+            })
+            
+        }
+
         function insertEventPage(){
             const offcanvas = bootstrap.Offcanvas.getOrCreateInstance('#offcanvasBottom');
 
             offcanvas.show();
+        }
+
+        function updateEventProcess(){
+            document.getElementById('upadteUploadData').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const offcanvas = bootstrap.Offcanvas.getOrCreateInstance('#offcanvasUpdateBottom');
+
+            
+            // FormData 객체 생성
+            const formData = new FormData();
+
+            // 추가 데이터 추가
+            const offcanvasUpdateEventTitle = document.getElementById("offcanvasUpdateEventTitle").value;
+            console.log(offcanvasUpdateEventTitle);
+            formData.append('eventTitle', offcanvasUpdateEventTitle);
+
+            const offcanvasUpdateEventStartDay = document.getElementById("offcanvasUpdateEventStartDay").value;
+            formData.append('eventStartDay', offcanvasUpdateEventStartDay);
+
+            const offcanvasUpdateEventEndDay = document.getElementById("offcanvasUpdateEventEndDay").value;
+            formData.append('eventEndDay', offcanvasUpdateEventEndDay);
+
+            const offcanvasUpdateEventNumber = document.getElementById("offcanvasUpdateEventNumber").value;
+            formData.append('eventNumber', offcanvasUpdateEventNumber);
+
+            // 이미지 파일 추가
+            const offcanvasUpdateUploadFile = document.getElementById("offcanvasUpdateUploadFile").files;
+            formData.append("uploadFile",offcanvasUpdateUploadFile[0]);
+            const offcanvasUpdateUploadFiles = document.getElementById('offcanvasUpdateUploadFiles').files;
+            for (const image of offcanvasUpdateUploadFiles) {
+                formData.append('uploadFiles', image);
+            }
+
+            const url = "/api/event/updateEventProcess";
+            // Fetch API를 사용하여 데이터 전송
+            fetch(url, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+
+                masterEventListPage();
+                document.getElementById("offcanvasUpdateEventTitle").value = "";
+                document.getElementById("offcanvasUpdateEventStartDay").value = "";
+                document.getElementById("offcanvasUpdateEventEndDay").value = "";
+                document.getElementById("offcanvasUpdateUploadFile").value = "";
+                document.getElementById("offcanvasUpdateUploadFiles").value = "";
+                offcanvas.hide();
+
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+            
+            });
+            
+
         }
 
         function insertEventProcess(){
@@ -269,9 +389,6 @@
 
             const offcanvasEventEndDay = document.getElementById("offcanvasEventEndDay").value;
             formData.append('eventEndDay', offcanvasEventEndDay);
-
-            const offcanvasContent = document.getElementById("offcanvasContent").value;
-            formData.append('content', offcanvasContent);
 
             // 이미지 파일 추가
             const offcanvasUploadFile = document.getElementById("offcanvasUploadFile").files;
@@ -295,7 +412,6 @@
                 document.getElementById("offcanvasEventTitle").value = "";
                 document.getElementById("offcanvasEventStartDay").value = "";
                 document.getElementById("offcanvasEventEndDay").value = "";
-                document.getElementById("offcanvasContent").value = "";
                 document.getElementById("offcanvasUploadFile").value = "";
                 document.getElementById("offcanvasUploadFiles").value = "";
                 offcanvas.hide();
@@ -515,14 +631,14 @@
             <span class="runningEventTitle"></span>
         </div>
         <div class="col-2">
-            <!-- <a class="btn btn-secondary btn-sm" th:href="@{updateEventPage(eventNumber=${eventBoardDto.eventNumber})}">수정</a> -->
-            <!-- <a class="btn btn-secondary btn-sm" th:href="@{deleteEventProcess(eventNumber=${eventBoardDto.eventNumber})}">삭제</a> -->
+            <span class="updateEventpage btn btn-danger btn-sm">수정</span>
+            <span class="deleteEventPage btn btn-danger btn-sm" >삭제</span>
         </div>
     </div>
 </div>
 
 <!-- 종료된 이벤트 템플릿 -->
-<div class="d-non" id="endEventTempleteLocation">
+<div class="d-none" id="endEventTempleteLocation">
     <div class="endEventTemplete row align-items-center text-center mt-1 border-bottom pb-1">
         <div class="col-2">
             <span class="endEventNumber"></span>
@@ -534,8 +650,8 @@
             <span class="endEventTitle"></span>
         </div>
         <div class="col-2">
-            <!-- <a class="btn btn-secondary btn-sm" th:href="@{updateEventPage(eventNumber=${eventEndBoardDto.eventNumber})}">수정</a>
-            <a class="btn btn-secondary btn-sm" th:href="@{deleteEventProcess(eventNumber=${eventEndBoardDto.eventNumber})}">삭제</a> -->
+            <span class="updateEndEventpage btn btn-danger btn-sm" >수정</span>
+            <span class="deleteEndEventPage btn btn-danger btn-sm" >삭제</span>
         </div>
     </div>
 </div>
@@ -805,18 +921,84 @@
                                 </div>
                             </div>
                             <div class="row mt-2">
-                                <div class="col-2">
-                                    <span>이벤트 내용</span>
+                                <div class="col text-end">
+                                    <button type="submit" class="btn btn-danger small" onclick="insertEventProcess()"> 이벤트 등록</button>
                                 </div>
                             </div>
-                            <div class="row">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="offcanvas offcanvas-bottom" style="height: 80%;" tabindex="-1" id="offcanvasUpdateBottom" aria-labelledby="offcanvasBottomLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasBottomLabel">이벤트 수정</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body small">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <form class="row mt-3" id="upadteUploadData">
+                        <div class="col">
+                            <div class="row mt-2">
+                                <div class="col-auto text-center">
+                                    <span>이벤트 제목</span> 
+                                </div>
                                 <div class="col">
-                                    <textarea id="offcanvasContent" class="form-control"></textarea>
+                                    <input class="form-control" id="offcanvasUpdateEventTitle" type="text">
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-auto">
+                                    <span>대표이미지</span>
+                                </div>
+                                <div class="col-4">
+                                    <input id="offcanvasUpdateUploadFile" type="file" accept="image/*">
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-auto">
+                                    <span>상세이미지</span>
+                                </div>
+                                <div class="col">
+                                    <input id="offcanvasUpdateUploadFiles" type="file" multiple accept="image/*">
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-auto">
+                                    <div class="row">
+                                        <div class="col">
+                                            <span>시작일</span>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col">
+                                            <input id="offcanvasUpdateEventStartDay" type="date">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="row">
+                                        <div class="col">
+                                            <span>종료일</span>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col">
+                                            <input id="offcanvasUpdateEventEndDay" type="date">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row mt-2">
                                 <div class="col text-end">
-                                    <button type="submit" class="btn btn-danger small" onclick="insertEventProcess()"> 이벤트 등록</button>
+                                    <input type="hidden" id="offcanvasUpdateEventNumber">
+                                    <button type="submit" class="btn btn-danger small" onclick="updateEventProcess()"> 이벤트 등록</button>
                                 </div>
                             </div>
                         </div>

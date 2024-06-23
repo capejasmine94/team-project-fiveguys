@@ -16,10 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 @RestController
 @RequestMapping("api/event")
 public class EventRestController {
@@ -238,6 +234,36 @@ public class EventRestController {
         return reLocation;
     }
 
+    @RequestMapping("updateEventPage")
+    public Map<String,Object> updateEventPage(@RequestParam("eventNumber") int eventNumber){
+              
+        return eventService.eventBoardDtoAndDetail(eventNumber);
+    }
+
+    @RequestMapping("updateEventProcess")
+    public Map<String,Object> updateEventProcess(EventBoardDto eventBoardDto, @RequestParam("uploadFile")MultipartFile uploadFile , @RequestParam("uploadFiles")MultipartFile[] uploadFiles){
+        Map<String,Object> map = new HashMap<>();
+
+        System.out.println(eventBoardDto.getEventNumber()+"##################");
+              System.out.println(eventService.eventBoardDtoAndDetail(eventBoardDto.getEventNumber()) + "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+        
+        String mainImage = mainImageRemake(uploadFile);
+        eventBoardDto.setEventMainImage(mainImage);
+
+        List<EventDetailImageDto> eventDetailImageList = detailImageReName(uploadFiles);
+        
+        eventService.updateEventProcess(eventBoardDto,eventDetailImageList);
+        map.put("success", "success");
+
+        return map;
+    }
     
+    @RequestMapping("deleteEventProcess")
+    public Map<String,Object> deleteEventProcess(@RequestParam("eventNumber")int eventNumber){
+        eventService.deleteEventProcess(eventNumber);
+        Map<String,Object> map = new HashMap<>();
+        map.put("success", "success");
+        return map;
+    }
     
 }

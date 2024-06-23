@@ -326,6 +326,13 @@ public class SellerCommunityRestController {
         return response;
     }
 
+    @RequestMapping("getChartRegisterCountPerMonth")
+    public Map<String, Object> getChartRegisterCountPerMonth(HttpSession session){
+        Map<String, Object> response = new HashMap<>();
+        response.put("getChartRegisterCountPerMonth", sellerCommunityService.getChartRegisterCountPerMonth());
+        return response;
+    }
+
     @RequestMapping("getChartRegisterCount")
     public Map<String, Object> getChartRegisterCount(HttpSession session){
         Map<String, Object> response = new HashMap<>();

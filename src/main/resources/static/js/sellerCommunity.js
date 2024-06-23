@@ -15,6 +15,8 @@ window.addEventListener("DOMContentLoaded",()=>{
 
     getSellerCommunityList(currentPage,searchWord,sortedOption,sellerSort);
 
+
+    lineChart();
     dayChart();
     pieChart();
 });
@@ -705,6 +707,7 @@ function submitSellerCommunity(event){
                 sellerCommunityForm.reset();
             }
             getSellerCommunityList(currentPage,searchWord,sortedOption,sellerSort);
+            lineChart();
             dayChart();
             pieChart();
         });
@@ -993,6 +996,137 @@ function addReply(target) {
     }else {
         showEditBox.classList.add("d-none");
     }
+}
+
+let myLineChart = null;
+
+function lineChart(){
+    if (myLineChart !== null) {
+        myLineChart.destroy();
+        myLineChart = null; // 변수를 null로 설정하여 참조를 제거
+    }
+
+    const myLineCharts= document.getElementById("myLineChart");
+
+    const url="/api/seller/getChartRegisterCountPerMonth";
+
+    fetch(url)
+        .then(response=>response.json())
+        .then(response=>{
+
+            const labels = ['1','2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
+            const tooltipLabels = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'];
+            const data = {
+                labels: labels,
+                datasets: [{
+                    label: '월별 게시글 등록 수',
+                    data: [0, 0, 0, 0, 0, 0, 0,0,0,0,0,0],
+                    fill: false,
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1
+                }]
+            };
+
+            for(let e of response.getChartRegisterCountPerMonth){
+
+
+                if(e.month_name_korean==="1월"){
+                    data.datasets[0].data[0]=e.count_per_month;
+                }
+                if(e.month_name_korean==="2월"){
+                    data.datasets[0].data[1]=e.count_per_month;
+                }
+                if(e.month_name_korean==="3월"){
+                    data.datasets[0].data[2]=e.count_per_month;
+                }
+                if(e.month_name_korean==="4월"){
+                    data.datasets[0].data[3]=e.count_per_month;
+                }
+                if(e.month_name_korean==="5월"){
+                    data.datasets[0].data[4]=e.count_per_month;
+                }
+                if(e.month_name_korean==="6월"){
+                    data.datasets[0].data[5]=e.count_per_month;
+                }
+                if(e.month_name_korean==="7월"){
+                    data.datasets[0].data[6]=e.count_per_month;
+                }
+                if(e.month_name_korean==="8월"){
+                    data.datasets[0].data[7]=e.count_per_month;
+                }
+                if(e.month_name_korean==="9월"){
+                    data.datasets[0].data[8]=e.count_per_month;
+                }
+                if(e.month_name_korean==="10월"){
+                    data.datasets[0].data[9]=e.count_per_month;
+                }
+                if(e.month_name_korean==="11월"){
+                    data.datasets[0].data[10]=e.count_per_month;
+                }
+                if(e.month_name_korean==="12월"){
+                    data.datasets[0].data[11]=e.count_per_month;
+                }
+            }
+
+            const config = {
+                type: 'line',
+                data: data,
+                options: {
+                    scales: {
+                        x: {
+                            ticks: {
+                                autoSkip: false,
+                                maxRotation: 45,
+                                minRotation: 45,
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks:{
+                                stepSize:5
+                            },
+                            max: 100 // y축 최대값 설정
+                        },
+                        responsive: false,  // 반응형 디자인 활성화
+                        maintainAspectRatio: false // 비율 유지 비활성화
+                    },
+                    plugins: {
+                        tooltip: {
+                            enabled: true,
+                            callbacks: {
+                                label: function(context) {
+                                    const monthIndex = context.dataIndex;
+                                    const month = tooltipLabels[monthIndex];
+                                    const value = context.raw;
+                                    return `${month}: ${value}개`;
+                                }
+                            }
+                        }
+                    },
+
+                }
+            };
+
+
+            myLineChart = new Chart(myLineCharts,config);
+
+
+
+            function updateChart() {
+                myPieChart.data.datasets.forEach((dataset, i) => {
+                    dataset.data = data.datasets[i].data;
+                });
+                myLineChart.update();
+            }
+
+            // 초기 차트 업데이트
+            updateChart();
+        });
+
+
 }
 
 let myChart = null;

@@ -69,6 +69,7 @@ public interface SellerCommunitySqlMapper {
     public void updateSellerReplyLikeStatus(SellerCommunityReplyLikeStatusDto sellerCommunityReplyLikeStatusDto);
 
     //차트
+    public List<Map<String,Object>> getChartRegisterCountPerMonth();
     public List<Map<String,Object>> getChartRegisterCount();
 
     public List<Map<String,Object>> getPieRegisterCount();

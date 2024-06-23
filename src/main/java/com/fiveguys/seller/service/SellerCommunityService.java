@@ -284,6 +284,10 @@ public class SellerCommunityService {
         sellerCommunitySqlMapper.updateSellerReplyLikeStatus(sellerCommunityReplyLikeStatusDto);
     }
 
+    public List<Map<String,Object>> getChartRegisterCountPerMonth(){
+        return sellerCommunitySqlMapper.getChartRegisterCountPerMonth();
+    }
+
     public List<Map<String,Object>> getChartRegisterCount(){
         return sellerCommunitySqlMapper.getChartRegisterCount();
     }

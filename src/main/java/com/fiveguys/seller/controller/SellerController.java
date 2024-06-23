@@ -1,9 +1,6 @@
 package com.fiveguys.seller.controller;
 
-import com.fiveguys.dto.SellerDto;
-import com.fiveguys.dto.SellerOrderDto;
-import com.fiveguys.dto.SellerReviewDto;
-import com.fiveguys.dto.SellerReviewImageDto;
+import com.fiveguys.dto.*;
 import com.fiveguys.seller.service.SellerService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +39,11 @@ public class SellerController {
 
 
     @RequestMapping("orderPage")
-    public String orderPage() {
+    public String orderPage(Model model) {
+
+        List<MaterialDto> materialInform = sellerService.selectMaterial();
+
+        model.addAttribute("materialInform", materialInform);
 
         return "seller/orderPage";
     }
@@ -105,36 +106,31 @@ public class SellerController {
     }
 
 
-    @RequestMapping("materialMenuPage1")
-    public String materialMenuPage1() {
-        return "/seller/materialMenuPage1";
-    }
+    @RequestMapping("materialMenuPage")
+    public String materialMenuPage(Model model) {
 
-    @RequestMapping("materialMenuPage2")
-    public String materialMenuPage2() {
-        return "/seller/materialMenuPage2";
-    }
+        List<MaterialCategoryDto> materialCategoryInform = sellerService.selectMaterialCategory();
 
-    @RequestMapping("materialMenuPage3")
-    public String materialMenuPage3() {
-        return "/seller/materialMenuPage3";
-    }
+        model.addAttribute("materialCategoryInform", materialCategoryInform);
 
-    @RequestMapping("materialMenuPage5")
-    public String materialMenuPage5() {
-        return "/seller/materialMenuPage5";
-    }
-
-    @RequestMapping("materialMenuPage6")
-    public String materialMenuPage6() {
-        return "/seller/materialMenuPage6";
+        return "/seller/materialMenuPage";
     }
 
 
-    @RequestMapping("materialMenuPage4")
-    public String materialMenuPage4() {
-        return "/seller/materialMenuPage4";
+    @RequestMapping("selectMaterialByCategoryNumber")
+    public String selectMaterialByCategoryNumber(@RequestParam("materialCategoryNumber") int materialCategoryNumber, Model model) {
+
+        List<Map<String, Object>> materialInform = sellerService.selectMaterialByCategoryNumber(materialCategoryNumber);
+        List<MaterialCategoryDto> materialCategoryInform = sellerService.selectMaterialCategory();
+
+
+        model.addAttribute("materialInform", materialInform);
+        model.addAttribute("materialCategoryInform", materialCategoryInform);
+
+        return "/seller/selectMaterialByCategoryNumber";
     }
+
+
 
 
     @RequestMapping("sellerReviewPage")
@@ -145,6 +141,12 @@ public class SellerController {
 
         return "/seller/sellerReviewPage";
     }
+
+
+
+
+
+
 
 
     @RequestMapping("myInformPage")
@@ -251,15 +253,13 @@ public class SellerController {
 
         sellerService.insertSellerReview(sellerReviewDto, sellerReviewImageDtoList);
 
-        return "/seller/mainPage";
+        return "redirect:/seller/reviewDetailPage?id=" + sellerService.selectRecentReviewNumber();
     }
 
 
 
     @RequestMapping("reviewDetailPage")
     public String reviewDetailPage(Model model, int id) {
-
-
 
         Map<String, Object> reviewInform = sellerService.selectSellerReview(id);
         model.addAttribute("reviewInform", reviewInform);

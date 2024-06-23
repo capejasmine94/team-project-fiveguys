@@ -45,7 +45,15 @@ public interface SellerSqlMapper {
 
     public List<SellerReviewImageDto> selectReviewImage(int sellerReviewNumber);
 
+    public List<MaterialDto> selectMaterial();
 
+    public List<MaterialCategoryDto> selectMaterialCategory();
+
+    public List<MaterialDto> selectMaterialByCategoryNumber(int materialCategoryNumber);
+
+    public MaterialImageDto selectMaterialImage(int materialNumber);
+
+    public int selectRecentReviewNumber();
 
 
 

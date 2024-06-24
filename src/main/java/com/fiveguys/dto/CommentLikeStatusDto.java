@@ -8,7 +8,7 @@ public class CommentLikeStatusDto {
     private int commentLikeNumber;
     private int customerNumber;
     private int commentNumber;
-    private String commentLikeStatus;
+//    private String commentLikeStatus;
 
 }
 

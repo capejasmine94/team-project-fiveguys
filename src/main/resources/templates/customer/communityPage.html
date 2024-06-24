@@ -21,8 +21,8 @@
 
 <body style="background-color: #B41E30; margin-bottom: 79px">
 
-    <div th:replace="common/communityNavi::topNavi"></div>
-    <div th:replace="common/customerNavi::bottomNavi"></div>
+    <div th:replace="~{common/communityNavi::topNavi}"></div>
+    <div th:replace="~{common/customerNavi::bottomNavi}"></div>
 
     <!--자유게시판 메인-->
     <div class="container" style="margin-top: 4rem">
@@ -83,7 +83,7 @@
                     </div>
                     <div class="col-auto p-1 d-flex">
 <!--                    좋아요카운트-->
-                        <span class="text-danger"><i class="bi bi-heart"></i></span>
+                        <span class="text-danger"><i class="bi bi-heart-fill"></i></span>
                         <span th:text="${communityData.likeCount}"></span>
                     </div>
 

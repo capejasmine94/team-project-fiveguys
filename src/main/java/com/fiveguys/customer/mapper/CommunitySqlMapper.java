@@ -13,11 +13,14 @@ public interface CommunitySqlMapper {
 
     public CustomerDto selectCustomerNumber(int customerNumber);
     public CommunityDto selectCommunityNumber(int communityNumber);
+
     // 조회수
     public void updateVisitCount(int communityNumber);
+
     //글 삭제,수정
     public void deleteCommunityPage(int communityNumber);
     public void updateCommunityPage(CommunityDto communityDto);
+
     //이미지
     public void communityDetailImageDtoList(CommunityDetailImageDto communityDetailImageDto);
     public List<CommunityDetailImageDto> selectCommunityDatailImageDtoList(int communityId);
@@ -32,6 +35,17 @@ public interface CommunitySqlMapper {
     public void deleteLikeNumber(int LikeNumber);
     public CommunityLikeDto selectCommunityLike(CommunityLikeDto communityLikeDto);
     public int selectCountCommunityLike(int communityNumber);
+
+    //댓글 좋아요 싫어요
+    public void insertCommentLike(CommentLikeStatusDto commentLikeStatusDto);
+    public void deleteCommentLikeNumber(int commentLikeNumber);
+    public CommentLikeStatusDto selectCommentLike(CommentLikeStatusDto commentLikeStatusDto);
+    public int selectCountCommunityCommentLike(int commentNumber);
+
+    //대댓글
+    public void insertCommunityCommentReply(CommunityCommentReplyDto communityCommentReplyDto);
+    public List<CommunityCommentReplyDto> selectCommunityCommentReplyList(int communityNumber);
+
 
 
 

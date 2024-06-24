@@ -13,8 +13,8 @@
 
 <body style="background-color: #B41E30; margin-top: 51px; margin-bottom: 69px">
 
-    <div th:replace="common/communityNavi::topNavi"></div>
-    <div th:replace="common/customerNavi::bottomNavi"></div>
+    <div th:replace="~{common/communityNavi::topNavi}"></div>
+    <div th:replace="~{common/customerNavi::bottomNavi}"></div>
 
     <!--글보기 페이지-->
     <div class="container">
@@ -47,15 +47,14 @@
     <div class="row">
         <div class="col border border-1 bg-white rounded-4 mx-3 my-2 px-4 py-3 shadow">
             <div class="row">
-                <div class="col">
-
+                <div class="col mb-3">
         <!--            제목 -->
-                    <span th:text="${communityData.communityDto.communityTitle}"></span>
+                    <span class="fw-bold fs-5" th:text="${communityData.communityDto.communityTitle}"></span>
                 </div>
             </div>
 
             <div class="row">
-                <div class="col">
+                <div class="col mb-3">
         <!--            내용-->
                     <div th:text="${communityData.communityDto.communityContent}"></div>
                 </div>
@@ -71,12 +70,22 @@
             <div class="row">
                 <div class="col text-center">
 
-        <!--            사용자가 로그인했고, 내가 쓴 글이 아닐때 -->
-                    <div class="row">
+        <!--            사용자가 로그인했고, 내가 쓴 글이 아닐때 : 좋아요 가능, 사용자가 누르지않으면 빈하트. 누르면 찬 하트 -->
+                    <div class="row text-end">
                         <div class="col">
                             <div th:if="${session.customerDto != null and communityData.communityDto.customerNumber != session.customerDto.customerNumber}">
                                 <a th:if="${communityLikeDto1} == null" th:href="@{./communityLikeProcess(communityNumber=${communityData.communityDto.communityNumber}, customerNumber=${session.customerDto.customerNumber})}" class="text-danger"><i class="bi bi-heart"></i></a>
                                 <a th:if="${communityLikeDto1} != null" th:href="@{./deleteLikeNumber(communityNumber=${communityData.communityDto.communityNumber}, customerNumber=${session.customerDto.customerNumber})}" class="text-danger"><i class="bi bi-heart-fill"></i></a>
+                                <span th:text="${likeCount}"></span>
+                            </div>
+                        </div>
+                    </div>
+
+<!--                    사용자가 로그인했고, 내가 쓴 글일때 : 좋아요 못누름. 카운트와 하트만 보임-->
+                    <div class="row text-end">
+                        <div class="col">
+                            <div th:if="${session.customerDto != null and communityData.communityDto.customerNumber == session.customerDto.customerNumber}">
+                                <span class="text-danger"><i class="bi bi-heart-fill"></i></span>
                                 <span th:text="${likeCount}"></span>
                             </div>
                         </div>
@@ -108,7 +117,7 @@
                 <textarea class="rounded-4 d-grid" name="commentText"></textarea>
                 <input type="hidden" name="communityNumber" th:value="${communityData.communityDto.communityNumber}">
             </div>
-            <div class="col-1 me-3">
+            <div class="col-auto">
                 <button class="btn btn-dark mt-2" style="height:50.8px;"><i class="bi bi-pencil-square"></i></button>
             </div>
         </form>
@@ -128,15 +137,24 @@
                                 <span><div th:text="${communityCommentDto.customerDto.customerName}"></div></span>
                                 <span><div th:text="${communityCommentDto.communityCommentDto.commentCreatedAt}"></div></span>
                             </div>
-                            <div class="col-1 mt-2">
+
+                            <div class="col-2 mt-2">
 <!--                                댓글 좋아요-->
-                                <i class="bi bi-hand-thumbs-up"></i>
-<!--                                <i class="bi bi-hand-thumbs-up-fill"></i>-->
-                            </div>
-                            <div class="col-1 mt-2">
-                                <i class="bi bi-hand-thumbs-down"></i>
-<!--                                <i class="bi bi-hand-thumbs-down-fill"></i>-->
-<!--                                댓글 싫어요-->
+<!--                                사용자가 로그인했고, 내가 쓴 글이 아닐때 : 좋아요 가능, 사용자가 누르지않으면 빈따봉. 누르면 따봉-->
+                                <div th:each="commentMap : ${selectCommentStatusLikeList}">
+                                    <div th:if="${session.customerDto} != null and ${commentMap.communityCommentDto.customerNumber} != ${session.customerDto.customerNumber}">
+                                        <a th:if="${commentMap.commentLikeStatusDto} == null"
+                                           th:href="@{./communityCommentLikeProcess(commentNumber=${commentMap.communityCommentDto.commentNumber}, customerNumber=${session.customerDto.customerNumber}, communityNumber=${communityData.communityDto.communityNumber})}"
+                                           style="text-decoration: none;">
+                                            <span class="text-dark"><i class="bi bi-hand-thumbs-up"></i><span class="ms-1" th:text="${commentMap.commentLikeCount}"></span></span>
+                                        </a>
+                                        <a th:if="${commentMap.commentLikeStatusDto} != null"
+                                           th:href="@{./deleteCommentLikeNumber(commentNumber=${commentMap.communityCommentDto.commentNumber}, customerNumber=${session.customerDto.customerNumber}, communityNumber=${communityData.communityDto.communityNumber})}"
+                                           style="text-decoration: none;">
+                                            <span class="text-dark"><i class="bi bi-hand-thumbs-up-fill"></i><span class="ms-1" th:text="${commentMap.commentLikeCount}"></span></span>
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="row">
@@ -144,10 +162,40 @@
                                 <span><div th:text="${communityCommentDto.communityCommentDto.commentText}"></div></span>
                             </div>
                         </div>
+
+<!--                        대댓글 버튼-->
+
+                        <div class="row">
+                            <div class="col text-end" th:if="${session.customerDto} != null">
+                                <a th:href="@{./communityCommentReply(commentNumber=${communityCommentDto.communityCommentDto.commentNumber}, communityNumber=${communityCommentDto.communityCommentDto.communityNumber})}" class="link-dark" style="font-size:0.8em">댓글쓰기</a>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom">댓글쓰기</button>
+
+                        <div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
+                            <div class="offcanvas-header">
+                                <h5 class="offcanvas-title" id="offcanvasBottomLabel">Offcanvas bottom</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                            </div>
+                            <div class="offcanvas-body small">
+                                <form th:action="@{/customer/communityCommentReplyProcess}" method="post" class="d-flex align-items-center">
+                                    <input type="hidden" name="commentNumber" th:value="${communityCommentDto.communityCommentDto.commentNumber}">
+                                    <input type="hidden" name="communityNumber" th:value="${communityCommentDto.communityCommentDto.communityNumber}">
+                                    <div class="col d-grid mx-1 pt-2" th:if="${session.customerDto} != null">
+                                        <textarea class="rounded-4 d-grid" name="communityCommentReplyText"></textarea>
+                                    </div>
+                                    <div class="col-auto">
+                                        <button type="submit" class="btn btn-dark mt-2" style="height:50.8px;"><i class="bi bi-pencil-square"></i></button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
     </div>
 
 

@@ -109,13 +109,14 @@ public class CommunityController {
     public String communityReadPage(HttpSession session, Model model, @RequestParam("communityNumber") int communityNumber){
 
         communityService.updateVisitCount(communityNumber);
-
+        //게시글 정보
         Map<String, Object> communityData = communityService.selectCommunityNumber(communityNumber);
         model.addAttribute("communityData", communityData);
 
         List<Map<String, Object>> communityCommentDtoList = communityService.selectCommunityCommentList(communityNumber);
         model.addAttribute("communityCommentDtoList", communityCommentDtoList);
 
+        // 게시글 좋아요
         CommunityLikeDto communityLikeDto = new CommunityLikeDto();
 
         CustomerDto customerDto = (CustomerDto)session.getAttribute("customerDto");
@@ -129,6 +130,12 @@ public class CommunityController {
         int likeCount = communityService.selectCountCommunityLike(communityNumber);
         model.addAttribute("likeCount", likeCount);
 
+
+        //댓글 리스트(좋아요상태, 카운트)
+        List<Map<String, Object>> selectCommentStatusLikeList = communityService.selectCommentLikeList(communityNumber, customerDto.getCustomerNumber());
+        model.addAttribute("selectCommentStatusLikeList", selectCommentStatusLikeList);
+
+        //이미지
         List<CommunityDetailImageDto> communityImageDtoFile = communityService.selectCommunityDatailImageDtoList(communityNumber);
         model.addAttribute("communityImageDtoFile", communityImageDtoFile);
 
@@ -173,6 +180,7 @@ public class CommunityController {
         return "redirect:./communityReadPage?communityNumber=" + communityCommentDto.getCommunityNumber();
     }
 
+    //게시판 좋아요
     @RequestMapping("communityLikeProcess")
     public String communityLikeProcess(CommunityLikeDto communityLikeDto){
         communityService.insertCommunityLike(communityLikeDto);
@@ -189,6 +197,46 @@ public class CommunityController {
         return "redirect:./communityReadPage?communityNumber=" + communityLikeDto.getCommunityNumber();
     }
 
+    //게시판 댓글 좋아요
+    @RequestMapping("communityCommentLikeProcess")
+    public String communityCommentLikeProcess(CommentLikeStatusDto commentLikeStatusDto, @RequestParam("communityNumber") int communityNumber){
+        communityService.insertCommentLike(commentLikeStatusDto);
+
+        return "redirect:./communityReadPage?communityNumber=" + communityNumber;
+    }
+
+    @RequestMapping("deleteCommentLikeNumber")
+    public String deleteCommentLikeNumber(CommentLikeStatusDto commentLikeStatusDto, @RequestParam("communityNumber") int communityNumber){
+        CommentLikeStatusDto commentLikeStatusDto1 = communityService.selectCommentLike(commentLikeStatusDto);
+        communityService.deleteCommentLikeNumber(commentLikeStatusDto1.getCommentLikeNumber());
+
+        return "redirect:./communityReadPage?communityNumber=" + communityNumber;
+
+    }
+
+    //대댓글 페이지 연결
+    @RequestMapping("communityCommentReply")
+    public String communityCommentReply(@RequestParam("commentNumber") int commentNumber, @RequestParam("communityNumber")int communityNumber, Model model){
+        model.addAttribute("commentNumber", commentNumber);
+        model.addAttribute("communityNumber", communityNumber);
+        return "customer/communityCommentReply";
+    }
+
+
+    //대댓글 쓰기
+    @RequestMapping("communityCommentReplyProcess")
+    public String communityCommentReplyProcess(HttpSession session, @RequestParam("commentNumber") int commentNumber, @RequestParam("communityCommentReplyText") String communityCommentReplyText, @RequestParam("communityNumber") int communityNumber){
+        CustomerDto customerDto = (CustomerDto)session.getAttribute("customerDto");
+
+        CommunityCommentReplyDto communityCommentReplyDto  = new CommunityCommentReplyDto();
+        communityCommentReplyDto.setCustomerNumber(customerDto.getCustomerNumber());
+        communityCommentReplyDto.setCommentNumber(commentNumber);
+        communityCommentReplyDto.setCommunityCommentReplyText(communityCommentReplyText);
+
+        communityService.insertCommunityCommentReply(communityCommentReplyDto);
+
+        return "redirect:/customer/communityReadPage?communityNumber=" + communityNumber;
+    }
 
 
 

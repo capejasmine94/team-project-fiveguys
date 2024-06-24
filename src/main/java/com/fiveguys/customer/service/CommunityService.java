@@ -52,8 +52,6 @@ public class CommunityService {
             map.put("commentCount", commentCount);
             map.put("communityImageDtoFile", communityImageDtoFile);
 
-            System.out.println("이미지파일서비스서비스서시버삳기" + communityImageDtoFile);
-
             result.add(map);
         }
 
@@ -99,10 +97,15 @@ public class CommunityService {
             int CommentWriterPk = communityCommentDto.getCustomerNumber();
             CustomerDto customerDto = communitySqlMapper.selectCustomerNumber(CommentWriterPk);
 
-            Map<String, Object> map = new HashMap<>();
+            //대댓글 리스트
+            List<CommunityCommentReplyDto> communityCommentReplyList = communitySqlMapper.selectCommunityCommentReplyList(communityCommentDto.getCommentNumber());
 
+            //댓글리스트
+            Map<String, Object> map = new HashMap<>();
             map.put("communityCommentDto", communityCommentDto);
             map.put("customerDto", customerDto);
+            //대댓글 리스트 추가
+            map.put("communityCommentReplyList", communityCommentReplyList);
 
             result.add(map);
         }
@@ -114,15 +117,12 @@ public class CommunityService {
     public void insertCommunityLike(CommunityLikeDto communityLikeDto){
         communitySqlMapper.insertCommunityLike(communityLikeDto);
     }
-
     public void deleteLikeNumber(int LikeNumber){
         communitySqlMapper.deleteLikeNumber(LikeNumber);
     }
-
     public CommunityLikeDto selectCommunityLike(CommunityLikeDto communityLikeDto){
         return communitySqlMapper.selectCommunityLike(communityLikeDto);
     }
-
     public int selectCountCommunityLike(int communityNumber){
         return communitySqlMapper.selectCountCommunityLike(communityNumber);
     }
@@ -130,9 +130,54 @@ public class CommunityService {
     //이미지
     public List<CommunityDetailImageDto> selectCommunityDatailImageDtoList(int cummunityId){
         return communitySqlMapper.selectCommunityDatailImageDtoList(cummunityId);
-
     }
 
+    //댓글 좋아요
+    public void insertCommentLike(CommentLikeStatusDto commentLikeStatusDto){
+        communitySqlMapper.insertCommentLike(commentLikeStatusDto);
+    }
+    public void deleteCommentLikeNumber(int commentLikeNumber){
+        communitySqlMapper.deleteCommentLikeNumber(commentLikeNumber);
+    }
+    public CommentLikeStatusDto selectCommentLike(CommentLikeStatusDto commentLikeStatusDto){
+        return communitySqlMapper.selectCommentLike(commentLikeStatusDto);
+    }
+
+    //댓글 좋아요
+    public List<Map<String, Object>> selectCommentLikeList(int communityNumber, int customerNumber){
+        List<Map<String, Object>> commentLikeStatusList = new ArrayList<>();
+
+        //댓글 리스트
+        List<CommunityCommentDto> communityCommentDtoList = communitySqlMapper.selectCommunityCommentList(communityNumber);
+
+        //댓글정보
+        for(CommunityCommentDto communityCommentDto : communityCommentDtoList){
+            Map<String, Object> commentMap = new HashMap<>();
+            int commentNumber = communityCommentDto.getCommentNumber();
+            // 댓글 좋아요 상태
+            CommentLikeStatusDto commentLikeStatusDto = new CommentLikeStatusDto();
+            System.out.println(commentNumber);
+            commentLikeStatusDto.setCommentNumber(commentNumber);
+            commentLikeStatusDto.setCustomerNumber(customerNumber);
+
+            CommentLikeStatusDto commentLikeStatusDto1 = selectCommentLike(commentLikeStatusDto);
+            commentMap.put("commentLikeStatusDto",commentLikeStatusDto1);
+
+            //댓글 좋아요 카운트
+            int commentLikeCount = communitySqlMapper.selectCountCommunityCommentLike(commentNumber);
+            commentMap.put("commentLikeCount", commentLikeCount);
+
+            commentLikeStatusList.add(commentMap);
+
+        }
+
+        return commentLikeStatusList;
+    }
+
+    //대댓글
+    public void insertCommunityCommentReply(CommunityCommentReplyDto communityCommentReplyDto){
+        communitySqlMapper.insertCommunityCommentReply(communityCommentReplyDto);
+    }
 
 
 

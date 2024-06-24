@@ -107,19 +107,20 @@ public class CommunityController {
     //자유게시판 상세글보기 페이지
     @RequestMapping("communityReadPage")
     public String communityReadPage(HttpSession session, Model model, @RequestParam("communityNumber") int communityNumber){
+        CustomerDto customerDto = (CustomerDto)session.getAttribute("customerDto");
 
         communityService.updateVisitCount(communityNumber);
         //게시글 정보
         Map<String, Object> communityData = communityService.selectCommunityNumber(communityNumber);
         model.addAttribute("communityData", communityData);
 
-        List<Map<String, Object>> communityCommentDtoList = communityService.selectCommunityCommentList(communityNumber);
+        List<Map<String, Object>> communityCommentDtoList = communityService.selectCommunityCommentList(communityNumber,customerDto.getCustomerNumber());
         model.addAttribute("communityCommentDtoList", communityCommentDtoList);
 
         // 게시글 좋아요
         CommunityLikeDto communityLikeDto = new CommunityLikeDto();
 
-        CustomerDto customerDto = (CustomerDto)session.getAttribute("customerDto");
+
 
         communityLikeDto.setCustomerNumber(customerDto.getCustomerNumber());
         communityLikeDto.setCommunityNumber(communityNumber);
@@ -132,7 +133,7 @@ public class CommunityController {
 
 
         //댓글 리스트(좋아요상태, 카운트)
-        List<Map<String, Object>> selectCommentStatusLikeList = communityService.selectCommentLikeList(communityNumber, customerDto.getCustomerNumber());
+        List<Map<String, Object>> selectCommentStatusLikeList = communityService.selectCommentLikeList(communityNumber);
         model.addAttribute("selectCommentStatusLikeList", selectCommentStatusLikeList);
 
         //이미지

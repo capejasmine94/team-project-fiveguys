@@ -88,7 +88,7 @@ public class CommunityService {
     }
 
     //댓글 리스트 출력
-    public List<Map<String, Object>> selectCommunityCommentList(int communityNumber) {
+    public List<Map<String, Object>> selectCommunityCommentList(int communityNumber,int customerNumber) {
         List<Map<String, Object>> result = new ArrayList<>();
 
         List<CommunityCommentDto> communityCommentDtoList = communitySqlMapper.selectCommunityCommentList(communityNumber);
@@ -96,6 +96,16 @@ public class CommunityService {
         for (CommunityCommentDto communityCommentDto : communityCommentDtoList) {
             int CommentWriterPk = communityCommentDto.getCustomerNumber();
             CustomerDto customerDto = communitySqlMapper.selectCustomerNumber(CommentWriterPk);
+
+//            CommentLikeStatusDto commentLikeStatusDto = new CommentLikeStatusDto();
+//            commentLikeStatusDto.setCustomerNumber(customerNumber);
+//            commentLikeStatusDto.setCommentNumber(communityCommentDto.getCommentNumber());
+//
+//            CommentLikeStatusDto checkSelectCommunityCommentExists = communitySqlMapper.checkSelectCommunityCommentExists(commentLikeStatusDto);
+//            if(checkSelectCommunityCommentExists == null){
+//                System.out.println("여기 실행됨");
+//                communitySqlMapper.insertCommentLike(commentLikeStatusDto);
+//            }
 
             //대댓글 리스트
             List<CommunityCommentReplyDto> communityCommentReplyList = communitySqlMapper.selectCommunityCommentReplyList(communityCommentDto.getCommentNumber());
@@ -144,7 +154,7 @@ public class CommunityService {
     }
 
     //댓글 좋아요
-    public List<Map<String, Object>> selectCommentLikeList(int communityNumber, int customerNumber){
+    public List<Map<String, Object>> selectCommentLikeList(int communityNumber){
         List<Map<String, Object>> commentLikeStatusList = new ArrayList<>();
 
         //댓글 리스트
@@ -154,14 +164,18 @@ public class CommunityService {
         for(CommunityCommentDto communityCommentDto : communityCommentDtoList){
             Map<String, Object> commentMap = new HashMap<>();
             int commentNumber = communityCommentDto.getCommentNumber();
+
             // 댓글 좋아요 상태
             CommentLikeStatusDto commentLikeStatusDto = new CommentLikeStatusDto();
-            System.out.println(commentNumber);
             commentLikeStatusDto.setCommentNumber(commentNumber);
-            commentLikeStatusDto.setCustomerNumber(customerNumber);
+            commentLikeStatusDto.setCustomerNumber(communityCommentDto.getCustomerNumber());
 
-            CommentLikeStatusDto commentLikeStatusDto1 = selectCommentLike(commentLikeStatusDto);
+
+            CommentLikeStatusDto commentLikeStatusDto1 = communitySqlMapper.selectCommentLike(commentLikeStatusDto);
+            System.out.println(commentLikeStatusDto1);
             commentMap.put("commentLikeStatusDto",commentLikeStatusDto1);
+
+            commentMap.put("communityCommentDto",communityCommentDto);
 
             //댓글 좋아요 카운트
             int commentLikeCount = communitySqlMapper.selectCountCommunityCommentLike(commentNumber);

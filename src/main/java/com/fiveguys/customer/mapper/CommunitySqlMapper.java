@@ -29,6 +29,7 @@ public interface CommunitySqlMapper {
     public void insertCommunityComment(CommunityCommentDto communityCommentDto);
     public List<CommunityCommentDto> selectCommunityCommentList(int communityNumber);
     public int selectCountCommentNumber(int commentNumber);
+    public CommentLikeStatusDto checkSelectCommunityCommentExists(CommentLikeStatusDto commentLikeStatusDto);
 
     //좋아요
     public void insertCommunityLike(CommunityLikeDto communityLikeDto);

@@ -27,7 +27,7 @@
             <span class="fs-3" th:text="${sellerDto.sellerName}"></span>
         </div>
         <div class="col text-end">
-            <a href="/customer/shoppingBasketPage" class="customer_navi_link">
+            <a th:href="@{/customer/shoppingBasketPage(sellerNumber=${sellerDto.sellerNumber})}" class="customer_navi_link">
                 <span class="fs-3"><i class="bi bi-bag"></i></span>
             </a>
         </div>
@@ -141,12 +141,13 @@
 <!--메뉴 선택창 -->
 <div class="container-fluid sticky-nav">
     <div class="row no-wrap-scroll bg-light fw-bold">
-        <div class="col colScroll" th:each="categoryList : ${categoryDtoList}">
-            <form th:action="@{/customer/storesDetailPage}" method="get">
+        <div class="col colScroll" th:each="categoryList : ${categoryNameList}">
+            <form action="customer/storesDetailMenu" method="get" >
                 <input type="hidden" name="sellerNumber" th:value="${param.sellerNumber}">
-                <input type="hidden" name="categoryNumber" th:value="${categoryList.categoryNumber}">
+                <input type="hidden" name="productCategoryNumber" th:value="${categoryList.productCategoryNumber}">
+                <input type="hidden" name="productCategoryNumber" th:value="${categoryList.productCategoryNumber}">
                 <button type="submit" formaction="#menu" formmethod="get" class="btn nav-link">
-                    <span th:text="${categoryList.categoryName}"></span>
+                    <span th:text="${categoryList.productCategoryName}"></span>
                 </button>
             </form>
         </div>
@@ -155,36 +156,35 @@
 <!--메뉴 보기 -->
 <div class="container mt-4 content-section" id="menu">
     <!-- 메뉴 카테고리 -->
-    <div class="row" th:if="${not #lists.isEmpty(productDtoList)}">
+    <div class="row">
         <div class="col">
             <div class="row mx-2 py-2 orderMenuBorder">
                 <div class="col">
-                    <span class="fw-bold" th:text="${productDtoList[0].categoryDto.categoryName}">카테고리이름</span>
+                    <span class="fw-bold" th:text="${productCategoryDto.productCategoryName}">카테고리이름</span>
                 </div>
             </div>
         </div>
     </div>
-    <!-- 오리지날메뉴  -->
-    <div class="row" th:each="productList : ${productDtoList}">
-        <a th:href="@{/customer/menuDetailPage(sellerNumber=${sellerDto.sellerNumber}, categoryNumber=${param.categoryNumber}, productNumber=${productList.productDto.productNumber})}"
+    <!-- 메뉴  -->
+
+    <div class="row" th:each="productList : ${productMenuList}" >
+        <a class="col" th:href="@{/customer/menuDetailPage(sellerNumber=${sellerDto.sellerNumber}, productCategoryNumber=${productList.productCategoryDto.productCategoryNumber}, productNumber=${productList.productDto.productNumber})}"
            style="color: black; text-decoration: none">
-            <div class="col">
-                <div class="row mx-2 py-4 orderMenuBorder" >
-                    <div class="col">
-                        <div class="row">
-                            <div class="col">
-                                <span class="fw-bold" th:text="${productList.productDto.productName}">치킨이름</span>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <span class="fw-bold" th:text="|${#numbers.formatInteger(productList.productDto.productPrice, 0, 'COMMA')}원|">치킨가격</span>
-                            </div>
+            <div class="row mx-2 py-4 orderMenuBorder" >
+                <div class="col">
+                    <div class="row">
+                        <div class="col">
+                            <span class="fw-bold" th:text="${productList.productDto.productName}">치킨이름</span>
                         </div>
                     </div>
-                    <div class="col text-end">
-                        <img th:src="${productList.productDto.productImage}" class="orderMenuImg">
+                    <div class="row">
+                        <div class="col fw-bold">
+                            <span th:text="|${#numbers.formatInteger(productList.productDto.productPrice, 0, 'COMMA')}원|">치킨가격</span>
+                        </div>
                     </div>
+                </div>
+                <div class="col text-end">
+                    <img th:src="${productList.productDto.productImage}" class="orderMenuImg">
                 </div>
             </div>
         </a>

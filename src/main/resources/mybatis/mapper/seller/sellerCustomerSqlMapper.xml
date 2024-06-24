@@ -11,32 +11,142 @@
         SELECT * FROM fc_seller WHERE sellerNumber = #{sellerNumber}
     </select>
 
-    <select id="selectCategoryList" resultType="CategoryDto">
-        SELECT * FROM fc_category ORDER BY categoryNumber ASC
+    <select id="selectProductCategoryByNumber" resultType="ProductCategoryDto">
+        SELECT * FROM fc_productCategory WHERE productCategoryNumber = #{productCategoryNumber};
     </select>
 
-    <select id="selectCategoryByNumber" resultType="CategoryDto">
-        SELECT * FROM fc_category WHERE categoryNumber = #{categoryNumber};
+    <select id="selectProductCategoryNameList" resultType="ProductCategoryDto">
+        SELECT * FROM fc_productCategory ORDER By productCategoryNumber asc
     </select>
 
-    <select id="selectProductList" parameterType="int" resultType="ProductDto">
-        SELECT * FROM fc_product WHERE categoryNumber = #{categoryNumber} ORDER BY productNumber ASC
+    <select id="selectProductList" resultType="ProductDto">
+        SELECT * FROM fc_product WHERE productCategoryNumber = #{productCategoryNumber}
     </select>
 
-    <select id="selectProductDetail" resultType="ProductDto">
-        SELECT * FROM fc_product
-        WHERE productNumber = #{productNumber}
+    <select id="selectProductDetailMenu" resultType="ProductDto">
+        SELECT * FROM fc_product WHERE productNumber = #{productNumber}
     </select>
 
-    <select id="selectProductsByCategoryNumbers" parameterType="list" resultType="ProductAndCategoryDto">
-        SELECT p.*, c.categoryName
-        FROM fc_product p
-        JOIN fc_category c ON p.categoryNumber = c.categoryNumber
-        WHERE p.categoryNumber IN
-        <foreach item="categoryNumber" collection="list" open="(" separator="," close=")">
-            #{categoryNumber}
+    <!-- 지점 메인메뉴 옵션 리스트 -->
+    <select id="selectProductOptionsWithValuesList" resultType="ProductOptionsWithValuesDto">
+        SELECT o.*, ov.optionValueName , ov.additionalPrice
+        FROM fc_productOption o
+                 JOIN fc_productOptionValue ov ON o.optionValueNumber = ov.optionValueNumber
+        WHERE o.productNumber = #{productNumber}
+    </select>
+    <!-- 지점 메뉴 사이드 옵션 리스트 -->
+    <select id="selectProductCategoryJoinList" resultType="ProductCategoryJoinDto">
+        SELECT pc.productCategoryName, p.productName, p.productPrice FROM fc_product p
+        JOIN fc_productCategory pc ON p.productCategoryNumber = pc.productCategoryNumber
+        WHERE pc.productCategoryNumber IN
+        <foreach collection="productCategoryNumbers" item="productCategoryNumber" open="(" separator="," close=")">
+            #{productCategoryNumber}
         </foreach>
-        ORDER BY p.categoryNumber ASC
     </select>
+    <!-- collection : 파라미터값 / item= : 파라미터랑 일치하는값 반환  -->
+
+    <!-- 장바구니 등록 -->
+    <insert id="insertOrderMenu">
+        INSERT INTO fc_orderMenu(
+            productNumber, productOptionNumber, orderMenuPrice, orderMenuQuantity, orderMenuState
+        )
+        values
+        ( #{productNumber}, #{productOptionNumber}, #{orderMenuPrice}, 1 , #{orderMenuState})
+    </insert>
+
+
+    <!-- 장바구니 중복메뉴-->
+<!--    <select id="selectOrderMenuDuplicateCheck" resultType="OrderMenuDto">-->
+<!--        SELECT * FROM fc_orderMenu WHERE productNumber = #{productNumber}-->
+<!--    </select>-->
+
+<!--    <select id="selectOrderMenuList" resultType="OrderMenuProductDto">-->
+<!--        SELECT o.*, p.productName,p.productImage-->
+<!--        FROM fc_orderMenu o-->
+<!--                 JOIN fc_product p ON o.productNumber = p.productNumber-->
+<!--        ORDER By orderMenuPrice DESC;-->
+<!--    </select>-->
+
+<!--    <delete id="deleteOrderMenu">-->
+<!--        DELETE FROM fc_orderMenu WHERE customerOrderNumber = #{customerOrderNumber}-->
+<!--    </delete>-->
+
+<!--    <update id="updateOrderMenuQuantity">-->
+<!--        UPDATE fc_orderMenu o-->
+<!--        INNER JOIN fc_product p ON o.productNumber = p.productNumber-->
+<!--        SET o.orderMenuPrice = p.productPrice * #{orderMenuQuantity},-->
+<!--	        o.orderMenuQuantity = #{orderMenuQuantity}-->
+<!--        WHERE o.customerOrderNumber = #{customerOrderNumber}-->
+<!--    </update>-->
+
+
+
+    <!-- 주소 등록 -->
+    <insert id="insertCustomerAddress">
+        INSERT INTO fc_customerAddress (customerNumber, deliveryAddress) values(#{customerNumber}, #{deliveryAddress});
+    </insert>
+    <!-- 주소 리스트 -->
+    <select id="selectCustomerAddressList" resultType="CustomerAddressDto">
+        SELECT * FROM fc_customerAddress
+        WHERE customerNumber = #{customerNumber}
+    </select>
+    <!-- 주문 주소 -->
+    <select id="selectCustomerAddress" resultType="String">
+        SELECT deliveryAddress FROM fc_customerAddress WHERE customerNumber = #{customerNumber}
+    </select>
+
+
+    <!-- 메뉴 옵션 나중에 해볼것 -->
+<!--    <select id="selectProductOptionList" resultType="ProductOptionDto">-->
+<!--        SELECT * FROM fc_productOption WHERE productNumber = #{productNumber}-->
+<!--    </select>-->
+
+<!--    <select id="selectProductOptionsWithValues" resultType="map">-->
+<!--        SELECT o.optionName, ov.optionValueName, ov.additionalPrice-->
+<!--        FROM fc_productOption o-->
+<!--        JOIN fc_productOptionValue ov ON o.productOptionNumber = ov.productOptionNumber-->
+<!--        WHERE o.productNumber = #{productNumber}-->
+<!--    </select>-->
+
+<!--    <select id="getProductsByCategoryNumbers" resultType="map">-->
+<!--        SELECT p.productNumber, p.productName, p.productPrice, p.productCategoryNumber, c.productCategoryName-->
+<!--        FROM fc_product p-->
+<!--                 JOIN fc_productCategory c ON p.productCategoryNumber = c.productCategoryNumber-->
+<!--        WHERE p.productCategoryNumber IN (5, 6, 7)-->
+<!--        ORDER BY p.productCategoryNumber ASC;-->
+<!--    </select>-->
+
+
+
+
+
+
+    <!--    <select id="selectCategoryList" resultType="CategoryDto">-->
+<!--        SELECT * FROM fc_category ORDER BY categoryNumber ASC-->
+<!--    </select>-->
+
+<!--    <select id="selectCategoryByNumber" resultType="CategoryDto">-->
+<!--        SELECT * FROM fc_category WHERE categoryNumber = #{categoryNumber};-->
+<!--    </select>-->
+
+<!--    <select id="selectProductList" parameterType="int" resultType="ProductDto">-->
+<!--        SELECT * FROM fc_product WHERE categoryNumber = #{categoryNumber} ORDER BY productNumber ASC-->
+<!--    </select>-->
+
+<!--    <select id="selectProductDetail" resultType="ProductDto">-->
+<!--        SELECT * FROM fc_product-->
+<!--        WHERE productNumber = #{productNumber}-->
+<!--    </select>-->
+
+<!--    <select id="selectProductsByCategoryNumbers" parameterType="list" resultType="ProductAndCategoryDto">-->
+<!--        SELECT p.*, c.categoryName-->
+<!--        FROM fc_product p-->
+<!--        JOIN fc_category c ON p.categoryNumber = c.categoryNumber-->
+<!--        WHERE p.categoryNumber IN-->
+<!--        <foreach item="categoryNumber" collection="list" open="(" separator="," close=")">-->
+<!--            #{categoryNumber}-->
+<!--        </foreach>-->
+<!--        ORDER BY p.categoryNumber ASC-->
+<!--    </select>-->
 
 </mapper>

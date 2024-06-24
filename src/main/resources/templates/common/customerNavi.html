@@ -13,7 +13,7 @@
 
 <body>
 <!--메인 페이지 상단-->
-<div th:fragment="topNavi" class="container-fluid fixed-top py-2">
+<div th:fragment="topNavi" class="container-fluid fixed-top py-2" style="background-color: #B41E30;">
     <div class="row align-items-center">
         <div class="col fs-3">
             <span class="text-white fw-bold">
@@ -40,7 +40,7 @@
             <div class="row-auto text-center">
                 <div class="col">
                     <a href="" class="customer_navi_link">
-                        <span><i class="bi bi-list fa-2x"></i></span>
+                        <span><i class="bi bi-envelope-paper fa-2x"></i></span>
                     </a>
                 </div>
             </div>
@@ -99,14 +99,14 @@
         <div class="col-auto rounded-circle">
             <div class="row-auto text-center">
                 <div class="col">
-                    <a href="" class="customer_navi_link">
-                        <span><i class="bi bi-envelope-paper fa-2x"></i></span>
+                    <a href="/customer/viewMorePage" class="customer_navi_link">
+                        <span><i class="bi bi-list fa-2x"></i></span>
                     </a>
                 </div>
             </div>
             <div class="row text-center" style="position: relative">
                 <div class="col">
-                    <span class="fw-bold" style="position: absolute; bottom: -0.8rem; left: 0.6rem; font-size: 0.7rem">주문내역</span>
+                    <span class="fw-bold" style="position: absolute; bottom: -0.8rem; left: 0.8rem; font-size: 0.8rem">더보기</span>
                 </div>
             </div>
         </div>
@@ -194,10 +194,12 @@
 <div th:fragment="cartBottomNavi" class="container-fluid py-2 fixed-bottom border bg-light">
     <div class="row mx-1">
         <div class="col border rounded-3 text-center py-1" style="background-color: #D72239">
-            <a href="/customer/shoppingBasketPage" class="fs-2" style="text-decoration: none; color: white">
-                <span><i class="fa-regular fa-credit-card"></i></span>
-                <span>결제 하기</span>
-            </a>
+            <form action="/customer/shoppingBasketPage" method="get">
+                <button class="btn border-0 fs-2" style="color:white;">
+                    <span><i class="fa-regular fa-credit-card"></i></span>
+                    <span>결제 하기</span>
+                </button>
+            </form>
         </div>
     </div>
 </div>

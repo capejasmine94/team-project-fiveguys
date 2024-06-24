@@ -3,11 +3,11 @@ package com.fiveguys.dto;
 import lombok.Data;
 
 @Data
-public class ProductDto {
+public class OrderMenuProductDto {
+    private int customerOrderNumber;
     private int productNumber;
-    private int productCategoryNumber;
+    private int orderMenuPrice;
+    private int orderMenuQuantity;
     private String productName;
-    private int productPrice;
-    private String productInformation;
     private String productImage;
 }

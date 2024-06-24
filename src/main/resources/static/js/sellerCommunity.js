@@ -164,6 +164,9 @@ function getSellerCommunityList(currentPage,searchWord,sortedOption,sellerSort){
                     const sellerCommentSellerNameReplyCount = newSellerCommentWrapper.querySelector(".sellerCommentSellerNameReplyCount");
                     sellerCommentSellerNameReplyCount.innerText=e.selectTotalCommentReplyCount;
 
+                    const sellerCommunityImageContainer =newSellerCommentWrapper.querySelector(".sellerCommunityImageContainer");
+                    sellerCommunityImageContainer.setAttribute("onclick",`sellerCommunityDetailPage(${e.sellerCommunityDto.sellerCommunityNumber})`);
+
                     const sellerCommunityImage = newSellerCommentWrapper.querySelector(".sellerCommunityImage");
                     const setSrc = "/images/"+e.sellerCommunityDto.sellerCommunityImage;
                     sellerCommunityImage.setAttribute("src",setSrc);
@@ -234,9 +237,7 @@ function getSellerCommunityList(currentPage,searchWord,sortedOption,sellerSort){
                 sellerCommentSellerNameReplyCount.innerText=e.selectTotalCommentReplyCount;
 
                 const sellerCommunityImageContainer =newSellerCommentWrapper.querySelector(".sellerCommunityImageContainer");
-                const sellerCommunityHrefValue = sellerCommunityImageContainer.getAttribute("href");
-                const newSellerCommunityHrefValue = sellerCommunityHrefValue+"?sellerCommunityNumber="+e.sellerCommunityDto.sellerCommunityNumber;
-                sellerCommunityImageContainer.setAttribute("href",newSellerCommunityHrefValue);
+                sellerCommunityImageContainer.setAttribute("onclick",`sellerCommunityDetailPage(${e.sellerCommunityDto.sellerCommunityNumber})`);
 
                 const sellerCommunityImage = newSellerCommentWrapper.querySelector(".sellerCommunityImage");
                 const setSrc = "/images/"+e.sellerCommunityDto.sellerCommunityImage;
@@ -1076,10 +1077,10 @@ function lineChart(){
                         x: {
                             ticks: {
                                 autoSkip: false,
-                                maxRotation: 45,
-                                minRotation: 45,
+                                maxRotation: 0,
+                                minRotation: 0,
                                 font: {
-                                    size: 11
+                                    size: 13
                                 }
                             }
                         },
@@ -1094,6 +1095,13 @@ function lineChart(){
                         maintainAspectRatio: false // 비율 유지 비활성화
                     },
                     plugins: {
+                        legend: {
+                            labels: {
+                                font: {
+                                    weight: 'bold'
+                                }
+                            }
+                        },
                         tooltip: {
                             enabled: true,
                             callbacks: {
@@ -1269,7 +1277,7 @@ function pieChart(){
                     ''
                 ],
                 datasets: [{
-                    label: '가장 많이 활동한 점주',
+                    label: '가장 많이 활동한 점주 Top 3',
                     data: [0, 0, 0],
                     backgroundColor: [
                         'rgb(255, 99, 132)',
@@ -1295,7 +1303,7 @@ function pieChart(){
                     plugins: {
                         title: {
                             display: true,
-                            text: '가장 많이 활동한 점주', // 제목 설정
+                            text: '가장 많이 활동한 점주 Top 3', // 제목 설정
                             font: {
                                 size: 12 // 폰트 크기 설정
                             }

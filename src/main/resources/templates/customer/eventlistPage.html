@@ -41,12 +41,12 @@
 
                     const thumbsUp = newEventTemplate.querySelector(".thumbsUp");
                     if(e.eventLikeCustomerCheck == 1 ){
-                         thumbsUp.classList.remove("bi-hand-thumbs-up");
-                         thumbsUp.classList.add("bi-hand-thumbs-up-fill");
+                         thumbsUp.classList.remove("bi-heart");
+                         thumbsUp.classList.add("bi-heart-fill");
                     }
                     else{
-                         thumbsUp.classList.remove("bi-hand-thumbs-up-fill");
-                         thumbsUp.classList.add("bi-hand-thumbs-up");
+                         thumbsUp.classList.remove("bi-heart-fill");
+                         thumbsUp.classList.add("bi-heart");
                     }
 
 
@@ -89,12 +89,12 @@
 
                     const thumbsUp = newEventTemplate.querySelector(".thumbsUp");
                     if(e.eventLikeCustomerCheck == 1 ){
-                         thumbsUp.classList.remove("bi-hand-thumbs-up");
-                         thumbsUp.classList.add("bi-hand-thumbs-up-fill");
+                         thumbsUp.classList.remove("bi-heart");
+                         thumbsUp.classList.add("bi-heart-fill");
                     }
                     else{
-                         thumbsUp.classList.remove("bi-hand-thumbs-up-fill");
-                         thumbsUp.classList.add("bi-hand-thumbs-up");
+                         thumbsUp.classList.remove("bi-heart-fill");
+                         thumbsUp.classList.add("bi-heart");
                     }
 
 
@@ -115,8 +115,9 @@
                   if(response.loginSuccess === "false"){
                     window.location.href="/login/customerLogin";
                   }
+                  reloadEventList();
               })
-              reloadEventList();
+              
         }
 
         function detailLikeDislike(eventNumber){
@@ -129,9 +130,10 @@
                   if(response.loginSuccess === "false"){
                     window.location.href="/login/customerLogin";
                   }
+                  reloadEventList()
+                  showDetailModal(eventNumber);
               })
-              reloadEventList()
-              showDetailModal(eventNumber);
+
         }
 
 
@@ -147,8 +149,9 @@
                     if(response.loginSuccess === "false"){
                         window.location.href="/login/customerLogin";
                     }
+                    endEventList();
               })
-              endEventList();
+
         }
 
         function showDetailModal(eventNumber){
@@ -201,12 +204,12 @@
                     console.log(location);
                     console.log(detailThumbsUp);
                     if(response.selectLikeCheck == 1 ){
-                        detailThumbsUp.classList.remove("bi-hand-thumbs-up");
-                        detailThumbsUp.classList.add("bi-hand-thumbs-up-fill");
+                        detailThumbsUp.classList.remove("bi-heart");
+                        detailThumbsUp.classList.add("bi-heart-fill");
                     }
                     else{
-                        detailThumbsUp.classList.remove("bi-hand-thumbs-up-fill");
-                        detailThumbsUp.classList.add("bi-hand-thumbs-up");
+                        detailThumbsUp.classList.remove("bi-heart-fill");
+                        detailThumbsUp.classList.add("bi-heart");
                     }
 
                 }else{
@@ -352,7 +355,7 @@
 <div class="container" style="background-color: #B41E30;">
     <div class="row" style="margin-bottom:82px; ">
         <div class="col mt-3">
-            <div class="row mt-4">
+            <div class="row mt-5">
                 <div class="col">
                     <ul class="nav nav-underline">
                         <li class="nav-item col-6 text-center">
@@ -389,18 +392,16 @@
 </div>
 <!--이벤트 목록 나오도록-->
 <div class="d-none">
-    <div class="EventList row mb-2 mx-3 pt-4 bg-white border rounded">
-        <div class="col px-4">
+    <div class="EventList row mb-3 ">
+        <div class="col">
             <div class="row">
-                <div class="col py-2">
+                <div class="col position-relaitive px-0">
                     <img onclick="detailPageProcess(this)" class="mainImg img-fluid">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col text-end">
-                    <input type="hidden" class="detailPageNumber">
-                    <i onclick="likeDisLikeProcess(this)" class="thumbsUp bi bi-hand-thumbs-up"></i>
-                    <span class="eventBoardLikeCount"></span>
+                    <span class="position-absolute top-15 end-0 translate-middle badge rounded-pill bg-danger mt-4 me-1">
+                        <input type="hidden" class="detailPageNumber">
+                        <i onclick="likeDisLikeProcess(this)" class="thumbsUp bi bi-heart"></i>
+                        <span class="eventBoardLikeCount"></span>
+                    </span>
                 </div>
             </div>
         </div>
@@ -408,18 +409,16 @@
 </div>
 <!-- 종료된 이벤트 목록 -->
 <div class="d-none">
-    <div class="endEventList row mb-2 mx-3 pt-4 bg-white border rounded">
-        <div class="col px-4">
+    <div class="endEventList row mb-3">
+        <div class="col">
             <div class="row">
-                <div class="col py-2">
+                <div class="col position-relaitive px-0">
                     <img onclick="detailEndPageProcess(this)" class="mainImg img-fluid">
-                </div>
-            </div>
-            <div class="row">
-                <div class="col text-end">
-                    <input type="hidden" class="detailPageNumber">
-                    <i onclick="likeDisLikeProcessTwo(this)" class="thumbsUp bi bi-hand-thumbs-up"></i>
-                    <span class="eventBoardLikeCount"></span>
+                    <span class="position-absolute top-15 end-0 translate-middle badge rounded-pill bg-danger mt-4 me-1">
+                        <input type="hidden" class="detailPageNumber">
+                        <i onclick="likeDisLikeProcessTwo(this)" class="thumbsUp bi bi-heart"></i>
+                        <span class="eventBoardLikeCount"></span>
+                    </span>
                 </div>
             </div>
         </div>
@@ -438,10 +437,10 @@
             <div class="modal-body">
                 <div class="container">
                     <div class="row" style="margin-bottom:82px;">
-                        <div class="col mt-2 px-5">
+                        <div class="col px-3">
                             <div class="row">
                                 <div class="col">
-                                    <div class="row mt-4">
+                                    <div class="row">
                                         <div class="col text-center px-0">
                                             <span class="fw-bold text-secondary" style="font-size:0.8em;"></span>
                                         </div>
@@ -458,14 +457,15 @@
                                             <span class="fw-bold text-secondary" style="font-size:0.8em;">~</span>
                                             <span class="eventEndtDay text-secondary" style="font-size:0.8em;"></span>
                                         </div>
-                                        <div class="col-auto pe-0 text-end">
-                                            <i onclick="detailLikeDislikeProcess()" class="detailThumbsUp bi bi-hand-thumbs-up"></i>
+                                        <div class="col-auto pe-0 text-end" style="font-size:0.9em;">
+                                            <i onclick="detailLikeDislikeProcess()" class="detailThumbsUp bi bi-heart pt-1"></i>
                                             <span class="eventBoardDetailLikeCount" ></span>
                                         </div>
-                                        <div class="col-auto">
-                                            <i class="bi bi-eye"></i>
+                                        <div class="col-auto text-end" style="font-size:0.9em;">
+                                            <i class="bi bi-eye pt-1"></i>
                                             <span class="eventBoardVisit"></span>
                                         </div>
+
                                     </div>
                                     <div class="row mt-4" >
                                         <div class="col px-0" id="boardDetailImageLocation">
@@ -569,7 +569,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="replyCommentLocation col">
+                <div class="replyCommentLocation col ">
 
                 </div>
             </div>
@@ -578,9 +578,9 @@
 </div>
 <!-- 대댓글 탬플릿 -->
 <div class="d-none" id="replyCommentTempleteLocation">
-    <div class="row replyCommentTemplete">
+    <div class="row replyCommentTemplete py-1">
         <div class="col-1"></div>
-        <div class="col">
+        <div class="col bg-body-tertiary">
             <div class="row">
                 <div class="col">
                     <div class="row">

@@ -53,6 +53,7 @@
     <select id="selectEventBoardComet" resultType="EventCommentDto">
         select * from fc_eventComment
         where eventNumber = #{eventNumber}
+        order By eventCommentNumber desc;
     </select>
 
     <select id="selectCustomerDto" resultType="CustomerDto">

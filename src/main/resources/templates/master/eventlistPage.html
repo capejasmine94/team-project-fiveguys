@@ -151,7 +151,6 @@
                 eventVisitCount.textContent = response.eventBoardDtoAndDetail.eventBoardDto.eventVisitCount;
 
                 
-                console.log(response.eventBoardDtoAndDetail.eventBoardDto.eventStartDay);
                 startDaylocation.textContent = response.eventBoardDtoAndDetail.eventBoardDto.eventStartDay;
                 endDaylocation.textContent = response.eventBoardDtoAndDetail.eventBoardDto.eventEndDay;
                 
@@ -181,7 +180,15 @@
                     eventCommentContent.textContent = comments.eventCommentDto.eventCommentContent;
 
                     const eventCommentCreatedAt = newCommentListTemplete.querySelector(".eventCommentCreatedAt");
-                    eventCommentCreatedAt.textContent = comments.eventCommentDto.eventCommentCreatedAt;
+                    const commentCreatedAt = new Date(comments.eventCommentDto.eventCommentCreatedAt);
+                    const year = commentCreatedAt.getFullYear();
+                    const month = String(commentCreatedAt.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
+                    const day = String(commentCreatedAt.getDate()).padStart(2, '0');
+
+                    const formattedDate = `${year}-${month}-${day}`;
+
+                    eventCommentCreatedAt.textContent = formattedDate;
+                    
 
                     const masterReplyLocation = newCommentListTemplete.querySelector(".masterReplyLocation");
 
@@ -195,35 +202,46 @@
 
                         const writebutton = newYesMasterNoReplyTemplete.querySelector(".writebutton");
                         const masterReply = newYesMasterNoReplyTemplete.querySelector(".masterReply");
-
-                        writebutton.onclick =(function(masterReply,ceventCommentNumber,eventNumber){
-                            return function(){
-                                writeprocess(masterReply,ceventCommentNumber,eventNumber);
-                            }
-                        })(masterReply.value,comments.eventCommentDto.eventCommentNumber,eventNumber);
-
                         
+
+                        console.log("masterReply.value"+masterReply.value);
+                        console.log("eventCommentNumber"+comments.eventCommentDto.eventCommentNumber);
+                        console.log("eventNumber"+eventNumber);
+                        writebutton.onclick = (function(masterReplyElement, ceventCommentNumber, eventNumber) {
+                            return function() {
+                                writeprocess(masterReplyElement.value, ceventCommentNumber, eventNumber);
+                            }
+                        })(masterReply, comments.eventCommentDto.eventCommentNumber, eventNumber);
 
                         masterReplyLocation.appendChild(newYesMasterNoReplyTemplete);
 
                     }
 
                     // 마스터 로그인 실패 댓글 있음
-                    if(comments.eventCommentDto.masterReply !== null && response.masterDto !== null){
+                    if(comments.eventCommentDto.masterReply !== null && response.masterDto === null){
                         const noMasteYesReplyTempleteLocation = document.getElementById("noMasteYesReplyTempleteLocation");
                         const noMasteYesReplyTemplete = noMasteYesReplyTempleteLocation.querySelector(".noMasteYesReplyTemplete");
                         const newNoMasteYesReplyTemplete = noMasteYesReplyTemplete.cloneNode(true);
 
                         const masterReply = newNoMasteYesReplyTemplete.querySelector(".masterReply");
                         const masterReplyCreatedAt = newNoMasteYesReplyTemplete.querySelector(".masterReplyCreatedAt");
+                        const replyCreatedAt = new Date(comments.eventCommentDto.masterReplyCreatedAt);
+                        const year = commentCreatedAt.getFullYear();
+                        const month = String(commentCreatedAt.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
+                        const day = String(commentCreatedAt.getDate()).padStart(2, '0');
+
+                        const formattedDate = `${year}-${month}-${day}`;
+
+                        masterReplyCreatedAt.textContent = formattedDate;
+
                         masterReply.textContent = comments.eventCommentDto.masterReply;
-                        masterReplyCreatedAt.textContent = comments.eventCommentDto.masterReplyCreatedAt;
+                        
                         masterReplyLocation.appendChild(newNoMasteYesReplyTemplete);
 
                     }
 
                     // 마스터 로그인 성공 댓글 확인
-                    if(comments.eventCommentDto.masterReply === null && response.masterDto === null){
+                    if(comments.eventCommentDto.masterReply !== null && response.masterDto !== null){
                         const yesMasterYesReplyTempleteLocation = document.getElementById("yesMasterYesReplyTempleteLocation");
                         const yesMasterYesReplyTemplete = yesMasterYesReplyTempleteLocation.querySelector(".yesMasterYesReplyTemplete");
                         const newYesMasterYesReplyTemplete = yesMasterYesReplyTemplete.cloneNode(true);
@@ -231,8 +249,17 @@
                         const masterReply = newYesMasterYesReplyTemplete.querySelector(".masterReply");
                         const masterReplyCreatedAt = newYesMasterYesReplyTemplete.querySelector(".masterReplyCreatedAt");
 
+                        const replyCreatedAt = new Date(comments.eventCommentDto.masterReplyCreatedAt);
+                        const year = commentCreatedAt.getFullYear();
+                        const month = String(commentCreatedAt.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
+                        const day = String(commentCreatedAt.getDate()).padStart(2, '0');
+
+                        const formattedDate = `${year}-${month}-${day}`;
+
+                        masterReplyCreatedAt.textContent = formattedDate;
+
                         masterReply.textContent = comments.eventCommentDto.masterReply;
-                        masterReplyCreatedAt.textContent = comments.eventCommentDto.masterReplyCreatedAt;
+                    
                         masterReplyLocation.appendChild(newYesMasterYesReplyTemplete);
 
                     }
@@ -697,7 +724,7 @@
                                             <span class="fw-bold text-secondary" style="font-size:0.8em;">기간 :</span>
                                             <span class="fw-bold text-secondary" id="eventStartDay" style="font-size:0.8em;"></span>
                                             <span class="fw-bold text-secondary" style="font-size:0.8em;">~</span>
-                                            <span class="fw-bold text-secondary" id="eventEndDay"></span>
+                                            <span class="fw-bold text-secondary" id="eventEndDay" style="font-size:0.8em;"></span>
                                         </div>
                                         <div class="col-auto pe-0 text-end">
                                             <i class="thumbsUp bi bi-hand-thumbs-up"></i>
@@ -751,7 +778,7 @@
 
 <!-- 코멘트 리스트 템플릿 -->
 <div class="d-none" id="commentListTempleteLocation">
-    <div class="commentListTemplete row border-bottom py-3">
+    <div class="commentListTemplete row border-bottom py-2">
         <div class="col">
             <div class="row">
                 <div class="col">
@@ -772,11 +799,11 @@
                     <span style="font-size:0.8em;" class="eventCommentCreatedAt"></span>
                 </div>
             </div>
-            <div class="row mt-4 mb-4" >
+            <div class="row mt-2 mb-2" >
                 <div class="col">
                     <div class="row">
                         <div class="col">
-                            <div class="masterReplyLocation row border">
+                            <div class="masterReplyLocation row border rounded pe-0">
                                 <!-- 마스터 댓글 -->
                             </div>
                         </div>
@@ -804,24 +831,29 @@
 
 <!-- 마스터 로그인 실패 댓글 있음 -->
 <div class="d-none" id="noMasteYesReplyTempleteLocation" >
-    <div class="noMasteYesReplyTemplete col">
+    <div class="noMasteYesReplyTemplete col bg-body-tertiary">
         <div class="row">
+            <div class="col-1"></div>
             <div class="col">
                 <div class="row">
                     <div class="col">
-                        <span class="fw-bolder" style="font-size:0.9em;" >운영자</span>
+                        <div class="row">
+                            <div class="col">
+                                <span class="fw-bolder" style="font-size:0.9em;" >운영자</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <span class="masterReply"></span>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <span style="font-size:0.8em;" class="masterReplyCreatedAt"></span>
+                <div class="row">
+                    <div class="col">
+                        <span class="masterReply"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <span style="font-size:0.8em;" class="masterReplyCreatedAt"></span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>   
@@ -829,30 +861,35 @@
 
 <!-- 마스터 로그인 성공 댓글 확인 -->
 <div class="d-none" id="yesMasterYesReplyTempleteLocation" >
-    <div class="yesMasterYesReplyTemplete col" >
+    <div class="yesMasterYesReplyTemplete col bg-body-tertiary py-1" >
         <div class="row">
+            <div class="col-1"></div>
             <div class="col">
                 <div class="row">
                     <div class="col">
-                        <span class="fw-bolder" style="font-size:0.9em;" >운영자</span>
-                    </div>
-                    <div class="col">
-                        수정
-                    </div>
-                    <div class="col">
-                        삭제
+                        <div class="row">
+                            <div class="col">
+                                <span class="fw-bolder" style="font-size:0.9em;" >운영자</span>
+                            </div>
+                            <div class="col-auto text-end pe-0">
+                                <span style="font-size:0.8em;">수정</span>
+                            </div>
+                            <div class="col-auto text-end">
+                                <span style="font-size:0.8em;">삭제</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <span class="masterReply"></span>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <span style="font-size:0.8em;" class="masterReplyCreatedAt"></span>
+                <div class="row">
+                    <div class="col">
+                        <span class="masterReply"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <span style="font-size:0.8em;" class="masterReplyCreatedAt"></span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>   

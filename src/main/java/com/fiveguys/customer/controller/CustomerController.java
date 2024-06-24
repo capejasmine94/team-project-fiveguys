@@ -103,13 +103,12 @@ public class CustomerController {
                                       @RequestParam("productCategoryNumber") int productCategoryNumber,
                                       @RequestParam("productNumber") List<Integer> productNumbers)  {
 
-//        for (Integer productNumber : productNumbers) {
-//            OrderMenuDto orderMenuDto1 = new OrderMenuDto();
-//            orderMenuDto1.setProductNumber(productNumber);
-//            orderMenuDto1.setProductOptionNumber();
-//            sellerCustomerService.insertOrderMenu(orderMenuDto1);
-//        }
-        sellerCustomerService.insertOrderMenu(orderMenuDto);
+        for (Integer productNumber : productNumbers) {
+            OrderMenuDto orderMenuDto1 = new OrderMenuDto();
+            orderMenuDto1.setProductNumber(productNumber);
+            orderMenuDto1.setProductOptionNumber(productOptionNumber);
+            sellerCustomerService.insertOrderMenu(orderMenuDto1);
+        }
 
         return "redirect:/customer/shoppingBasketPage?sellerNumber=" + sellerNumber +
                 "&productCategoryNumber=" + productCategoryNumber;

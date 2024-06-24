@@ -157,6 +157,20 @@
     </select>
 
 
+    <delete id="deleteReview">
+        delete from fc_sellerReview
+        where sellerReviewNumber = #{sellerReviewNumber}
+    </delete>
+
+
+
+    <update id="updateReview">
+        UPDATE fc_sellerReview
+        SET sellerReviewContent = #{sellerReviewContent}
+        WHERE sellerReviewNumber = #{sellerReviewNumber}
+    </update>
+
+
 
 
 

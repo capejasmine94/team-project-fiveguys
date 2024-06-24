@@ -30,7 +30,34 @@
             <div class="row pt-3">
                 <span class="col-3 fs-4 fw-bolder">지점 : <span class="fs-5 fw-bold" th:text="${reviewInform.sellerDto.sellerName}"></span></span>
                 <span class="col-3 fs-4 fw-bolder">게시일 : <span class="fs-5 fw-bold" th:text="${#dates.format(reviewInform.sellerReviewDto.sellerReviewCreatedAt, 'yyyy-MM-dd')}"></span></span>
+
+                <span class="col-2"></span>
+
+                <span class="col-3 text-end">
+
+                     <a class="btn btn-dark"
+                        th:if="${reviewInform.sellerDto.sellerNumber == session.sellerDto.sellerNumber}"
+                        th:href="@{/seller/reviewUpdatePage(id=${reviewInform.sellerReviewDto.sellerReviewNumber})}">
+                        수정
+                    </a>
+
+                </span>
+
+
+                <span class="col-1 text-end">
+
+                    <form action="/seller/deleteReview" th:if="${reviewInform.sellerDto.sellerNumber == session.sellerDto.sellerNumber}">
+                        <input type="hidden" name="sellerReviewNumber" th:value="${reviewInform.sellerReviewDto.sellerReviewNumber}">
+                        <button type="submit" class="btn btn-danger">삭제</button>
+                    </form>
+
+                </span>
+
             </div>
+
+
+
+
 
             <div class="row text-center pt-3">
                 <div class="col-6" th:each="reviewImageDtoList : ${reviewInform.sellerReviewImageDtoList}">

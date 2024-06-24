@@ -159,6 +159,18 @@ public class SellerService {
     }
 
 
+    public void deleteReview(int sellerReviewNumber) {
+        sellerSqlMapper.deleteReview(sellerReviewNumber);
+    }
+
+
+    public void updateReview(SellerReviewDto sellerReviewDto) {
+        sellerSqlMapper.updateReview(sellerReviewDto);
+    }
+
+
+
+
     public List<Map<String, Object>> selectAllSellerReview() {
         List<Map<String, Object>> sellerReviewList = new ArrayList<>();
         List<SellerReviewDto> sellerReviewDtoList = sellerSqlMapper.selectAllSellerReview();

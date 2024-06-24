@@ -48,5 +48,9 @@ public interface MasterSqlMapper {
 
     public SellerReviewDto selectSellerReviewInformByReviewNumber(int sellerReviewNumber);
 
+    public List<SellerReviewDto> selectRecentSellerReview();
+
+    public List<SellerOrderDto> selectRecentSellerOrder();
+
 
 }

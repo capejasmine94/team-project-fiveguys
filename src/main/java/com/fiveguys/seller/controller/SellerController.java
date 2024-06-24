@@ -123,7 +123,7 @@ public class SellerController {
         List<Map<String, Object>> materialInform = sellerService.selectMaterialByCategoryNumber(materialCategoryNumber);
         List<MaterialCategoryDto> materialCategoryInform = sellerService.selectMaterialCategory();
 
-
+        model.addAttribute("materialCategoryNumber", materialCategoryNumber);
         model.addAttribute("materialInform", materialInform);
         model.addAttribute("materialCategoryInform", materialCategoryInform);
 
@@ -265,6 +265,35 @@ public class SellerController {
         model.addAttribute("reviewInform", reviewInform);
 
         return "/seller/reviewDetailPage";
+    }
+
+
+    @RequestMapping("reviewUpdatePage")
+    public String reviewUpdatePage(Model model, int id) {
+
+        Map<String, Object> reviewInform = sellerService.selectSellerReview(id);
+        model.addAttribute("reviewInform", reviewInform);
+
+        return "/seller/reviewUpdatePage";
+    }
+
+
+
+    @RequestMapping("deleteReview")
+    public String deleteReview(@RequestParam("sellerReviewNumber") int sellerReviewNumber) {
+
+        sellerService.deleteReview(sellerReviewNumber);
+
+        return "/seller/sellerReviewPage";
+    }
+
+
+    @RequestMapping("updateReview")
+    public String updateReview(SellerReviewDto sellerReviewDto) {
+
+        sellerService.updateReview(sellerReviewDto);
+
+        return "redirect:/seller/reviewDetailPage?id=" + sellerReviewDto.getSellerReviewNumber();
     }
 
 

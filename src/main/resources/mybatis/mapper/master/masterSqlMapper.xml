@@ -136,6 +136,21 @@
     </select>
 
 
+    <select id="selectRecentSellerReview">
+        select * from fc_sellerReview
+        order by sellerReviewNumber  desc limit 5;
+    </select>
+
+
+    <select id="selectRecentSellerOrder">
+        select * from fc_sellerOrder
+        order by sellerOrderNumber desc limit 5;
+    </select>
+
+
+
+
+
 
 
 

@@ -26,7 +26,13 @@ public class MasterController {
     private MasterService masterService;
 
     @RequestMapping("mainPage")
-    public String mainPage() {
+    public String mainPage(Model model) {
+
+        List<Map<String, Object>> sellerReviewInform = masterService.selectRecentSellerReview();
+        List<Map<String, Object>> sellerOrderInform = masterService.selectRecentSellerOrder();
+        model.addAttribute("sellerReviewInform", sellerReviewInform);
+        model.addAttribute("sellerOrderInform", sellerOrderInform);
+
         return "/master/mainPage";
     }
 
@@ -170,9 +176,12 @@ public class MasterController {
     public String insertMaterial(MaterialDto materialDto, MultipartFile uploadFile) {
 
 
+
         if (uploadFile != null) {
             if(uploadFile.isEmpty()) {
-                masterService.insertMaterialNoImage(materialDto);
+
+                return "/master/materialRegisterFailPage";
+
             }
 
             String rootPath = "/Users/fiveguys_image/";

@@ -55,6 +55,10 @@ public interface SellerSqlMapper {
 
     public int selectRecentReviewNumber();
 
+    public void deleteReview(int sellerReviewNumber);
+
+    public void updateReview(SellerReviewDto sellerReviewDto);
+
 
 
 

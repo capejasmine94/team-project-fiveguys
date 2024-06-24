@@ -23,14 +23,13 @@
                 <span class="col px-0 text-end fw-bold fs-4">
                     <span th:text="${session.masterDto.masterNickName}"></span>
                     <span class="fs-5">님으로 접속 중</span>
-                    <a href="/master/logout" class="col-2 pt-1 bi bi-box-arrow-right text-decoration-none text-secondary fst-normal fs-5">Logout</a>
+                    <a href="" class="col-2 pt-1 bi bi-box-arrow-right text-decoration-none text-secondary fst-normal fs-5">Logout</a>
                 </span>
 
             </div>
 
 
             <div class="row pt-3">
-
                 <nav class="navbar navbar-expand-lg bg-danger">
                     <div class="container-fluid">
                         <a class="navbar-brand fs-2 text-white fw-bold text-center col-2" href="/master/mainPage">F.Guys</a>
@@ -48,49 +47,33 @@
                         </div>
                     </div>
                 </nav>
-
-            </div>
-
-
-            <div class="row">
-
-                <table class="table table-danger">
-                    <thead>
-                    <tr>
-                        <th class="text-center" scope="col">#</th>
-                        <th class="text-end" scope="col">지점명</th>
-                        <th class="text-center" scope="col">내용</th>
-                        <th class="text-start" scope="col">작성일</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="sellerReviewList : ${sellerReviewList}">
-                        <td class="text-center" th:text="${sellerReviewList.sellerReviewDto.sellerReviewNumber}"></td>
-                        <td class="text-end" th:text="${sellerReviewList.sellerDto.sellerName}"></td>
-
-
-                        <td class="text-center text-black">
-                            <a th:href="@{/master/reviewDetailPage(id=${sellerReviewList.sellerReviewDto.sellerOrderNumber})}"
-                               th:text="${#strings.length(sellerReviewList.sellerReviewDto.sellerReviewContent) > 7 ? #strings.substring(sellerReviewList.sellerReviewDto.sellerReviewContent, 0, 7) + '...' : sellerReviewList.sellerReviewDto.sellerReviewContent}"
-                               class="text-decoration-none fw-bold text-black">
-                            </a>
-                        </td>
-
-
-                        <td class="text-start" th:text="${#dates.format(sellerReviewList.sellerReviewDto.sellerReviewCreatedAt, 'yyyy-MM-dd')}"></td>
-                    </tr>
-                    </tbody>
-                </table>
-
             </div>
 
 
 
 
+            <div class="row pt-5 mt-5">
+
+               <div class="col text-center fs-2 fw-bold">재료등록에 실패했습니다.</div>
+
+            </div>
+
+
+            <div class="row pt-3">
+
+                <div class="col text-center fs-6 fw-bold text-secondary">재료 정보를 기입해주셔야 합니다.</div>
+
+            </div>
 
 
 
-
+            <div class="row pt-5">
+                <span class="col-3"></span>
+                <a href="/master/materialRegisterPage" class="col-2 btn btn-danger">재등록</a>
+                <span class="col-2"></span>
+                <a href="/master/mainPage" class="col-2 btn btn-dark bi bi-house-door-fill"></a>
+                <span class="col-3"></span>
+            </div>
 
 
         </div>

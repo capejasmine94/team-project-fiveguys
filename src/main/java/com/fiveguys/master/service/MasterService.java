@@ -201,5 +201,46 @@ public class MasterService {
 
 
 
+    public List<Map<String, Object>> selectRecentSellerReview() {
+
+        List<Map<String, Object>> sellerReviewList = new ArrayList<>();
+
+        List<SellerReviewDto> sellerReviewDtoList = masterSqlMapper.selectRecentSellerReview();
+
+        for (SellerReviewDto sellerReviewDto : sellerReviewDtoList) {
+            SellerOrderDto sellerOrderDto = masterSqlMapper.selectSellerOrder(sellerReviewDto.getSellerOrderNumber());
+            SellerDto sellerDto = masterSqlMapper.selectSeller(sellerOrderDto.getSellerNumber());
+
+            Map<String, Object> map = new HashMap<>();
+            map.put("sellerDto", sellerDto);
+            map.put("sellerReviewDto", sellerReviewDto);
+
+            sellerReviewList.add(map);
+        }
+
+        return sellerReviewList;
+
+    }
+
+
+    public List<Map<String, Object>> selectRecentSellerOrder() {
+        List<Map<String, Object>> sellerOrderList = new ArrayList<>();
+        List<SellerOrderDto> sellerOrderDtoList = masterSqlMapper.selectRecentSellerOrder();
+
+        for (SellerOrderDto sellerOrderDto : sellerOrderDtoList) {
+            SellerDto sellerDto = masterSqlMapper.selectSeller(sellerOrderDto.getSellerNumber());
+
+            Map<String, Object> map = new HashMap<>();
+            map.put("sellerDto", sellerDto);
+            map.put("sellerOrderDto", sellerOrderDto);
+
+            sellerOrderList.add(map);
+        }
+
+        return sellerOrderList;
+    }
+
+
+
 
 }

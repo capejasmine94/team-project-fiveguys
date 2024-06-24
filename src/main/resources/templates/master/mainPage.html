@@ -52,6 +52,77 @@
             </div>
 
 
+            <div class="row pt-5">
+
+
+                <button type="button" class="col-6 btn btn-outline-danger">최근 주문 내역</button>
+
+                <button type="button" class="col-6 btn btn-outline-danger">최근 등록 리뷰</button>
+
+
+            </div>
+
+
+            <div class="row">
+
+                <div class="col-6">
+
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th class="text-center" scope="col">지점</th>
+                            <th class="text-center" scope="col">주문일</th>
+                            <th class="text-center" scope="col">주문상태</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="sellerOrderInform : ${sellerOrderInform}">
+                            <td class="text-center" th:text="${sellerOrderInform.sellerDto.sellerName}"></td>
+                            <td class="text-center">
+                                <a th:href="@{/master/orderDetailPage(id=${sellerOrderInform.sellerOrderDto.sellerOrderNumber})}"
+                                   th:text="${#dates.format(sellerOrderInform.sellerOrderDto.sellerOrderCreatedAt, 'yyyy-MM-dd')}"
+                                   class="text-decoration-none fw-bold text-black">
+                                </a>
+                            </td>
+                            <td class="text-center" th:text="${sellerOrderInform.sellerOrderDto.sellerOrderStatus}"></td>
+
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+                <div class="col-6">
+
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th class="text-center" scope="col">지점</th>
+                            <th class="text-center" scope="col">내용</th>
+                            <th class="text-center" scope="col">등록일</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="sellerReviewInform : ${sellerReviewInform}">
+                            <td class="text-center" th:text="${sellerReviewInform.sellerDto.sellerName}"></td>
+                            <td class="text-center text-black">
+                                <a th:href="@{/master/reviewDetailPage(id=${sellerReviewInform.sellerReviewDto.sellerOrderNumber})}"
+                                   th:text="${#strings.length(sellerReviewInform.sellerReviewDto.sellerReviewContent) > 7 ? #strings.substring(sellerReviewInform.sellerReviewDto.sellerReviewContent, 0, 7) + '...' : sellerReviewInform.sellerReviewDto.sellerReviewContent}"
+                                   class="text-decoration-none fw-bold text-black">
+                                </a>
+                            </td>
+                            <td class="text-center" th:text="${#dates.format(sellerReviewInform.sellerReviewDto.sellerReviewCreatedAt, 'yyyy-MM-dd')}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+            </div>
+
+
+
+
 
 
 

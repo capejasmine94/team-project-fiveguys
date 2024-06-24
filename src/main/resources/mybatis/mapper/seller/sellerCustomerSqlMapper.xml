@@ -36,12 +36,13 @@
     </select>
     <!-- 지점 메뉴 사이드 옵션 리스트 -->
     <select id="selectProductCategoryJoinList" resultType="ProductCategoryJoinDto">
-        SELECT pc.productCategoryName, p.productName, p.productPrice FROM fc_product p
+        SELECT p.productNumber, pc.productCategoryName, p.productName, p.productPrice FROM fc_product p
         JOIN fc_productCategory pc ON p.productCategoryNumber = pc.productCategoryNumber
         WHERE pc.productCategoryNumber IN
         <foreach collection="productCategoryNumbers" item="productCategoryNumber" open="(" separator="," close=")">
             #{productCategoryNumber}
         </foreach>
+        ORDER BY pc.productCategoryNumber ASC
     </select>
     <!-- collection : 파라미터값 / item= : 파라미터랑 일치하는값 반환  -->
 

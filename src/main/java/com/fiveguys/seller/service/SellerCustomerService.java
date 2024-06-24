@@ -78,8 +78,8 @@ public class SellerCustomerService {
     }
     // 메뉴 사이드 옵션
     public Map<String, List<ProductCategoryJoinDto>> selectProductCategoryJoinList(List<Integer> productCategoryNumbers) {
-
-        Map<String, List<ProductCategoryJoinDto>> result = new HashMap<>();
+        // 쿼리에서 받은대로 순서대로 정렬하려면 LinkedHashMap<>(); 사용 hashMap은 랜덤으로 출력
+        Map<String, List<ProductCategoryJoinDto>> result = new LinkedHashMap<>();
 
         List<ProductCategoryJoinDto> list = sellerCustomerSqlMapper.selectProductCategoryJoinList(productCategoryNumbers);
         List<String> filteredList = list.stream() //
@@ -89,7 +89,7 @@ public class SellerCustomerService {
         for(String categoryName : filteredList){
             List<ProductCategoryJoinDto> productOptionsWithValuesList = list.stream()
                     .filter(f -> f.getProductCategoryName().equals(categoryName))
-                    .toList();
+                    .collect(Collectors.toList());
             result.put(categoryName, productOptionsWithValuesList);
         }
 

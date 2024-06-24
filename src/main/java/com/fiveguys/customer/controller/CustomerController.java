@@ -85,15 +85,9 @@ public class CustomerController {
         if (allowedSideMenuList.contains(productCategoryNumber)) {
             List<Integer> productCategoryNumbers = allowedMainMenuSideList;
             Map<String, List<ProductCategoryJoinDto>> categoryJoinList = sellerCustomerService.selectProductCategoryJoinList(productCategoryNumbers);
+            System.out.println(categoryJoinList);
             model.addAttribute("categoryJoinList", categoryJoinList);
         }
-
-//        List<Integer> productCategoryNumbers = allowedMainMenuSideList;
-//        Map<String, List<ProductCategoryJoinDto>> categoryJoinList = sellerCustomerService.selectProductCategoryJoinList(productCategoryNumbers);
-//        if(productCategoryNumber == 1 || productCategoryNumber == 2 || productCategoryNumber == 3 || productCategoryNumber == 4) {
-//            model.addAttribute("categoryJoinList", categoryJoinList);
-//        }
-
         return "customer/menuDetailPage";
     }
 
@@ -104,10 +98,17 @@ public class CustomerController {
         return "customer/test";
     }
     @RequestMapping("addToShoppingBasket")
-    public String addToShoppingBasket(@ModelAttribute OrderMenuDto orderMenuDto,
+    public String addToShoppingBasket(@RequestParam(name = "productOptionNumber") int productOptionNumber,
                                       @RequestParam(name = "sellerNumber") int sellerNumber,
-                                      @RequestParam("productCategoryNumber") int productCategoryNumber) {
+                                      @RequestParam("productCategoryNumber") int productCategoryNumber,
+                                      @RequestParam("productNumber") List<Integer> productNumbers)  {
 
+//        for (Integer productNumber : productNumbers) {
+//            OrderMenuDto orderMenuDto1 = new OrderMenuDto();
+//            orderMenuDto1.setProductNumber(productNumber);
+//            orderMenuDto1.setProductOptionNumber();
+//            sellerCustomerService.insertOrderMenu(orderMenuDto1);
+//        }
         sellerCustomerService.insertOrderMenu(orderMenuDto);
 
         return "redirect:/customer/shoppingBasketPage?sellerNumber=" + sellerNumber +

@@ -91,7 +91,8 @@
         </div>
     </div>
 </div>
-<form action="/customer/addToShoppingBasket" method="get">
+<form action="/customer/test" method="get">
+<!--<form action="/customer/addToShoppingBasket" method="get">-->
 <div class="container">
     <!-- 치킨 옵션    -->
     <div class="row" th:each="optionMap : ${optionWithValuesList}">
@@ -106,7 +107,7 @@
             </div>
             <div class="row my-2 px-2" th:each="optionValue, subIter : ${optionMap.getValue()}">
                 <div class="col">
-                    <input type="checkbox" name="productOptionNumber" th:value="${optionValue.productOptionNumber}">
+                    <input type="radio" name="productOptionNumber" th:value="${optionValue.productOptionNumber}" th:checked="${subIter.index == 0}">
                     <span class="ms-1" th:text="${optionValue.optionValueName}">한마리</span>
                 </div>
                 <div class="col text-end">
@@ -128,7 +129,8 @@
             </div>
             <div class="row my-2 px-2" th:each="categoryJoinValue, subIter : ${categoryJoinMap.getValue()}">
                 <div class="col">
-                    <input type="checkbox" name="c"><span class="ms-1" th:text="${categoryJoinValue.productName}">사이드,음료,소스</span>
+                     <input type="checkbox" name="productNumber" th:value="${categoryJoinValue.productNumber}">
+                    <span class="ms-1" th:text="${categoryJoinValue.productName}">사이드,음료,소스</span>
                 </div>
                 <div class="col text-end">
                     <span th:text="|+${#numbers.formatInteger(categoryJoinValue.productPrice, 0, 'COMMA')}원|">사이드옵션가격</span>

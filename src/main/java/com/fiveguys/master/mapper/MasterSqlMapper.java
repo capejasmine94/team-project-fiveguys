@@ -32,7 +32,21 @@ public interface MasterSqlMapper {
 
     public void updateOrderStatusDeliveryCompleted(SellerOrderDto sellerOrderDto);
 
+    public List<SellerReviewImageDto> selectReviewImage(int sellerReviewNumber);
 
+    public void insertMaterialCategory(String materialCategoryName);
+
+    public List<MaterialCategoryDto> selectMaterialCategory();
+
+    public void insertMaterial(MaterialDto materialDto);
+
+    public void insertMaterialImage(MaterialImageDto materialImageDto);
+
+    public MaterialDto selectRecentMaterial();
+
+    public MaterialImageDto selectRecentMaterialImage();
+
+    public SellerReviewDto selectSellerReviewInformByReviewNumber(int sellerReviewNumber);
 
 
 }

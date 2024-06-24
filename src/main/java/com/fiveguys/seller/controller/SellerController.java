@@ -1,8 +1,6 @@
 package com.fiveguys.seller.controller;
 
-import com.fiveguys.dto.SellerDto;
-import com.fiveguys.dto.SellerOrderDto;
-import com.fiveguys.dto.SellerReviewDto;
+import com.fiveguys.dto.*;
 import com.fiveguys.seller.service.SellerService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +8,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-import java.util.Map;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Controller
 @RequestMapping("seller")
@@ -39,7 +39,11 @@ public class SellerController {
 
 
     @RequestMapping("orderPage")
-    public String orderPage() {
+    public String orderPage(Model model) {
+
+        List<MaterialDto> materialInform = sellerService.selectMaterial();
+
+        model.addAttribute("materialInform", materialInform);
 
         return "seller/orderPage";
     }
@@ -102,36 +106,31 @@ public class SellerController {
     }
 
 
-    @RequestMapping("materialMenuPage1")
-    public String materialMenuPage1() {
-        return "/seller/materialMenuPage1";
-    }
+    @RequestMapping("materialMenuPage")
+    public String materialMenuPage(Model model) {
 
-    @RequestMapping("materialMenuPage2")
-    public String materialMenuPage2() {
-        return "/seller/materialMenuPage2";
-    }
+        List<MaterialCategoryDto> materialCategoryInform = sellerService.selectMaterialCategory();
 
-    @RequestMapping("materialMenuPage3")
-    public String materialMenuPage3() {
-        return "/seller/materialMenuPage3";
-    }
+        model.addAttribute("materialCategoryInform", materialCategoryInform);
 
-    @RequestMapping("materialMenuPage5")
-    public String materialMenuPage5() {
-        return "/seller/materialMenuPage5";
-    }
-
-    @RequestMapping("materialMenuPage6")
-    public String materialMenuPage6() {
-        return "/seller/materialMenuPage6";
+        return "/seller/materialMenuPage";
     }
 
 
-    @RequestMapping("materialMenuPage4")
-    public String materialMenuPage4() {
-        return "/seller/materialMenuPage4";
+    @RequestMapping("selectMaterialByCategoryNumber")
+    public String selectMaterialByCategoryNumber(@RequestParam("materialCategoryNumber") int materialCategoryNumber, Model model) {
+
+        List<Map<String, Object>> materialInform = sellerService.selectMaterialByCategoryNumber(materialCategoryNumber);
+        List<MaterialCategoryDto> materialCategoryInform = sellerService.selectMaterialCategory();
+
+
+        model.addAttribute("materialInform", materialInform);
+        model.addAttribute("materialCategoryInform", materialCategoryInform);
+
+        return "/seller/selectMaterialByCategoryNumber";
     }
+
+
 
 
     @RequestMapping("sellerReviewPage")
@@ -142,6 +141,12 @@ public class SellerController {
 
         return "/seller/sellerReviewPage";
     }
+
+
+
+
+
+
 
 
     @RequestMapping("myInformPage")
@@ -198,18 +203,63 @@ public class SellerController {
 
 
     @RequestMapping("insertSellerReview")
-    public String insertSellerReview(SellerReviewDto sellerReviewDto) {
+    public String insertSellerReview(SellerReviewDto sellerReviewDto, MultipartFile[] uploadFiles) {
 
-        sellerService.insertSellerReview(sellerReviewDto);
+        List<SellerReviewImageDto> sellerReviewImageDtoList = new ArrayList<>();
 
-        return "/seller/mainPage";
+        if (uploadFiles != null) {
+            for (MultipartFile multipartFile : uploadFiles) {
+                if (multipartFile.isEmpty()) {
+                    continue;
+                }
+
+                String rootPath = "/Users/fiveguys_image/";
+
+                //날짜 별 폴더 생성
+
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy//MM/dd/");
+                String todayPath = sdf.format(new Date());
+
+                File todayFolderForCreate = new File(rootPath + todayPath);
+
+                if (!todayFolderForCreate.exists()) {
+                    todayFolderForCreate.mkdirs();
+                }
+
+                String originalFilename = multipartFile.getOriginalFilename();
+
+                String uuid = UUID.randomUUID().toString();
+                long currentTime = System.currentTimeMillis();
+
+                String fileName = uuid + "_" + currentTime;
+
+                String ext = originalFilename.substring(originalFilename.lastIndexOf("."));
+                fileName += ext;
+
+                try{
+                    multipartFile.transferTo(new File(rootPath + todayPath + fileName));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+                SellerReviewImageDto sellerReviewImageDto = new SellerReviewImageDto();
+                sellerReviewImageDto.setOriginal_filename(originalFilename);
+                sellerReviewImageDto.setLocation(todayPath + fileName);
+
+                sellerReviewImageDtoList.add(sellerReviewImageDto);
+
+            }
+        }
+
+        sellerService.insertSellerReview(sellerReviewDto, sellerReviewImageDtoList);
+
+        return "redirect:/seller/reviewDetailPage?id=" + sellerService.selectRecentReviewNumber();
     }
 
 
 
     @RequestMapping("reviewDetailPage")
     public String reviewDetailPage(Model model, int id) {
-
 
         Map<String, Object> reviewInform = sellerService.selectSellerReview(id);
         model.addAttribute("reviewInform", reviewInform);

@@ -19,6 +19,9 @@ public interface SellerCommunitySqlMapper {
     public SellerCommunityDto selectSellerCommunityById(int sellerCommunityNumber);
     public List<SellerCommunityImageDetailDto> selectImageListById(int sellerCommunityNumber);
 
+    //최상단 인기게시물 노출
+   public List<SellerCommunityDto> selectSellerCommunityByPopularity(SellerCommunityPaginationDto sellerCommunityPaginationDto);
+
     //전체 게시물 개수 가져오기, 검색된 후의 게시물도 포함
     public Integer selectSellerCommunityCount(SellerCommunityPaginationDto sellerCommunityPaginationDto);
 
@@ -44,6 +47,10 @@ public interface SellerCommunitySqlMapper {
     public void deleteSellerCommunityLike(SellerCommunityLikeDto sellerCommunityLikeDto);
     public Integer checkIfSellerCommunityLikeExists(SellerCommunityLikeDto sellerCommunityLikeDto);
 
+    //게시글 내 페이지 이동
+    public SellerCommunityDto selectPreviousSellerCommunity(int sellerCommunityNumber);
+    public SellerCommunityDto selectNextSellerCommunity(int sellerCommunityNumber);
+
     //게시글 조회수 증가
     public void updateSellerCommunityVisitCount(int sellerCommunityNumber);
 
@@ -62,6 +69,7 @@ public interface SellerCommunitySqlMapper {
     public void updateSellerReplyLikeStatus(SellerCommunityReplyLikeStatusDto sellerCommunityReplyLikeStatusDto);
 
     //차트
+    public List<Map<String,Object>> getChartRegisterCountPerMonth();
     public List<Map<String,Object>> getChartRegisterCount();
 
     public List<Map<String,Object>> getPieRegisterCount();

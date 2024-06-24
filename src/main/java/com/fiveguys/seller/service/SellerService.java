@@ -145,8 +145,17 @@ public class SellerService {
     }
 
 
-    public void insertSellerReview(SellerReviewDto sellerReviewDto) {
+    public void insertSellerReview(SellerReviewDto sellerReviewDto, List<SellerReviewImageDto> reviewImageDtoList) {
         sellerSqlMapper.insertSellerReview(sellerReviewDto);
+
+        for (SellerReviewImageDto reviewImageDto : reviewImageDtoList) {
+
+            reviewImageDto.setSellerReviewNumber(sellerReviewDto.getSellerReviewNumber());
+
+
+            sellerSqlMapper.insertReviewImage(reviewImageDto);
+        }
+
     }
 
 
@@ -181,15 +190,26 @@ public class SellerService {
         SellerDto sellerDto = sellerSqlMapper.selectSellerInform(sellerOrderDto.getSellerNumber());
         MasterReplyDto masterReplyDto = sellerSqlMapper.selectMasterReply(sellerReviewDto.getSellerReviewNumber());
 
+        List<SellerReviewImageDto> sellerReviewImageDtoList = sellerSqlMapper.selectReviewImage(id);
+
 
         Map<String, Object> map = new HashMap<>();
         map.put("sellerDto", sellerDto);
         map.put("sellerOrderDto", sellerOrderDto);
         map.put("sellerReviewDto", sellerReviewDto);
         map.put("masterReplyDto", masterReplyDto);
+        map.put("sellerReviewImageDtoList", sellerReviewImageDtoList);
 
         return map;
     }
+
+
+    public int selectRecentReviewNumber() {
+        int recentReviewNumber = sellerSqlMapper.selectRecentReviewNumber();
+
+        return recentReviewNumber;
+    }
+
 
 
     public List<Map<String, Object>> selectMyReview(int sellerNumber) {
@@ -212,6 +232,41 @@ public class SellerService {
 
         return sellerReviewList;
 
+    }
+
+
+    public List<MaterialDto> selectMaterial() {
+        List<MaterialDto> materialDtoList = sellerSqlMapper.selectMaterial();
+
+        return materialDtoList;
+    }
+
+    public List<MaterialCategoryDto> selectMaterialCategory() {
+        List<MaterialCategoryDto> materialCategoryDtoList = sellerSqlMapper.selectMaterialCategory();
+        
+        return materialCategoryDtoList;
+    }
+
+
+    public List<Map<String, Object>> selectMaterialByCategoryNumber(int materialCategoryNumber) {
+
+        List<Map<String, Object>> materialInform = new ArrayList<>();
+
+        List<MaterialDto> materialDtoList = sellerSqlMapper.selectMaterialByCategoryNumber(materialCategoryNumber);
+
+        for (MaterialDto materialDto : materialDtoList) {
+            int materialNumber = materialDto.getMaterialNumber();
+            MaterialImageDto materialImageDto = sellerSqlMapper.selectMaterialImage(materialNumber);
+
+            Map<String, Object> map = new HashMap<>();
+
+            map.put("materialDto", materialDto);
+            map.put("materialImageDto", materialImageDto);
+
+            materialInform.add(map);
+
+        }
+        return materialInform;
     }
 
 

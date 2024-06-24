@@ -86,11 +86,20 @@
 
                     </div>
                     <!--차트 들어가는 부분-->
-                    <div class="row mt-2" style="height:350px;">
-                        <canvas id="myChart"></canvas>
+                    <div class="row mt-1" style="height:250px;">
+                        <div class="col">
+                            <canvas id="myLineChart" height="400"></canvas>
+                        </div>
                     </div>
-                    <div class="row mt-2" style="height:350px;">
-                        <canvas id="myPieChart"></canvas>
+                    <div class="row mt-2" >
+                        <div class="col">
+                            <canvas id="myChart" height="250"></canvas>
+                        </div>
+                    </div>
+                    <div class="row mt-2" style="height:250px;">
+                        <div class="col">
+                            <canvas id="myPieChart" height="250"></canvas>
+                        </div>
                     </div>
                 </div>
                 <!--커뮤니티게시판 삽입부분-->
@@ -253,6 +262,7 @@
                 <div class="row mt-2">
                     <div class="col">
                         <span class="fw-bold sellerCommentTitle"></span>
+                        <span class="badgeShow" style="font-size:0.5em; margin-top:5px;"></span>
                     </div>
                 </div>
                 <div class="row mt-2">
@@ -376,12 +386,25 @@
                             </form>
                         </div>
                     </div>
-                    <div class="row pt-5"></div>
                 </div>
                 <div class="col-2"></div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+            <div class="row border-top py-3">
+                <div class="col ms-2">
+                    <span id="previousArticle" style="cursor:pointer">
+                        <span><i class="bi bi-arrow-left-circle"></i></span>
+                        <span>이전글</span>
+                    </span>
+                </div>
+                <div class="col text-center" style="cursor:pointer">
+                    <span data-bs-dismiss="modal">목록으로</span>
+                </div>
+                <div class="col text-end me-2">
+                    <span id="nextArticle" style="cursor:pointer">
+                         <span>다음글</span>
+                        <span><i class="bi bi-arrow-right-circle"></i></span>
+                    </span>
+                </div>
             </div>
         </div>
     </div>
@@ -444,7 +467,7 @@
                     </div>
                 </form>
                 <!--대댓글 컨테이너-->
-                <div class="row">
+                <div class="row bg-body-secondary">
                     <div class="col replyContainer">
 
                     </div>
@@ -576,7 +599,9 @@
 
             </div>
             <div class="modal-footer">
+
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
             </div>
         </div>
     </div>

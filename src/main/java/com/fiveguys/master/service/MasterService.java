@@ -43,6 +43,7 @@ public class MasterService {
         SellerOrderDto sellerOrderDto = masterSqlMapper.selectSellerOrder(sellerReviewDto.getSellerOrderNumber());
         SellerDto sellerDto = masterSqlMapper.selectSeller(sellerOrderDto.getSellerNumber());
         MasterReplyDto masterReplyDto = masterSqlMapper.selectMasterReply(sellerReviewDto.getSellerReviewNumber());
+        List<SellerReviewImageDto> sellerReviewImageDtoList = masterSqlMapper.selectReviewImage(sellerReviewDto.getSellerReviewNumber());
 
         Map<String, Object> map = new HashMap<>();
 
@@ -50,6 +51,7 @@ public class MasterService {
         map.put("sellerOrderDto", sellerOrderDto);
         map.put("sellerReviewDto", sellerReviewDto);
         map.put("masterReplyDto", masterReplyDto);
+        map.put("sellerReviewImageDtoList", sellerReviewImageDtoList);
 
         return map;
     }
@@ -57,6 +59,13 @@ public class MasterService {
 
     public void insertMasterReply(MasterReplyDto masterReplyDto) {
         masterSqlMapper.insertMasterReply(masterReplyDto);
+
+    }
+
+    public SellerReviewDto selectSellerReviewInformByReviewNumber(int sellerReviewNumber) {
+        SellerReviewDto sellerReviewDto = masterSqlMapper.selectSellerReviewInformByReviewNumber(sellerReviewNumber);
+
+        return sellerReviewDto;
     }
 
 
@@ -145,6 +154,51 @@ public class MasterService {
 
         masterSqlMapper.updateOrderStatusDeliveryCompleted(sellerOrderDto);
     }
+
+
+    public void insertMaterialCategory(String materialCategoryName) {
+        masterSqlMapper.insertMaterialCategory(materialCategoryName);
+    }
+
+
+
+    public List<MaterialCategoryDto> selectMaterialCategory() {
+
+        List<MaterialCategoryDto> materialCategoryDto = masterSqlMapper.selectMaterialCategory();
+
+        return materialCategoryDto;
+    }
+
+
+    public void insertMaterial(MaterialDto materialDto, MaterialImageDto materialImageDto) {
+
+        masterSqlMapper.insertMaterial(materialDto);
+
+        int materialNumber = materialDto.getMaterialNumber();
+        materialImageDto.setMaterialNumber(materialNumber);
+
+        masterSqlMapper.insertMaterialImage(materialImageDto);
+    }
+
+
+
+    public void insertMaterialNoImage(MaterialDto materialDto) {
+        masterSqlMapper.insertMaterial(materialDto);
+    }
+
+
+    public Map<String, Object> selectRecentMaterial() {
+
+        Map<String, Object> map = new HashMap<>();
+        MaterialDto materialDto = masterSqlMapper.selectRecentMaterial();
+        MaterialImageDto materialImageDto = masterSqlMapper.selectRecentMaterialImage();
+
+        map.put("materialDto", materialDto);
+        map.put("materialImageDto", materialImageDto);
+        return map;
+    }
+
+
 
 
 

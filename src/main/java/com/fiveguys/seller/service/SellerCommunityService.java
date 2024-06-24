@@ -33,8 +33,35 @@ public class SellerCommunityService {
     public List<Map<String,Object>> selectSellerCommunityList(SellerCommunityPaginationDto sellerCommunityPaginationDto, int sellerNumber){
         List<Map<String,Object>> result = new ArrayList<>();
         List<SellerCommunityDto> sellerCommunityDtoList = sellerCommunitySqlMapper.selectSellerCommunityList(sellerCommunityPaginationDto);
+
+        System.out.println(sellerCommunitySqlMapper.selectSellerCommunityList(sellerCommunityPaginationDto));
         for (SellerCommunityDto sellerCommunityDto : sellerCommunityDtoList) {
             Map<String,Object> map = new HashMap<>();
+
+
+            SellerCommunityLikeDto sellerCommunityLikeDto = new SellerCommunityLikeDto();
+            sellerCommunityLikeDto.setSellerNumber(sellerNumber);
+            sellerCommunityLikeDto.setSellerCommunityNumber(sellerCommunityDto.getSellerCommunityNumber());
+
+            int textLength = sellerCommunityDto.getSellerCommunityContent().length();
+            map.put("checkIfSellerCommunityLikeExists",sellerCommunitySqlMapper.checkIfSellerCommunityLikeExists(sellerCommunityLikeDto));
+            map.put("textLength", textLength);
+            map.put("sellerCommunityDto", sellerCommunityDto);
+            map.put("selectTotalCommentReplyCount",sellerCommunitySqlMapper.selectTotalCommentCount(sellerCommunityDto.getSellerCommunityNumber())+sellerCommunitySqlMapper.selectTotalReplyCount(sellerCommunityDto.getSellerCommunityNumber()));
+            map.put("selectSellerCommunityLikeCount",sellerCommunitySqlMapper.selectSellerCommunityLikeCount(sellerCommunityDto.getSellerCommunityNumber()));
+            map.put("sellerName",sellerCommunitySqlMapper.selectSeller(sellerCommunityDto.getSellerCommunityNumber()));
+            result.add(map);
+        }
+        return result;
+    }
+
+    public List<Map<String,Object>> selectSellerCommunityByPopularity(SellerCommunityPaginationDto sellerCommunityPaginationDto, int sellerNumber){
+        List<Map<String,Object>> result = new ArrayList<>();
+        List<SellerCommunityDto> sellerCommunityDtoList = sellerCommunitySqlMapper.selectSellerCommunityByPopularity(sellerCommunityPaginationDto);
+
+        for (SellerCommunityDto sellerCommunityDto : sellerCommunityDtoList) {
+            Map<String,Object> map = new HashMap<>();
+
 
             SellerCommunityLikeDto sellerCommunityLikeDto = new SellerCommunityLikeDto();
             sellerCommunityLikeDto.setSellerNumber(sellerNumber);
@@ -219,6 +246,15 @@ public class SellerCommunityService {
         return sellerCommunitySqlMapper.checkIfSellerCommunityLikeExists(sellerCommunityLikeDto);
     }
 
+    //게시글 내에서 페이지 이동
+    public SellerCommunityDto selectPreviousSellerCommunity(int sellerCommunityNumber){
+        return sellerCommunitySqlMapper.selectPreviousSellerCommunity(sellerCommunityNumber);
+    }
+
+    public SellerCommunityDto selectNextSellerCommunity(int sellerCommunityNumber){
+        return sellerCommunitySqlMapper.selectNextSellerCommunity(sellerCommunityNumber);
+    }
+
     //게시글 조회수 증가
     public void updateSellerCommunityVisitCount(int sellerCommunityNumber){
         sellerCommunitySqlMapper.updateSellerCommunityVisitCount(sellerCommunityNumber);
@@ -246,6 +282,10 @@ public class SellerCommunityService {
     //대댓글 좋아요 싫어요 업데이트
     public void updateSellerReplyLikeStatus(SellerCommunityReplyLikeStatusDto sellerCommunityReplyLikeStatusDto){
         sellerCommunitySqlMapper.updateSellerReplyLikeStatus(sellerCommunityReplyLikeStatusDto);
+    }
+
+    public List<Map<String,Object>> getChartRegisterCountPerMonth(){
+        return sellerCommunitySqlMapper.getChartRegisterCountPerMonth();
     }
 
     public List<Map<String,Object>> getChartRegisterCount(){

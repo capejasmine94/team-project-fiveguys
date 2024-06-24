@@ -77,6 +77,9 @@
 
 
     <insert id="insertSellerReview">
+        <selectKey resultType="int" keyProperty="sellerReviewNumber" order="AFTER">
+            select max(sellerReviewNumber) from fc_sellerReview
+        </selectKey>
         insert into fc_sellerReview
             (sellerOrderNumber, sellerReviewContent)
         values(#{sellerOrderNumber}, #{sellerReviewContent});
@@ -115,6 +118,46 @@
         SELECT * from fc_masterReply
         where sellerReviewNumber = #{sellerReviewNumber}
     </select>
+
+    <insert id="insertReviewImage">
+        insert into fc_sellerReviewImage(sellerReviewNumber, location, original_filename)
+        values (#{sellerReviewNumber}, #{location}, #{original_filename})
+    </insert>
+
+
+    <select id="selectReviewImage">
+        select * from fc_sellerReviewImage
+        where sellerReviewNumber = #{sellerReviewNumber}
+    </select>
+
+
+    <select id="selectMaterial">
+        select * from fc_material;
+    </select>
+
+    <select id="selectMaterialCategory">
+        select * from fc_materialCategory;
+    </select>
+
+
+    <select id="selectMaterialByCategoryNumber">
+        select * from fc_material
+        where materialCategoryNumber = #{materialCategoryNumber}
+    </select>
+
+
+    <select id="selectMaterialImage">
+        select * from fc_materialImage
+        where materialNumber = #{materialNumber}
+    </select>
+
+
+    <select id="selectRecentReviewNumber">
+        select max(sellerReviewNumber) from fc_sellerReview;
+    </select>
+
+
+
 
 
 

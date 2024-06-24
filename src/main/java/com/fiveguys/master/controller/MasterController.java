@@ -1,17 +1,22 @@
 package com.fiveguys.master.controller;
 
-import com.fiveguys.dto.MasterReplyDto;
-import com.fiveguys.dto.SellerOrderDto;
+import com.fiveguys.dto.*;
 import com.fiveguys.master.service.MasterService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("master")
@@ -23,6 +28,15 @@ public class MasterController {
     @RequestMapping("mainPage")
     public String mainPage() {
         return "/master/mainPage";
+    }
+
+
+    @RequestMapping("logout")
+    public String logout(HttpSession session) {
+
+        session.invalidate();
+
+        return "redirect:/login/masterLogin";
     }
 
 
@@ -50,7 +64,9 @@ public class MasterController {
     public String insertMasterReply(MasterReplyDto masterReplyDto) {
         masterService.insertMasterReply(masterReplyDto);
 
-        return "/master/mainPage";
+        SellerReviewDto sellerReviewDto = masterService.selectSellerReviewInformByReviewNumber(masterReplyDto.getSellerReviewNumber());
+
+        return "redirect:/master/reviewDetailPage?id=" + sellerReviewDto.getSellerOrderNumber();
     }
 
 
@@ -85,7 +101,7 @@ public class MasterController {
 
         masterService.updateOrderStatusProcessingShipment(id);
 
-        return "/master/mainPage";
+        return "redirect:/master/orderDetailPage?id=" + id;
     }
 
     @RequestMapping("updateOrderStatusDelivery")
@@ -93,7 +109,7 @@ public class MasterController {
 
         masterService.updateOrderStatusDelivery(id);
 
-        return "/master/mainPage";
+        return "redirect:/master/orderDetailPage?id=" + id;
     }
 
 
@@ -102,7 +118,103 @@ public class MasterController {
 
         masterService.updateOrderStatusDeliveryCompleted(id);
 
-        return "/master/mainPage";
+        return "redirect:/master/orderDetailPage?id=" + id;
+    }
+
+
+    @RequestMapping("materialRegisterPage")
+    public String materialRegisterPage(Model model) {
+
+        List<MaterialCategoryDto> materialCategoryInform = masterService.selectMaterialCategory();
+
+        model.addAttribute("materialCategoryInform", materialCategoryInform);
+
+        return "/master/materialRegisterPage";
+    }
+
+
+
+
+    @RequestMapping("materialRegisterSuccessPage")
+    public String materialRegisterSuccessPage(Model model) {
+
+        Map<String, Object> materialInform = masterService.selectRecentMaterial();
+        model.addAttribute("materialInform", materialInform);
+
+        return "/master/materialRegisterSuccessPage";
+    }
+
+
+
+
+
+
+    @RequestMapping("materialCategoryRegisterPage")
+    public String materialCategoryRegisterPage() {
+
+        return "/master/materialCategoryRegisterPage";
+    }
+
+
+
+    @RequestMapping("insertMaterialCategory")
+    public String insertMaterialCategory(String materialCategoryName) {
+
+        masterService.insertMaterialCategory(materialCategoryName);
+
+        return "redirect:/master/materialCategoryRegisterPage";
+    }
+
+
+    @RequestMapping("insertMaterial")
+    public String insertMaterial(MaterialDto materialDto, MultipartFile uploadFile) {
+
+
+        if (uploadFile != null) {
+            if(uploadFile.isEmpty()) {
+                masterService.insertMaterialNoImage(materialDto);
+            }
+
+            String rootPath = "/Users/fiveguys_image/";
+
+            //날짜별 폴더생성
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy//MM/dd/");
+            String todayPath = sdf.format(new Date());
+
+            File todayFolderForCreate = new File(rootPath + todayPath);
+
+            if (!todayFolderForCreate.exists()) {
+                todayFolderForCreate.mkdirs();
+            }
+
+            String originalFilename = uploadFile.getOriginalFilename();
+
+            String uuid = UUID.randomUUID().toString();
+            long currentTime = System.currentTimeMillis();
+
+            String filename = uuid + "_" + currentTime;
+
+            String ext = originalFilename.substring(originalFilename.lastIndexOf("."));
+            filename += ext;
+
+            try{
+                uploadFile.transferTo(new File(rootPath + todayPath + filename));
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+            MaterialImageDto materialImageDto = new MaterialImageDto();
+            materialImageDto.setOriginal_filename(originalFilename);
+            materialImageDto.setLocation(todayPath + filename);
+
+            masterService.insertMaterial(materialDto, materialImageDto);
+
+        }
+
+
+
+
+        return "redirect:/master/materialRegisterSuccessPage";
     }
 
 

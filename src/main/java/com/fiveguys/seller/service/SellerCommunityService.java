@@ -295,4 +295,30 @@ public class SellerCommunityService {
     public List<Map<String,Object>> getPieRegisterCount(){
         return sellerCommunitySqlMapper.getPieRegisterCount();
     }
+
+
+    //게시글 수정,삭제
+    public void updateSellerCommunity(SellerCommunityDto sellerCommunityDto){
+        sellerCommunitySqlMapper.updateSellerCommunity(sellerCommunityDto);
+    }
+    public void deleteSellerCommunity(int sellerCommunityNumber){
+        sellerCommunitySqlMapper.deleteSellerCommunity(sellerCommunityNumber);
+    }
+    public void deleteSellerCommunityDetailImage(int sellerCommunityNumber){
+        sellerCommunitySqlMapper.deleteSellerCommunityDetailImage(sellerCommunityNumber);
+    }
+
+    //댓글 수정 삭제
+    public void updateSellerCommunityComment(SellerCommunityCommentDto sellerCommunityCommentDto){
+        sellerCommunitySqlMapper.updateSellerCommunityComment(sellerCommunityCommentDto);
+    }
+    public void deleteSellerCommunityComment(int sellerCommunityCommentNumber){
+        sellerCommunitySqlMapper.deleteSellerCommunityComment(sellerCommunityCommentNumber);
+    }
+    public void updateSellerCommunityReply(SellerCommunityReplyDto sellerCommunityReplyDto){
+        sellerCommunitySqlMapper.updateSellerCommunityReply(sellerCommunityReplyDto);
+    }
+    public void deleteSellerCommunityReply(int sellerCommunityReplyNumber){
+        sellerCommunitySqlMapper.deleteSellerCommunityReply(sellerCommunityReplyNumber);
+    }
 }

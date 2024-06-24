@@ -382,4 +382,45 @@
         ORDER BY counts DESC
             LIMIT 3;
     </select>
+
+    <!--게시글 수정,삭제-->
+    <update id="updateSellerCommunity">
+        update fc_sellerCommunity
+        set
+            sellerCommunityImage=#{sellerCommunityImage},
+            sellerCommunityTitle =#{sellerCommunityTitle},
+            sellerCommunityContent=#{sellerCommunityContent}
+        where sellerCommunityNumber=#{sellerCommunityNumber}
+    </update>
+    <delete id="deleteSellerCommunity">
+        delete from fc_sellerCommunity
+        where sellerCommunityNumber=#{sellerCommunityNumber}
+    </delete>
+    <delete id="deleteSellerCommunityDetailImage">
+        delete from fc_sellerCommunityImageDetail
+        where sellerCommunityNumber=#{sellerCommunityNumber}
+    </delete>
+
+
+    <!--댓글 수정,삭제-->
+    <update id="updateSellerCommunityComment">
+        update fc_sellerCommunityComment
+        set
+            sellerCommunityCommentContent=#{sellerCommunityCommentContent}
+        where sellerCommunityCommentNumber=#{sellerCommunityCommentNumber}
+    </update>
+    <delete id="deleteSellerCommunityComment">
+        delete from fc_sellerCommunityComment
+        where sellerCommunityCommentNumber=#{sellerCommunityCommentNumber}
+    </delete>
+    <!--대댓글 수정,삭제-->
+    <update id="updateSellerCommunityReply">
+        update fc_sellerCommunityReply
+        set sellerCommunityReplyContent=#{sellerCommunityReplyContent}
+        where sellerCommunityReplyNumber=#{sellerCommunityReplyNumber}
+    </update>
+    <delete id="deleteSellerCommunityReply">
+        delete from fc_sellerCommunityReply
+        where sellerCommunityReplyNumber=#{sellerCommunityReplyNumber}
+    </delete>
 </mapper>

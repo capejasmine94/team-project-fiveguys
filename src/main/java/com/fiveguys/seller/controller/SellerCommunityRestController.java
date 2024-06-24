@@ -345,4 +345,56 @@ public class SellerCommunityRestController {
         response.put("getPieRegisterCount",sellerCommunityService.getPieRegisterCount());
         return response;
     }
+
+    //게시글 수정 삭제
+
+    @RequestMapping("updateSellerCommunityDetail")
+    public Map<String,Object> updateSellerCommunityDetail(SellerCommunityDto sellerCommunityDto, SellerCommunityImageDetailDto sellerCommunityImageDetailDto){
+        Map<String,Object> response = new HashMap<>();
+        sellerCommunityService.updateSellerCommunity(sellerCommunityDto);
+        sellerCommunityService.deleteSellerCommunity(sellerCommunityDto.getSellerCommunityNumber());
+        response.put("success", true);
+        return response;
+    }
+    @RequestMapping("deleteSellerCommunityDetail")
+    public Map<String,Object> deleteSellerCommunityDetail(int sellerCommunityNumber){
+        Map<String,Object> response = new HashMap<>();
+        sellerCommunityService.deleteSellerCommunity(sellerCommunityNumber);
+        sellerCommunityService.deleteSellerCommunityDetailImage(sellerCommunityNumber);
+        response.put("success", true);
+        return response;
+    }
+
+    @RequestMapping("updateSellerCommunityComment")
+    public Map<String,Object> updateSellerCommunityComment(SellerCommunityCommentDto sellerCommunityCommentDto){
+        Map<String,Object> response = new HashMap<>();
+        sellerCommunityService.updateSellerCommunityComment(sellerCommunityCommentDto);
+        response.put("success", true);
+        return response;
+    }
+
+    @RequestMapping("deleteSellerCommunityComment")
+    public Map<String,Object> deleteSellerCommunityComment(int sellerCommunityCommentNumber){
+        Map<String,Object> response = new HashMap<>();
+        sellerCommunityService.deleteSellerCommunityComment(sellerCommunityCommentNumber);
+        response.put("success", true);
+        return response;
+    }
+
+    @RequestMapping("updateSellerCommunityReply")
+    public Map<String,Object> updateSellerCommunityReply(SellerCommunityReplyDto sellerCommunityReplyDto){
+        Map<String,Object> response = new HashMap<>();
+        sellerCommunityService.updateSellerCommunityReply(sellerCommunityReplyDto);
+        response.put("success", true);
+        return response;
+    }
+
+    @RequestMapping("deleteSellerCommunityReply")
+    public Map<String,Object> deleteSellerCommunityReply(int sellerCommunityReplyNumber){
+        Map<String,Object> response = new HashMap<>();
+        sellerCommunityService.deleteSellerCommunityReply(sellerCommunityReplyNumber);
+        response.put("success", true);
+        return response;
+    }
+
 }

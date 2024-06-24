@@ -73,4 +73,15 @@ public interface SellerCommunitySqlMapper {
     public List<Map<String,Object>> getChartRegisterCount();
 
     public List<Map<String,Object>> getPieRegisterCount();
+
+    //게시글 수정,삭제
+    public void updateSellerCommunity(SellerCommunityDto sellerCommunityDto);
+    public void deleteSellerCommunity(int sellerCommunityNumber);
+    public void deleteSellerCommunityDetailImage(int sellerCommunityNumber);
+
+    //댓글 수정 삭제
+    public void updateSellerCommunityComment(SellerCommunityCommentDto sellerCommunityCommentDto);
+    public void deleteSellerCommunityComment(int sellerCommunityCommentNumber);
+    public void updateSellerCommunityReply(SellerCommunityReplyDto sellerCommunityReplyDto);
+    public void deleteSellerCommunityReply(int sellerCommunityReplyNumber);
 }

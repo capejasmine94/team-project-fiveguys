@@ -284,7 +284,7 @@ public class SellerController {
 
         sellerService.deleteReview(sellerReviewNumber);
 
-        return "/seller/sellerReviewPage";
+        return "redirect:/seller/sellerReviewPage";
     }
 
 

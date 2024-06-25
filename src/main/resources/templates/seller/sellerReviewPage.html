@@ -110,14 +110,14 @@
                 <div class="col-10">
 
                     <div class="row pt-2">
-                        <div class="col-10 fs-3 fw-bold text-center">사장님 리뷰</div>
-
+                        <div class="col-10 fs-3 fw-bold text-center">&lt;전체 리뷰&gt;</div>
                         <a href="/seller/reviewChoicePage" class="col-2 btn btn-danger">리뷰 작성</a>
                     </div>
 
+                    <div class="row pt-2"></div>
 
 
-                    <table class="table row-12 pt-3">
+                    <table class="table row-12">
                         <thead>
                         <tr>
                             <th class="text-center" scope="col">번호</th>
@@ -134,7 +134,7 @@
                             <td>
                                 <a th:href="@{/seller/reviewDetailPage(id=${reviewInform.sellerReviewDto.sellerReviewNumber})}"
                                    th:text="${#strings.length(reviewInform.sellerReviewDto.sellerReviewContent) > 7 ? #strings.substring(reviewInform.sellerReviewDto.sellerReviewContent, 0, 7) + '...' : reviewInform.sellerReviewDto.sellerReviewContent}"
-                                    class="text-decoration-none fw-bold text-black">
+                                    class="fw-bold text-black">
                                 </a>
                             </td>
                             <td th:text="${#dates.format(reviewInform.sellerReviewDto.sellerReviewCreatedAt, 'yyyy-MM-dd')}"></td>

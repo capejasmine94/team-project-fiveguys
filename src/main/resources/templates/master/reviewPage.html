@@ -20,8 +20,8 @@
         <div class="col-10">
 
             <div class="row pt-4">
-                <span class="col px-0 text-end fw-bold fs-4">
-                    <span th:text="${session.masterDto.masterNickName}"></span>
+                <span class="col px-0 text-end">
+                    <span class="fw-bold fs-4" th:text="${session.masterDto.masterNickName}"></span>
                     <span class="fs-5">님으로 접속 중</span>
                     <a href="/master/logout" class="col-2 pt-1 bi bi-box-arrow-right text-decoration-none text-secondary fst-normal fs-5">Logout</a>
                 </span>
@@ -31,7 +31,7 @@
 
             <div class="row pt-3">
 
-                <nav class="navbar navbar-expand-lg bg-danger">
+                <nav class="navbar navbar-expand-lg" style="background-color: #B41E30;">
                     <div class="container-fluid">
                         <a class="navbar-brand fs-2 text-white fw-bold text-center col-2" href="/master/mainPage">F.Guys</a>
                         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,30 +54,42 @@
 
             <div class="row">
 
-                <table class="table table-danger">
-                    <thead>
+                <table class="table">
+                    <thead class="table-danger">
                     <tr>
                         <th class="text-center" scope="col">#</th>
-                        <th class="text-end" scope="col">지점명</th>
+                        <th class="text-center" scope="col">지점명</th>
                         <th class="text-center" scope="col">내용</th>
-                        <th class="text-start" scope="col">작성일</th>
+                        <th class="text-center" scope="col">작성일</th>
+                        <th class="text-center" scope="col">답변 여부</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="sellerReviewList : ${sellerReviewList}">
                         <td class="text-center" th:text="${sellerReviewList.sellerReviewDto.sellerReviewNumber}"></td>
-                        <td class="text-end" th:text="${sellerReviewList.sellerDto.sellerName}"></td>
+                        <td class="text-center" th:text="${sellerReviewList.sellerDto.sellerName}"></td>
 
 
                         <td class="text-center text-black">
                             <a th:href="@{/master/reviewDetailPage(id=${sellerReviewList.sellerReviewDto.sellerOrderNumber})}"
                                th:text="${#strings.length(sellerReviewList.sellerReviewDto.sellerReviewContent) > 7 ? #strings.substring(sellerReviewList.sellerReviewDto.sellerReviewContent, 0, 7) + '...' : sellerReviewList.sellerReviewDto.sellerReviewContent}"
-                               class="text-decoration-none fw-bold text-black">
+                               class="fw-bold text-black">
                             </a>
                         </td>
 
 
-                        <td class="text-start" th:text="${#dates.format(sellerReviewList.sellerReviewDto.sellerReviewCreatedAt, 'yyyy-MM-dd')}"></td>
+                        <td class="text-center" th:text="${#dates.format(sellerReviewList.sellerReviewDto.sellerReviewCreatedAt, 'yyyy-MM-dd')}"></td>
+
+
+                        <td class="text-center" th:if="${sellerReviewList.masterReplyDto == null}">
+                            <a class="btn btn-danger btn-sm" th:href="@{/master/reviewDetailPage(id=${sellerReviewList.sellerReviewDto.sellerOrderNumber})}">답변 전</a>
+                        </td>
+
+                        <td class="text-center" th:if="${sellerReviewList.masterReplyDto != null}">
+                            <a class="btn btn-dark btn-sm" th:href="@{/master/reviewDetailPage(id=${sellerReviewList.sellerReviewDto.sellerOrderNumber})}">답변완료</a>
+                        </td>
+
+
                     </tr>
                     </tbody>
                 </table>

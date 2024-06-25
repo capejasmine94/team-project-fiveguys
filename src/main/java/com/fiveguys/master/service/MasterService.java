@@ -25,10 +25,12 @@ public class MasterService {
 
             SellerOrderDto sellerOrderDto = masterSqlMapper.selectSellerOrder(sellerReviewDto.getSellerOrderNumber());
             SellerDto sellerDto = masterSqlMapper.selectSeller(sellerOrderDto.getSellerNumber());
+            MasterReplyDto masterReplyDto = masterSqlMapper.selectMasterReplyByReviewNumber(sellerReviewDto.getSellerReviewNumber());
 
             map.put("sellerDto", sellerDto);
             map.put("sellerOrderDto", sellerOrderDto);
             map.put("sellerReviewDto", sellerReviewDto);
+            map.put("masterReplyDto", masterReplyDto);
 
             allSellerReview.add(map);
         }
@@ -61,6 +63,17 @@ public class MasterService {
         masterSqlMapper.insertMasterReply(masterReplyDto);
 
     }
+
+
+    public void deleteReply(int masterReplyNumber) {
+        masterSqlMapper.deleteReply(masterReplyNumber);
+    }
+
+    public void updateReply(MasterReplyDto masterReplyDto) {
+        masterSqlMapper.updateReply(masterReplyDto);
+    }
+
+
 
     public SellerReviewDto selectSellerReviewInformByReviewNumber(int sellerReviewNumber) {
         SellerReviewDto sellerReviewDto = masterSqlMapper.selectSellerReviewInformByReviewNumber(sellerReviewNumber);

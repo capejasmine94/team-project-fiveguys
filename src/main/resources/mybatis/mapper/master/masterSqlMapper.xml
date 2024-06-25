@@ -144,8 +144,31 @@
 
     <select id="selectRecentSellerOrder">
         select * from fc_sellerOrder
-        order by sellerOrderNumber desc limit 5;
+        group by sellerOrderCreatedAt
+        order by sellerOrderNumber
+        desc limit 5;
     </select>
+
+
+    <delete id="deleteReply">
+        delete from fc_masterReply
+        where masterReplyNumber = #{masterReplyNumber}
+    </delete>
+
+
+
+    <update id="updateReply">
+        UPDATE fc_masterReply
+        SET masterReplyContent = #{masterReplyContent}
+        WHERE masterReplyNumber = #{masterReplyNumber}
+    </update>
+
+
+    <select id="selectMasterReplyByReviewNumber">
+        SELECT * from fc_masterReply
+        where sellerReviewNumber = #{sellerReviewNumber}
+    </select>
+
 
 
 

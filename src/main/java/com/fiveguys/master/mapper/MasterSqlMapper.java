@@ -52,5 +52,11 @@ public interface MasterSqlMapper {
 
     public List<SellerOrderDto> selectRecentSellerOrder();
 
+    public void deleteReply(int masterReplyNumber);
+
+    public void updateReply(MasterReplyDto masterReplyDto);
+
+    public MasterReplyDto selectMasterReplyByReviewNumber(int sellerReviewNumber);
+
 
 }

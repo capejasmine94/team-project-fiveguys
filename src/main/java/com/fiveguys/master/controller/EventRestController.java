@@ -126,10 +126,12 @@ public class EventRestController {
     @RequestMapping("updateMasterReply")
     // 하나의 데이터 객체를 받을 때 잘 작동되는 것 같음
     public Map<String,Object> updateMasterReply(@RequestBody EventCommentDto eventCommentDto) {
-        System.out.println();
         Map<String,Object> map = new HashMap<>();
         eventService.updateEventCommentMasterReply(eventCommentDto);
-        map.put("eventNumber", eventCommentDto.getEventNumber());
+        int eventBoardNumber =  eventService.selectEventBoardNumerByEventCommentNumber(eventCommentDto.getEventCommentNumber());
+
+        System.out.println(eventBoardNumber+"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        map.put("eventNumber", eventBoardNumber);
         return map;
 
     }
@@ -137,6 +139,7 @@ public class EventRestController {
     public Map<String,Object> insertEventProcess(HttpSession session, EventBoardDto eventBoardDto, 
     @RequestParam("uploadFile") MultipartFile uploadFile, @RequestParam("uploadFiles") MultipartFile[] uploadFiles){
 
+        System.out.println("레스트 컨트롤러 몇번");
         Map<String,Object> map = new HashMap<>();
         String mainImage = mainImageRemake(uploadFile);
         eventBoardDto.setEventMainImage(mainImage);
@@ -244,9 +247,7 @@ public class EventRestController {
     public Map<String,Object> updateEventProcess(EventBoardDto eventBoardDto, @RequestParam("uploadFile")MultipartFile uploadFile , @RequestParam("uploadFiles")MultipartFile[] uploadFiles){
         Map<String,Object> map = new HashMap<>();
 
-        System.out.println(eventBoardDto.getEventNumber()+"##################");
-              System.out.println(eventService.eventBoardDtoAndDetail(eventBoardDto.getEventNumber()) + "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-        
+       
         String mainImage = mainImageRemake(uploadFile);
         eventBoardDto.setEventMainImage(mainImage);
 
@@ -265,5 +266,7 @@ public class EventRestController {
         map.put("success", "success");
         return map;
     }
+
+
     
 }

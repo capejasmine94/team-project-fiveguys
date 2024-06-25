@@ -76,6 +76,34 @@ public class MasterController {
     }
 
 
+    @RequestMapping("deleteReply")
+    public String deleteReply(int masterReplyNumber, int sellerOrderNumber) {
+        masterService.deleteReply(masterReplyNumber);
+
+        return "redirect:/master/reviewDetailPage?id=" + sellerOrderNumber;
+    }
+
+
+    @RequestMapping("updateReply")
+    public String updateReply(MasterReplyDto masterReplyDto, int sellerOrderNumber) {
+
+        masterService.updateReply(masterReplyDto);
+
+        return "redirect:/master/reviewDetailPage?id=" + sellerOrderNumber;
+    }
+
+
+
+    @RequestMapping("replyUpdatePage")
+    public String replyUpdatePage(Model model, int id) {
+
+        Map<String, Object> reviewInform =  masterService.selectSellerReview(id);
+        model.addAttribute("reviewInform", reviewInform);
+
+        return "/master/replyUpdatePage";
+    }
+
+
     @RequestMapping("orderPage")
     public String orderPage(Model model, int id) {
         List<Map<String, Object>> sellerOrderInform = masterService.selectAllSellerOrder(id);

@@ -144,11 +144,11 @@
 
                 <div class="col-10">
                     <div class="row pt-3">
-                        <div class="col text-danger fw-bold">&lt;최근 주문 내역&gt;</div>
+                        <div class="col-3 text-danger fw-bold">&lt;최근 주문 내역&gt;</div>
                         <a href="/seller/orderCheckPage" class="col text-end text-secondary text-decoration-none" style="font-size: 0.9rem">+더보기</a>
                     </div>
-                    <div class="row">
-                        <table class="table table table-danger">
+                    <div class="row pt-2">
+                        <table class="table">
                             <thead>
                             <tr>
                                 <th class="text-center" scope="col">배송지</th>
@@ -174,10 +174,55 @@
                 </div>
             </div>
 
+
+            <div class="row">
+                <div class="col-2"></div>
+
+                <div class="col-10">
+                    <div class="row pt-3">
+                        <div class="col-3 text-danger fw-bold">&lt;최근 커뮤니티 게시글&gt;</div>
+                        <a href="/seller/sellerCommunity" class="col text-end text-secondary text-decoration-none" style="font-size: 0.9rem">+더보기</a>
+                    </div>
+                    <div class="row pt-2">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th class="text-center" scope="col">작성자</th>
+                                <th class="text-center" scope="col">제목</th>
+                                <th scope="col">작성일</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="sellerOrderList : ${sellerOrderList}">
+
+                                <td class="text-center" th:text="${sellerOrderList.sellerDto.sellerName}"></td>
+                                <td class="text-center">
+                                    <a th:href="@{/seller/orderDetailCheckPage(id=${sellerOrderList.sellerOrderDto.sellerOrderNumber})}"
+                                       th:text="${#dates.format(sellerOrderList.sellerOrderDto.sellerOrderCreatedAt, 'yyyy-MM-dd')}"
+                                       class="text-decoration-none fw-bold text-black">
+                                    </a>
+                                </td>
+                                <td th:text="${sellerOrderList.sellerOrderDto.sellerOrderStatus}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+
+
             <div class="row pt-5"></div>
 
 
         </div>
+
+
+
+
+
+
 
         <div class="col-2"></div>
 

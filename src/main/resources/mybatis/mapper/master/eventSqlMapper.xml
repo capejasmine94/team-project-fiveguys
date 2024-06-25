@@ -53,6 +53,7 @@
     <select id="selectEventBoardComet" resultType="EventCommentDto">
         select * from fc_eventComment
         where eventNumber = #{eventNumber}
+        order By eventCommentNumber desc;
     </select>
 
     <select id="selectCustomerDto" resultType="CustomerDto">
@@ -157,5 +158,11 @@
         delete from fc_winner
         where winnerNumber = #{winnerNumber}
     </delete>
+
+    <select id="selectEventBoardNumerByEventCommentNumber" resultType="int">
+        select eventNumber from fc_eventComment
+        where eventCommentNumber = #{eventCommentNumber}
+    </select>
+
 
 </mapper>

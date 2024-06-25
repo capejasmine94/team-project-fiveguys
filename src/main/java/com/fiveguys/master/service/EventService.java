@@ -54,6 +54,7 @@ public class EventService {
         List<Map<String,Object>> selectEventBoardCometInfoList = new ArrayList<>();
         List<EventCommentDto> selectEventCommentList = eventSqlMapper.selectEventBoardComet(eventNumber);
         for(EventCommentDto eventCommentDto: selectEventCommentList){
+           
             Map<String,Object> map = new HashMap<>();
             CustomerDto customerDto = eventSqlMapper.selectCustomerDto(eventCommentDto.getCustomerNumber());
             map.put("customerDto",customerDto);
@@ -187,4 +188,10 @@ public class EventService {
 
         return eventBoardInfoList;
     }
+
+    public int selectEventBoardNumerByEventCommentNumber(int eventCommentNumber) {
+        return eventSqlMapper.selectEventBoardNumerByEventCommentNumber(eventCommentNumber);
+    }
+
+   
 }

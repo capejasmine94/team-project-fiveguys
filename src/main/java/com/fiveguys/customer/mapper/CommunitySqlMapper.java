@@ -2,8 +2,11 @@ package com.fiveguys.customer.mapper;
 
 import com.fiveguys.dto.*;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface CommunitySqlMapper {
@@ -27,7 +30,7 @@ public interface CommunitySqlMapper {
 
     //댓글
     public void insertCommunityComment(CommunityCommentDto communityCommentDto);
-    public List<CommunityCommentDto> selectCommunityCommentList(int communityNumber);
+    public List<CommunityCommentDto> selectCommunityCommentList(@Param("communityNumber") int communityNumber, @Param("customerNumber") int customerNumber);
     public int selectCountCommentNumber(int commentNumber);
     public CommentLikeStatusDto checkSelectCommunityCommentExists(CommentLikeStatusDto commentLikeStatusDto);
 

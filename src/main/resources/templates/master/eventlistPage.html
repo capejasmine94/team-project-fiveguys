@@ -22,9 +22,6 @@
 
                 const endEventCount = document.getElementById("endEventCount");
                 endEventCount.textContent = response.selectEndEvent;
-
-                const winnerEventCount = document.getElementById("winnerEventCount");
-                winnerEventCount.textContent = response.selectWinnerEventCount;
                 
                 const runningEventLocation = document.getElementById("runningEventLocation");
                 runningEventLocation.innerHTML="";
@@ -44,7 +41,6 @@
                             showDetailPage(eventNumber);
                         };
                     })(runningEvent.eventBoardDto.eventNumber);
-
 
                     const updateEventpage = newRunningEventTemplete.querySelector(".updateEventpage");
                     updateEventpage.onclick = (function(eventNumber) {
@@ -109,26 +105,6 @@
                     endEventLocation.appendChild(newEndEventTemplete);
                 }
 
-
-                const winnerLocation = document.getElementById("winnerLocation");
-                winnerLocation.innerHTML="";
-                const winnerTempleteLocation = document.getElementById("winnerTempleteLocation");
-                const winnerTemplete = winnerTempleteLocation.querySelector(".winnerTemplete")
-                
-                for(winnerEvent of response.eventWinnerList){
-                    const newWinnerTemplete = winnerTemplete.cloneNode(true);
-                    const winnerNumber = newWinnerTemplete.querySelector(".winnerNumber");
-                    const winnerTitle = newWinnerTemplete.querySelector(".winnerTitle");
-                    
-                    winnerTitle.style.cursor = 'pointer';
-                    winnerTitle.onclick =() =>{
-                        showWinnerDetailPage(winnerEvent.winnerNumber);
-                    }
-                    winnerNumber.textContent = winnerEvent.winnerNumber;
-                    winnerTitle.textContent = winnerEvent.winnerTitle;  
-                    winnerLocation.appendChild(newWinnerTemplete);
-
-                }
             })
         }
 
@@ -151,7 +127,6 @@
                 eventVisitCount.textContent = response.eventBoardDtoAndDetail.eventBoardDto.eventVisitCount;
 
                 
-                console.log(response.eventBoardDtoAndDetail.eventBoardDto.eventStartDay);
                 startDaylocation.textContent = response.eventBoardDtoAndDetail.eventBoardDto.eventStartDay;
                 endDaylocation.textContent = response.eventBoardDtoAndDetail.eventBoardDto.eventEndDay;
                 
@@ -177,11 +152,22 @@
                     const customerName = newCommentListTemplete.querySelector(".customerName");
                     customerName.textContent = comments.customerDto.customerName;
 
+                    const commentNumber = newCommentListTemplete.querySelector(".commentNumber");
+                    commentNumber.textContent = comments.eventCommentDto.eventCommentNumber;
+
                     const eventCommentContent = newCommentListTemplete.querySelector(".eventCommentContent");
                     eventCommentContent.textContent = comments.eventCommentDto.eventCommentContent;
 
                     const eventCommentCreatedAt = newCommentListTemplete.querySelector(".eventCommentCreatedAt");
-                    eventCommentCreatedAt.textContent = comments.eventCommentDto.eventCommentCreatedAt;
+                    const commentCreatedAt = new Date(comments.eventCommentDto.eventCommentCreatedAt);
+                    const year = commentCreatedAt.getFullYear();
+                    const month = String(commentCreatedAt.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
+                    const day = String(commentCreatedAt.getDate()).padStart(2, '0');
+
+                    const formattedDate = `${year}-${month}-${day}`;
+
+                    eventCommentCreatedAt.textContent = formattedDate;
+                    
 
                     const masterReplyLocation = newCommentListTemplete.querySelector(".masterReplyLocation");
 
@@ -195,35 +181,46 @@
 
                         const writebutton = newYesMasterNoReplyTemplete.querySelector(".writebutton");
                         const masterReply = newYesMasterNoReplyTemplete.querySelector(".masterReply");
-
-                        writebutton.onclick =(function(masterReply,ceventCommentNumber,eventNumber){
-                            return function(){
-                                writeprocess(masterReply,ceventCommentNumber,eventNumber);
-                            }
-                        })(masterReply.value,comments.eventCommentDto.eventCommentNumber,eventNumber);
-
                         
+
+                        console.log("masterReply.value"+masterReply.value);
+                        console.log("eventCommentNumber"+comments.eventCommentDto.eventCommentNumber);
+                        console.log("eventNumber"+eventNumber);
+                        writebutton.onclick = (function(masterReplyElement, ceventCommentNumber, eventNumber) {
+                            return function() {
+                                writeprocess(masterReplyElement.value, ceventCommentNumber, eventNumber);
+                            }
+                        })(masterReply, comments.eventCommentDto.eventCommentNumber, eventNumber);
 
                         masterReplyLocation.appendChild(newYesMasterNoReplyTemplete);
 
                     }
 
                     // 마스터 로그인 실패 댓글 있음
-                    if(comments.eventCommentDto.masterReply !== null && response.masterDto !== null){
+                    if(comments.eventCommentDto.masterReply !== null && response.masterDto === null){
                         const noMasteYesReplyTempleteLocation = document.getElementById("noMasteYesReplyTempleteLocation");
                         const noMasteYesReplyTemplete = noMasteYesReplyTempleteLocation.querySelector(".noMasteYesReplyTemplete");
                         const newNoMasteYesReplyTemplete = noMasteYesReplyTemplete.cloneNode(true);
 
                         const masterReply = newNoMasteYesReplyTemplete.querySelector(".masterReply");
                         const masterReplyCreatedAt = newNoMasteYesReplyTemplete.querySelector(".masterReplyCreatedAt");
+                        const replyCreatedAt = new Date(comments.eventCommentDto.masterReplyCreatedAt);
+                        const year = commentCreatedAt.getFullYear();
+                        const month = String(commentCreatedAt.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
+                        const day = String(commentCreatedAt.getDate()).padStart(2, '0');
+
+                        const formattedDate = `${year}-${month}-${day}`;
+
+                        masterReplyCreatedAt.textContent = formattedDate;
+
                         masterReply.textContent = comments.eventCommentDto.masterReply;
-                        masterReplyCreatedAt.textContent = comments.eventCommentDto.masterReplyCreatedAt;
+                        
                         masterReplyLocation.appendChild(newNoMasteYesReplyTemplete);
 
                     }
 
                     // 마스터 로그인 성공 댓글 확인
-                    if(comments.eventCommentDto.masterReply === null && response.masterDto === null){
+                    if(comments.eventCommentDto.masterReply !== null && response.masterDto !== null){
                         const yesMasterYesReplyTempleteLocation = document.getElementById("yesMasterYesReplyTempleteLocation");
                         const yesMasterYesReplyTemplete = yesMasterYesReplyTempleteLocation.querySelector(".yesMasterYesReplyTemplete");
                         const newYesMasterYesReplyTemplete = yesMasterYesReplyTemplete.cloneNode(true);
@@ -231,8 +228,17 @@
                         const masterReply = newYesMasterYesReplyTemplete.querySelector(".masterReply");
                         const masterReplyCreatedAt = newYesMasterYesReplyTemplete.querySelector(".masterReplyCreatedAt");
 
+                        const replyCreatedAt = new Date(comments.eventCommentDto.masterReplyCreatedAt);
+                        const year = commentCreatedAt.getFullYear();
+                        const month = String(commentCreatedAt.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
+                        const day = String(commentCreatedAt.getDate()).padStart(2, '0');
+
+                        const formattedDate = `${year}-${month}-${day}`;
+
+                        masterReplyCreatedAt.textContent = formattedDate;
+
                         masterReply.textContent = comments.eventCommentDto.masterReply;
-                        masterReplyCreatedAt.textContent = comments.eventCommentDto.masterReplyCreatedAt;
+                    
                         masterReplyLocation.appendChild(newYesMasterYesReplyTemplete);
 
                     }
@@ -243,10 +249,6 @@
 
                 modal.show();
             });
-        }
-
-        function showWinnerDetailPage(eventNumber){
-
         }
 
         function deleteEventProcess(eventNumber){
@@ -313,7 +315,7 @@
         }
 
         function updateEventProcess(){
-            document.getElementById('upadteUploadData').addEventListener('submit', function(event) {
+            document.getElementById('upadteUploadData').onsubmit = function(event) {
             event.preventDefault();
             const offcanvas = bootstrap.Offcanvas.getOrCreateInstance('#offcanvasUpdateBottom');
 
@@ -366,13 +368,14 @@
                 console.error('Error:', error);
             });
             
-            });
+            };
             
 
         }
 
         function insertEventProcess(){
-            document.getElementById('uploadData').addEventListener('submit', function(event) {
+            console.log("여기가 몇번");
+            document.getElementById('uploadData').onsubmit= function(event) {
             event.preventDefault();
             const offcanvas = bootstrap.Offcanvas.getOrCreateInstance('#offcanvasBottom');
 
@@ -406,26 +409,86 @@
             })
             .then(response => response.json())
             .then(data => {
-                console.log('Success:', data);
-
-                masterEventListPage();
+                console.log('Success:', data); 
                 document.getElementById("offcanvasEventTitle").value = "";
                 document.getElementById("offcanvasEventStartDay").value = "";
                 document.getElementById("offcanvasEventEndDay").value = "";
                 document.getElementById("offcanvasUploadFile").value = "";
                 document.getElementById("offcanvasUploadFiles").value = "";
                 offcanvas.hide();
+                masterEventListPage();
+
 
             })
             .catch((error) => {
                 console.error('Error:', error);
             });
             
-            });
+            };
             
 
 
         }
+
+        function updateMasterReplyProcessFunction(afterMasterReply,commentNumber){
+            const url = "/api/event/updateMasterReply"
+            fetch(url,{
+                method : "post",
+                headers : {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    masterReply: afterMasterReply,
+                    eventCommentNumber:commentNumber
+                })
+            })
+            .then(response => response.json())
+            .then(response => {
+                showDetailPage(response.eventNumber)
+            })
+                
+        }
+
+        function updateMasterReply(target){
+            const location = target.closest(".yesMasterYesReplyTemplete");
+            const beforeMasterReply = location.querySelector(".masterReply").textContent;
+            
+            const commentListTemplete = target.closest(".commentListTemplete");
+            const commentNumber = commentListTemplete.querySelector(".commentNumber").textContent;
+
+            location.innerHTML = ""; // 해당 위치의 HTML을 비웁니다.
+
+            const updateMasterReplyTempleteLocation = document.getElementById("updateMasterReplyTempleteLocation"); // updatetemplete ID를 가진 요소를 선택합니다.
+            const updateMasterReplyTemplete = updateMasterReplyTempleteLocation.querySelector(".updateMasterReplyTemplete");
+            const positionCopy = updateMasterReplyTemplete.cloneNode(true); // 선택한 요소의 복제본을 생성합니다.
+            
+            positionCopy.querySelector(".masterReply").textContent = beforeMasterReply;
+            const afterMasterReply = positionCopy.querySelector(".masterReply");
+            const updateMasterReplyProcess = positionCopy.querySelector(".updateMasterReplyProcess");         
+
+            location.appendChild(positionCopy);
+            
+            
+            updateMasterReplyProcess.onclick = function() {
+                updateMasterReplyProcessFunction(afterMasterReply.value, commentNumber);
+            };
+                        
+        }
+
+        function updateDeleteMasterReply(target){
+            const location = target.closest(".yesMasterYesReplyTemplete");
+            
+            const commentListTemplete = target.closest(".commentListTemplete");
+            const commentNumber = commentListTemplete.querySelector(".commentNumber").textContent;
+           
+            const afterMasterReply = null;
+            
+            updateMasterReplyProcessFunction(afterMasterReply, commentNumber);
+
+
+        } 
+
+
 
         window.addEventListener("DOMContentLoaded", () => {
             masterEventListPage();
@@ -453,7 +516,7 @@
     
                 <div class="row pt-3">
     
-                    <nav class="navbar navbar-expand-lg bg-danger">
+                    <nav class="navbar navbar-expand-lg" style="background-color: #B41E30;">
                         <div class="container-fluid">
                             <a class="navbar-brand fs-2 text-white fw-bold text-center col-2" href="/master/mainPage">F.Guys</a>
                             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -475,7 +538,7 @@
     
                 <div class="row">
                     <div class="col">
-                        <div class="row">
+                        <div class="row mt-3">
                             <div class="col">
                                 <span class="fs-3">이벤트 관리</span>
                             </div>
@@ -519,7 +582,7 @@
                                         <input class="form-control form-control-sm" type="text">
                                     </div>
                                     <div class="col-auto">
-                                        <a class="btn btn-danger btn-sm">검색하기</a>
+                                        <a class="btn btn-sm text-white" style="background-color: #B41E30;">검색하기</a>
                                     </div>
                                 </div>
                             </div>
@@ -527,12 +590,9 @@
                         <div class="row mt-3 border py-3 px-1">
                             <div class="col">
                                 <div class="row">
-                                    <div class="col-9"></div>
-                                    <div class="col d-grid pe-0">
-                                        <button class="btn btn-danger btn-sm" type="button" onclick="insertEventPage()">이벤트 등록</button>
-                                    </div>
-                                    <div class="col d-grid">
-                                        <a href="./winnerInsertPage" class="btn btn btn-danger btn-sm">당첨자 등록</a>
+                                    <div class="col"></div>
+                                    <div class="col-auto d-grid pe-0">
+                                        <button class="btn btn-sm text-white" style="background-color: #B41E30;" type="button" onclick="insertEventPage()">이벤트 등록</button>
                                     </div>
                                 </div>
                                 <div class="row mt-1">
@@ -545,7 +605,7 @@
                                                         <span>Total</span><span id="runningEventCount"></span>
                                                     </div>
                                                 </div>
-                                                <div class="row bg-danger text-center text-white">
+                                                <div class="row text-center text-white" style="background-color: #B41E30;">
                                                     <div class="col-2">번호</div>
                                                     <div class="col-3">이미지</div>
                                                     <div class="col">이벤트명</div>
@@ -566,7 +626,7 @@
                                                         <span>Total</span><span id="endEventCount"></span>
                                                     </div>
                                                 </div>
-                                                <div class="row bg-danger text-center text-white">
+                                                <div class="row text-center text-white" style="background-color: #B41E30;">
                                                     <div class="col-2">번호</div>
                                                     <div class="col-3">이미지</div>
                                                     <div class="col">이벤트명</div>
@@ -575,26 +635,6 @@
                                                 <div class="row">
                                                     <div class="col" id="endEventLocation">
                                                         <!-- 종료된 이벤트 -->
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row mt-3">
-                                            <div class="col">
-                                                <div class="row">
-                                                    <div class="col-auto fw-bolder">이벤트 당첨안내</div>
-                                                    <div class="col">
-                                                        <span>Total</span><span id="winnerEventCount"></span>
-                                                    </div>
-                                                </div>
-                                                <div class="row bg-danger text-center text-white">
-                                                    <div class="col-2">번호</div>
-                                                    <div class="col">이벤트명</div>
-                                                    <div class="col-2">관리</div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col" id="winnerLocation">
-                                                        <!-- 당첨자 이벤트 -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -631,8 +671,8 @@
             <span class="runningEventTitle"></span>
         </div>
         <div class="col-2">
-            <span class="updateEventpage btn btn-danger btn-sm">수정</span>
-            <span class="deleteEventPage btn btn-danger btn-sm" >삭제</span>
+            <span class="updateEventpage btn btn-outline-dark btn-sm">수정</span>
+            <span class="deleteEventPage btn btn-dark btn-sm text-white">삭제</span>
         </div>
     </div>
 </div>
@@ -650,27 +690,12 @@
             <span class="endEventTitle"></span>
         </div>
         <div class="col-2">
-            <span class="updateEndEventpage btn btn-danger btn-sm" >수정</span>
-            <span class="deleteEndEventPage btn btn-danger btn-sm" >삭제</span>
+            <span class="updateEndEventpage btn btn-outline-dark btn-sm" >수정</span>
+            <span class="deleteEndEventPage btn btn-dark btn-sm">삭제</span>
         </div>
     </div>
 </div>
 
-<!-- 당첨자 이벤트 템플릿 -->
-<div class="d-none" id="winnerTempleteLocation">
-    <div class="winnerTemplete row align-items-center text-center mt-1 border-bottom py-3">
-        <div class="col-2">
-            <span class="winnerNumber"></span>
-        </div>
-        <div class="col">
-            <span class="winnerTitle"></span>
-        </div>
-        <div class="col-2">
-            <!-- <a class="btn btn-secondary btn-sm" th:href="@{updateWinnerPage(winnerNumber=${eventWinnerdDto.winnerNumber})}">수정</a>
-            <a class="btn btn-secondary btn-sm" th:href="@{deleteWinnerProcess(winnerNumber=${eventWinnerdDto.winnerNumber})}">삭제</a> -->
-        </div>
-    </div>
-</div>
 
 <!-- 상세페이지 모달 -->
 
@@ -697,7 +722,7 @@
                                             <span class="fw-bold text-secondary" style="font-size:0.8em;">기간 :</span>
                                             <span class="fw-bold text-secondary" id="eventStartDay" style="font-size:0.8em;"></span>
                                             <span class="fw-bold text-secondary" style="font-size:0.8em;">~</span>
-                                            <span class="fw-bold text-secondary" id="eventEndDay"></span>
+                                            <span class="fw-bold text-secondary" id="eventEndDay" style="font-size:0.8em;"></span>
                                         </div>
                                         <div class="col-auto pe-0 text-end">
                                             <i class="thumbsUp bi bi-hand-thumbs-up"></i>
@@ -751,7 +776,7 @@
 
 <!-- 코멘트 리스트 템플릿 -->
 <div class="d-none" id="commentListTempleteLocation">
-    <div class="commentListTemplete row border-bottom py-3">
+    <div class="commentListTemplete row border-bottom py-2">
         <div class="col">
             <div class="row">
                 <div class="col">
@@ -772,11 +797,16 @@
                     <span style="font-size:0.8em;" class="eventCommentCreatedAt"></span>
                 </div>
             </div>
-            <div class="row mt-4 mb-4" >
+            <div class="row">
+                <div class="col">
+                    <input type="hidden" class="commentNumber">
+                </div>
+            </div>
+            <div class="row mt-2 mb-2" >
                 <div class="col">
                     <div class="row">
                         <div class="col">
-                            <div class="masterReplyLocation row border">
+                            <div class="masterReplyLocation row border rounded pe-0">
                                 <!-- 마스터 댓글 -->
                             </div>
                         </div>
@@ -804,24 +834,29 @@
 
 <!-- 마스터 로그인 실패 댓글 있음 -->
 <div class="d-none" id="noMasteYesReplyTempleteLocation" >
-    <div class="noMasteYesReplyTemplete col">
+    <div class="noMasteYesReplyTemplete col bg-body-tertiary">
         <div class="row">
+            <div class="col-1"></div>
             <div class="col">
                 <div class="row">
                     <div class="col">
-                        <span class="fw-bolder" style="font-size:0.9em;" >운영자</span>
+                        <div class="row">
+                            <div class="col">
+                                <span class="fw-bolder" style="font-size:0.9em;" >운영자</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <span class="masterReply"></span>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <span style="font-size:0.8em;" class="masterReplyCreatedAt"></span>
+                <div class="row">
+                    <div class="col">
+                        <span class="masterReply"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <span style="font-size:0.8em;" class="masterReplyCreatedAt"></span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>   
@@ -829,33 +864,54 @@
 
 <!-- 마스터 로그인 성공 댓글 확인 -->
 <div class="d-none" id="yesMasterYesReplyTempleteLocation" >
-    <div class="yesMasterYesReplyTemplete col" >
+    <div class="yesMasterYesReplyTemplete col bg-body-tertiary py-1" >
         <div class="row">
+            <div class="col-1"></div>
             <div class="col">
                 <div class="row">
                     <div class="col">
-                        <span class="fw-bolder" style="font-size:0.9em;" >운영자</span>
+                        <div class="row">
+                            <div class="col">
+                                <span class="fw-bolder" style="font-size:0.9em;" >운영자</span>
+                            </div>
+                            <div class="col-auto text-end pe-0">
+                                <span style="font-size:0.8em;" onclick="updateMasterReply(this)">수정</span>
+                            </div>
+                            <div class="col-auto text-end">
+                                <span style="font-size:0.8em;" onclick="updateDeleteMasterReply(this)">삭제</span>
+                            </div>
+                        </div>
                     </div>
+                </div>
+                <div class="row">
                     <div class="col">
-                        수정
+                        <span class="masterReply"></span>
                     </div>
+                </div>
+                <div class="row">
                     <div class="col">
-                        삭제
+                        <span style="font-size:0.8em;" class="masterReplyCreatedAt"></span>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col">
-                <span class="masterReply"></span>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <span style="font-size:0.8em;" class="masterReplyCreatedAt"></span>
-            </div>
-        </div>
     </div>   
+</div>
+
+<!-- 마스터 댓글 수정 -->
+<div class="d-none" id="updateMasterReplyTempleteLocation">
+    <div class="updateMasterReplyTemplete col ">
+        <div class="row mt-3">
+            <div class="col">
+                <textarea class="masterReply form-control" ></textarea>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col text-end mb-3">
+                <span class="updateMasterReplyProcess btn btn-primary">댓글수정</span>
+            </div>
+        </div>
+    </div>
 </div>
 
 

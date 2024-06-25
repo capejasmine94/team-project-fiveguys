@@ -20,8 +20,8 @@
         <div class="col-10">
 
             <div class="row pt-4">
-                <span class="col px-0 text-end fw-bold fs-4">
-                    <span th:text="${session.masterDto.masterNickName}"></span>
+                <span class="col px-0 text-end">
+                    <span class="fw-bold fs-4" th:text="${session.masterDto.masterNickName}"></span>
                     <span class="fs-5">님으로 접속 중</span>
                     <a href="/master/logout" class="col-2 pt-1 bi bi-box-arrow-right text-decoration-none text-secondary fst-normal fs-5">Logout</a>
                 </span>
@@ -31,7 +31,7 @@
 
             <div class="row pt-3">
 
-                <nav class="navbar navbar-expand-lg bg-danger">
+                <nav class="navbar navbar-expand-lg" style="background-color: #B41E30;">
                     <div class="container-fluid">
                         <a class="navbar-brand fs-2 text-white fw-bold text-center col-2" href="/master/mainPage">F.Guys</a>
                         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -55,9 +55,9 @@
             <div class="row pt-5">
 
 
-                <button type="button" class="col-6 btn btn-outline-danger">최근 주문 내역</button>
+                <button type="button" class="col-6 btn btn-outline-danger" disabled>최근 주문 내역</button>
 
-                <button type="button" class="col-6 btn btn-outline-danger">최근 등록 리뷰</button>
+                <button type="button" class="col-6 btn btn-outline-danger" disabled>최근 등록 리뷰</button>
 
 
             </div>
@@ -81,7 +81,7 @@
                             <td class="text-center">
                                 <a th:href="@{/master/orderDetailPage(id=${sellerOrderInform.sellerOrderDto.sellerOrderNumber})}"
                                    th:text="${#dates.format(sellerOrderInform.sellerOrderDto.sellerOrderCreatedAt, 'yyyy-MM-dd')}"
-                                   class="text-decoration-none fw-bold text-black">
+                                   class="fw-bold text-black">
                                 </a>
                             </td>
                             <td class="text-center" th:text="${sellerOrderInform.sellerOrderDto.sellerOrderStatus}"></td>
@@ -108,7 +108,7 @@
                             <td class="text-center text-black">
                                 <a th:href="@{/master/reviewDetailPage(id=${sellerReviewInform.sellerReviewDto.sellerOrderNumber})}"
                                    th:text="${#strings.length(sellerReviewInform.sellerReviewDto.sellerReviewContent) > 7 ? #strings.substring(sellerReviewInform.sellerReviewDto.sellerReviewContent, 0, 7) + '...' : sellerReviewInform.sellerReviewDto.sellerReviewContent}"
-                                   class="text-decoration-none fw-bold text-black">
+                                   class="fw-bold text-black">
                                 </a>
                             </td>
                             <td class="text-center" th:text="${#dates.format(sellerReviewInform.sellerReviewDto.sellerReviewCreatedAt, 'yyyy-MM-dd')}"></td>

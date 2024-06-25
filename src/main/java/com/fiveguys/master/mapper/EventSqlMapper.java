@@ -59,4 +59,8 @@ public interface EventSqlMapper {
     void updateWinnerProcess(WinnerDto winnerDto);
 
     void deleteWinner(int winnerNumber);
+
+    int selectEventBoardNumerByEventCommentNumber(int eventCommentNumber);
+
+
 }

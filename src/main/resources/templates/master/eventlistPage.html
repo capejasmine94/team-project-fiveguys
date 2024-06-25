@@ -164,7 +164,11 @@
                     const month = String(commentCreatedAt.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
                     const day = String(commentCreatedAt.getDate()).padStart(2, '0');
 
-                    const formattedDate = `${year}-${month}-${day}`;
+                    const hours = String(commentCreatedAt.getHours()).padStart(2, '0');
+                    const minutes = String(commentCreatedAt.getMinutes()).padStart(2, '0');
+                    const seconds = String(commentCreatedAt.getSeconds()).padStart(2, '0');
+
+                    const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 
                     eventCommentCreatedAt.textContent = formattedDate;
                     
@@ -209,7 +213,11 @@
                         const month = String(commentCreatedAt.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
                         const day = String(commentCreatedAt.getDate()).padStart(2, '0');
 
-                        const formattedDate = `${year}-${month}-${day}`;
+                        const hours = String(commentCreatedAt.getHours()).padStart(2, '0');
+                        const minutes = String(commentCreatedAt.getMinutes()).padStart(2, '0');
+                        const seconds = String(commentCreatedAt.getSeconds()).padStart(2, '0');
+
+                        const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 
                         masterReplyCreatedAt.textContent = formattedDate;
 
@@ -232,8 +240,11 @@
                         const year = commentCreatedAt.getFullYear();
                         const month = String(commentCreatedAt.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
                         const day = String(commentCreatedAt.getDate()).padStart(2, '0');
+                        const hours = String(commentCreatedAt.getHours()).padStart(2, '0');
+                        const minutes = String(commentCreatedAt.getMinutes()).padStart(2, '0');
+                        const seconds = String(commentCreatedAt.getSeconds()).padStart(2, '0');
 
-                        const formattedDate = `${year}-${month}-${day}`;
+                        const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 
                         masterReplyCreatedAt.textContent = formattedDate;
 
@@ -781,8 +792,20 @@
             <div class="row">
                 <div class="col">
                     <div class="row">
+                        <div class="col-1 me-2">
+                            <span class="fs-1 p-0"><i class="bi bi-person-circle"></i></span>
+                        </div>
                         <div class="col">
-                            <span class="customerName fw-bolder" style="font-size:0.9em;" ></span>
+                            <div class="row">
+                                <div class="col">
+                                    <span class="customerName fw-bolder" style="font-size:0.8rem;" ></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <span style="font-size:0.8rem;" class="eventCommentCreatedAt"></span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -794,11 +817,6 @@
             </div>
             <div class="row">
                 <div class="col">
-                    <span style="font-size:0.8em;" class="eventCommentCreatedAt"></span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
                     <input type="hidden" class="commentNumber">
                 </div>
             </div>
@@ -806,7 +824,7 @@
                 <div class="col">
                     <div class="row">
                         <div class="col">
-                            <div class="masterReplyLocation row border rounded pe-0">
+                            <div class="masterReplyLocation row pe-0">
                                 <!-- 마스터 댓글 -->
                             </div>
                         </div>
@@ -864,21 +882,32 @@
 
 <!-- 마스터 로그인 성공 댓글 확인 -->
 <div class="d-none" id="yesMasterYesReplyTempleteLocation" >
-    <div class="yesMasterYesReplyTemplete col bg-body-tertiary py-1" >
+    <div class="yesMasterYesReplyTemplete col py-1" >
         <div class="row">
-            <div class="col-1"></div>
-            <div class="col">
+            <div class="col ms-3 border-start border-2 ps-2">
                 <div class="row">
                     <div class="col">
                         <div class="row">
+                            <div class="col-1 me-2">
+                                <span class="fs-1 p-0"><i class="bi bi-person-circle"></i></span>
+                            </div>
                             <div class="col">
-                                <span class="fw-bolder" style="font-size:0.9em;" >운영자</span>
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="fw-bolder" style="font-size:0.9em;" >운영자</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <span style="font-size:0.8em;" class="masterReplyCreatedAt"></span>
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-auto text-end pe-0">
-                                <span style="font-size:0.8em;" onclick="updateMasterReply(this)">수정</span>
+                                <span style="font-size:0.8em; cursor: pointer;" onclick="updateMasterReply(this)">수정</span>
                             </div>
                             <div class="col-auto text-end">
-                                <span style="font-size:0.8em;" onclick="updateDeleteMasterReply(this)">삭제</span>
+                                <span style="font-size:0.8em; cursor: pointer;" onclick="updateDeleteMasterReply(this)">삭제</span>
                             </div>
                         </div>
                     </div>

@@ -195,7 +195,7 @@
             #{customerNumber}, #{commentNumber}
         )
     </insert>
-    <!--댓글 좋아요 기록이 잇는지 확인-->
+    <!--댓글 좋아요 기록이 있는지 확인-->
     <select id="checkSelectCommunityCommentExists">
         select * from fc_commentLikeStatus where commentNumber=#{commentNumber} and commentNumber=#{commentNumber}
     </select>

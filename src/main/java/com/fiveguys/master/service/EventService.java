@@ -188,4 +188,10 @@ public class EventService {
 
         return eventBoardInfoList;
     }
+
+    public int selectEventBoardNumerByEventCommentNumber(int eventCommentNumber) {
+        return eventSqlMapper.selectEventBoardNumerByEventCommentNumber(eventCommentNumber);
+    }
+
+   
 }

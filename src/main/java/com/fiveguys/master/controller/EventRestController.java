@@ -128,7 +128,10 @@ public class EventRestController {
     public Map<String,Object> updateMasterReply(@RequestBody EventCommentDto eventCommentDto) {
         Map<String,Object> map = new HashMap<>();
         eventService.updateEventCommentMasterReply(eventCommentDto);
-        map.put("eventNumber", eventCommentDto.getEventNumber());
+        int eventBoardNumber =  eventService.selectEventBoardNumerByEventCommentNumber(eventCommentDto.getEventCommentNumber());
+
+        System.out.println(eventBoardNumber+"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        map.put("eventNumber", eventBoardNumber);
         return map;
 
     }
@@ -263,5 +266,7 @@ public class EventRestController {
         map.put("success", "success");
         return map;
     }
+
+
     
 }

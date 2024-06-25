@@ -152,6 +152,9 @@
                     const customerName = newCommentListTemplete.querySelector(".customerName");
                     customerName.textContent = comments.customerDto.customerName;
 
+                    const commentNumber = newCommentListTemplete.querySelector(".commentNumber");
+                    commentNumber.textContent = comments.eventCommentDto.eventCommentNumber;
+
                     const eventCommentContent = newCommentListTemplete.querySelector(".eventCommentContent");
                     eventCommentContent.textContent = comments.eventCommentDto.eventCommentContent;
 
@@ -427,19 +430,65 @@
 
         }
 
+        function updateMasterReplyProcessFunction(afterMasterReply,commentNumber){
+            const url = "/api/event/updateMasterReply"
+            fetch(url,{
+                method : "post",
+                headers : {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    masterReply: afterMasterReply,
+                    eventCommentNumber:commentNumber
+                })
+            })
+            .then(response => response.json())
+            .then(response => {
+                showDetailPage(response.eventNumber)
+            })
+                
+        }
+
         function updateMasterReply(target){
             const location = target.closest(".yesMasterYesReplyTemplete");
+            const beforeMasterReply = location.querySelector(".masterReply").textContent;
+            
+            const commentListTemplete = target.closest(".commentListTemplete");
+            const commentNumber = commentListTemplete.querySelector(".commentNumber").textContent;
+
             location.innerHTML = ""; // 해당 위치의 HTML을 비웁니다.
 
             const updateMasterReplyTempleteLocation = document.getElementById("updateMasterReplyTempleteLocation"); // updatetemplete ID를 가진 요소를 선택합니다.
             const updateMasterReplyTemplete = updateMasterReplyTempleteLocation.querySelector(".updateMasterReplyTemplete");
             const positionCopy = updateMasterReplyTemplete.cloneNode(true); // 선택한 요소의 복제본을 생성합니다.
+            
+            positionCopy.querySelector(".masterReply").textContent = beforeMasterReply;
+            const afterMasterReply = positionCopy.querySelector(".masterReply");
+            const updateMasterReplyProcess = positionCopy.querySelector(".updateMasterReplyProcess");         
 
-            const beforeMasterReply = location.querySelector(".masterReply");
-            
-            
             location.appendChild(positionCopy);
+            
+            
+            updateMasterReplyProcess.onclick = function() {
+                updateMasterReplyProcessFunction(afterMasterReply.value, commentNumber);
+            };
+                        
         }
+
+        function updateDeleteMasterReply(target){
+            const location = target.closest(".yesMasterYesReplyTemplete");
+            
+            const commentListTemplete = target.closest(".commentListTemplete");
+            const commentNumber = commentListTemplete.querySelector(".commentNumber").textContent;
+           
+            const afterMasterReply = null;
+            
+            updateMasterReplyProcessFunction(afterMasterReply, commentNumber);
+
+
+        } 
+
+
 
         window.addEventListener("DOMContentLoaded", () => {
             masterEventListPage();
@@ -748,6 +797,11 @@
                     <span style="font-size:0.8em;" class="eventCommentCreatedAt"></span>
                 </div>
             </div>
+            <div class="row">
+                <div class="col">
+                    <input type="hidden" class="commentNumber">
+                </div>
+            </div>
             <div class="row mt-2 mb-2" >
                 <div class="col">
                     <div class="row">
@@ -824,7 +878,7 @@
                                 <span style="font-size:0.8em;" onclick="updateMasterReply(this)">수정</span>
                             </div>
                             <div class="col-auto text-end">
-                                <span style="font-size:0.8em;">삭제</span>
+                                <span style="font-size:0.8em;" onclick="updateDeleteMasterReply(this)">삭제</span>
                             </div>
                         </div>
                     </div>
@@ -854,7 +908,7 @@
         </div>
         <div class="row mt-2">
             <div class="col text-end mb-3">
-                <span class="writebutton btn btn-primary">댓글쓰기</span>
+                <span class="updateMasterReplyProcess btn btn-primary">댓글수정</span>
             </div>
         </div>
     </div>

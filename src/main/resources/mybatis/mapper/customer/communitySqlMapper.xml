@@ -109,24 +109,46 @@
     </insert>
 
 
-<!--    댓글 리스트-->
-    <select id="selectCommunityCommentList">
+<!--&lt;!&ndash;    댓글 리스트&ndash;&gt;-->
+<!--    <select id="selectCommunityCommentList">-->
+<!--        select-->
+<!--            fcc.commentNumber,-->
+<!--            fcc.customerNumber,-->
+<!--            fcc.communityNumber,-->
+<!--            fcc.commentText,-->
+<!--            fcc.commentCreatedAt,-->
+<!--            CASE-->
+<!--                WHEN FLOOR(TIMESTAMPDIFF(MONTH, fcc.commentCreatedAt, NOW()) / 12) >= 1 THEN CONCAT(FLOOR(TIMESTAMPDIFF(MONTH,  fcc.commentCreatedAt, NOW()) / 12), '년전')-->
+<!--                WHEN TIMESTAMPDIFF(MONTH, fcc.commentCreatedAt, NOW()) >= 1 THEN CONCAT(TIMESTAMPDIFF(MONTH,  fcc.commentCreatedAt, NOW()), '달전')-->
+<!--                WHEN DATEDIFF(CURRENT_DATE, commentCreatedAt) >= 1 THEN CONCAT(DATEDIFF(CURRENT_DATE,  fcc.commentCreatedAt), '일전')-->
+<!--                WHEN TIMESTAMPDIFF(HOUR, fcc.commentCreatedAt, NOW()) >= 1 THEN CONCAT(TIMESTAMPDIFF(HOUR,  fcc.commentCreatedAt, NOW()), '시간전')-->
+<!--                ELSE CONCAT(TIMESTAMPDIFF(MINUTE,  fcc.commentCreatedAt, NOW()), '분전')-->
+<!--                end as commentCreatedAt,-->
+<!--            (select count(*) from fc_commentLikeStatus fcs where fcs.commentNumber=fcc.commentNumber) as likeCount,-->
+<!--            (select count(*) from fc_commentLikeStatus fcs where fcs.customerNumber = #{customerNumber} and fcs.commentNumber=fcc.commentNumber) as customerLikeCount-->
+<!--        from fc_communityComment fcc-->
+<!--        where communityNumber = #{communityNumber}-->
+<!--        order by fcc.commentNumber desc;-->
+<!--    </select>-->
+
+    <!--    댓글 리스트-->
+    <select id="selectCommunityCommentList" resultType="CommunityCommentDto">
         select
-            fcc.commentNumber,
-            fcc.customerNumber,
-            fcc.communityNumber,
-            fcc.commentText,
-            fcc.commentCreatedAt,
-            CASE
-                WHEN FLOOR(TIMESTAMPDIFF(MONTH, fcc.commentCreatedAt, NOW()) / 12) >= 1 THEN CONCAT(FLOOR(TIMESTAMPDIFF(MONTH,  fcc.commentCreatedAt, NOW()) / 12), '년전')
-                WHEN TIMESTAMPDIFF(MONTH, fcc.commentCreatedAt, NOW()) >= 1 THEN CONCAT(TIMESTAMPDIFF(MONTH,  fcc.commentCreatedAt, NOW()), '달전')
-                WHEN DATEDIFF(CURRENT_DATE, commentCreatedAt) >= 1 THEN CONCAT(DATEDIFF(CURRENT_DATE,  fcc.commentCreatedAt), '일전')
-                WHEN TIMESTAMPDIFF(HOUR, fcc.commentCreatedAt, NOW()) >= 1 THEN CONCAT(TIMESTAMPDIFF(HOUR,  fcc.commentCreatedAt, NOW()), '시간전')
-                ELSE CONCAT(TIMESTAMPDIFF(MINUTE,  fcc.commentCreatedAt, NOW()), '분전')
-                end as commentCreatedAt,
-            (select count(*) from fc_commentLikeStatus fcs where fcs.commentNumber=fcc.commentNumber) as likeCount,
-            (select count(*) from fc_commentLikeStatus fcs where fcs.customerNumber = #{customerNumber} and fcs.commentNumber=fcc.commentNumber) as customerLikeCount
+        fcc.commentNumber,
+        fcc.customerNumber,
+        fcc.communityNumber,
+        fcc.commentText,
+        fcc.commentCreatedAt,
+        CASE
+        WHEN FLOOR(TIMESTAMPDIFF(MONTH, fcc.commentCreatedAt, NOW()) / 12) >= 1 THEN CONCAT(FLOOR(TIMESTAMPDIFF(MONTH,  fcc.commentCreatedAt, NOW()) / 12), '년전')
+        WHEN TIMESTAMPDIFF(MONTH, fcc.commentCreatedAt, NOW()) >= 1 THEN CONCAT(TIMESTAMPDIFF(MONTH,  fcc.commentCreatedAt, NOW()), '달전')
+        WHEN DATEDIFF(CURRENT_DATE, commentCreatedAt) >= 1 THEN CONCAT(DATEDIFF(CURRENT_DATE,  fcc.commentCreatedAt), '일전')
+        WHEN TIMESTAMPDIFF(HOUR, fcc.commentCreatedAt, NOW()) >= 1 THEN CONCAT(TIMESTAMPDIFF(HOUR,  fcc.commentCreatedAt, NOW()), '시간전')
+        ELSE CONCAT(TIMESTAMPDIFF(MINUTE,  fcc.commentCreatedAt, NOW()), '분전')
+        end as commentCreatedAt
+
         from fc_communityComment fcc
+        where communityNumber = #{communityNumber}
         order by fcc.commentNumber desc;
     </select>
 
@@ -196,7 +218,7 @@
         where commentNumber = #{commentNumber}
     </select>
 
-<!--    대댓글-->
+    <!--    대댓글-->
     <insert id="insertCommunityCommentReply">
         insert into fc_communityCommentReply(
             customerNumber, commentNumber, communityCommentReplyText
@@ -205,7 +227,7 @@
         )
     </insert>
 
-<!--    대댓글 리스트-->
+    <!--    대댓글 리스트-->
     <select id="selectCommunityCommentReplyList" resultType="CommunityCommentReplyDto">
         select
         communityCommunityReplyNumber,

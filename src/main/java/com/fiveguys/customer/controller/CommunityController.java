@@ -115,12 +115,11 @@ public class CommunityController {
         model.addAttribute("communityData", communityData);
 
         List<Map<String, Object>> communityCommentDtoList = communityService.selectCommunityCommentList(communityNumber,customerDto.getCustomerNumber());
+//        System.out.println(communityCommentDtoList);
         model.addAttribute("communityCommentDtoList", communityCommentDtoList);
 
         // 게시글 좋아요
         CommunityLikeDto communityLikeDto = new CommunityLikeDto();
-
-
 
         communityLikeDto.setCustomerNumber(customerDto.getCustomerNumber());
         communityLikeDto.setCommunityNumber(communityNumber);
@@ -133,8 +132,8 @@ public class CommunityController {
 
 
         //댓글 리스트(좋아요상태, 카운트)
-        List<Map<String, Object>> selectCommentStatusLikeList = communityService.selectCommentLikeList(communityNumber);
-        model.addAttribute("selectCommentStatusLikeList", selectCommentStatusLikeList);
+//        List<Map<String, Object>> selectCommentStatusLikeList = communityService.selectCommentLikeList(communityNumber);
+//        model.addAttribute("selectCommentStatusLikeList", selectCommentStatusLikeList);
 
         //이미지
         List<CommunityDetailImageDto> communityImageDtoFile = communityService.selectCommunityDatailImageDtoList(communityNumber);
@@ -201,7 +200,13 @@ public class CommunityController {
     //게시판 댓글 좋아요
     @RequestMapping("communityCommentLikeProcess")
     public String communityCommentLikeProcess(CommentLikeStatusDto commentLikeStatusDto, @RequestParam("communityNumber") int communityNumber){
-        communityService.insertCommentLike(commentLikeStatusDto);
+
+        communityService.selectCommentLike(commentLikeStatusDto);
+        if(communityService.selectCommentLike(commentLikeStatusDto) == null){
+            communityService.insertCommentLike(commentLikeStatusDto);
+        }else{
+            communityService.deleteCommentLikeNumber(commentLikeStatusDto.getCommentLikeNumber());
+        }
 
         return "redirect:./communityReadPage?communityNumber=" + communityNumber;
     }

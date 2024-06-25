@@ -136,6 +136,7 @@ public class EventRestController {
     public Map<String,Object> insertEventProcess(HttpSession session, EventBoardDto eventBoardDto, 
     @RequestParam("uploadFile") MultipartFile uploadFile, @RequestParam("uploadFiles") MultipartFile[] uploadFiles){
 
+        System.out.println("레스트 컨트롤러 몇번");
         Map<String,Object> map = new HashMap<>();
         String mainImage = mainImageRemake(uploadFile);
         eventBoardDto.setEventMainImage(mainImage);

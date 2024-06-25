@@ -298,8 +298,11 @@ public class SellerCommunityService {
 
 
     //게시글 수정,삭제
-    public void updateSellerCommunity(SellerCommunityDto sellerCommunityDto){
+    public void updateSellerCommunity(SellerCommunityDto sellerCommunityDto, List<SellerCommunityImageDetailDto> sellerCommunityImageDetailDtoList){
         sellerCommunitySqlMapper.updateSellerCommunity(sellerCommunityDto);
+        for(SellerCommunityImageDetailDto sellerCommunityImageDetailDto : sellerCommunityImageDetailDtoList){
+            sellerCommunitySqlMapper.insertSellerCommunityImageDetail(sellerCommunityImageDetailDto);
+        }
     }
     public void deleteSellerCommunity(int sellerCommunityNumber){
         sellerCommunitySqlMapper.deleteSellerCommunity(sellerCommunityNumber);

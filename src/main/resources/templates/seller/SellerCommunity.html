@@ -345,12 +345,12 @@
                                                 <span><i class="bi-eye"></i></span>
                                                 <span id="sellerCommunityVisitCount"></span>
                                             </div>
-                                            <div class="col text-end me-2 day-top">
-                                                <span style="cursor:pointer;">
-                                                     <i class="bi bi-pencil"></i>
+                                            <div id="updateDeleteArticleContainer" class="col text-end me-2 day-top">
+                                                <span onclick="commentUpdateModal()" style="cursor:pointer;">
+                                                     <i id="updateArticle" class="bi bi-pencil"></i>
                                                      <span>수정</span>
                                                 </span>
-                                                <span style="cursor:pointer;">
+                                                <span id="deleteArticle" style="cursor:pointer;">
                                                     <i class="bi bi-trash ms-2"></i>
                                                     <span>삭제</span>
                                                 </span>
@@ -458,17 +458,20 @@
                     </div>
                 </div>
             </div>
-            <div class="col text-end me-2 mt-1">
-                <span style="cursor:pointer;">
-                     <i class="bi bi-pencil"></i>
+            <div class="updateDeleteCommentContainer col text-end me-2 mt-1">
+                <span onclick="submitComment(this)" class="submitComment d-none" style="cursor:pointer;">
+                    <i class="bi bi-floppy"></i>
+                </span>
+                <span onclick="updateComment(this)" style="cursor:pointer;">
+                     <i class="updateComment bi bi-pencil ms-2"></i>
                 </span>
                 <span style="cursor:pointer;">
-                    <i class="bi bi-trash ms-2"></i>
+                    <i class="deleteComment bi bi-trash ms-2"></i>
                 </span>
             </div>
         </div>
         <div class="row">
-            <div class="col" >
+            <div class="col">
                 <span class="commentContent text-break"></span>
             </div>
         </div>
@@ -510,7 +513,7 @@
                         <input class="form-control btn btn-danger py-3 " type="submit" value="작성">
                     </div>
                 </form>
-                <div onclick="addReply(this)" class="row border-top py-2" style="cursor: pointer;">
+                <div onclick="addReply(this)" class="row py-2" style="cursor: pointer;">
                     <div class="col text-center">
                         <span>답글접기</span>
                         <span><i class="bi bi-chevron-up"></i></span>
@@ -539,6 +542,17 @@
                         <span class="replyCreatedAt day align-top"></span>
                     </div>
                 </div>
+            </div>
+            <div class="updateDeleteReplyContainer col text-end me-2 mt-1">
+                 <span onclick="submitReply(this)" class="submitReply d-none"  style="cursor:pointer;">
+                    <i class="bi bi-floppy"></i>
+                </span>
+                <span onclick="updateReply(this)" style="cursor:pointer;">
+                     <i class="updateReply bi bi-pencil ms-2"></i>
+                </span>
+                <span style="cursor:pointer;">
+                    <i class="deleteReply bi bi-trash ms-2"></i>
+                </span>
             </div>
         </div>
         <div class="row">
@@ -646,6 +660,86 @@
 
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 
+            </div>
+        </div>
+    </div>
+</div>
+<!--게시글 수정 모달-->
+<div class="modal fade" id="sellerCommunityUpdateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mt-2">
+                    <div class="col">
+                        <span class="fw-bold fs-3">게시글 수정</span>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col">
+                        <form id="sellerCommunityUpdateForm" method="post" action="/api/seller/updateSellerCommunityDetail"
+                              onsubmit="updateSellerCommunity(event)" enctype="multipart/form-data">
+                            <div class="row">
+                                <div class="col">
+                                    <span id="updateSuccessMessage"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <span class="font">게시글제목</span>
+                                </div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col">
+                                    <input class="form-control font" type="text" id="updateSellerCommunityTitle"
+                                           name="sellerCommunityTitle" placeholder="수정할 제목 입력">
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col">
+                                    <span class="font">게시글 대표 이미지 등록</span>
+                                </div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col">
+                                    <input id="updateOneSellerCommunityImage" name="oneSellerCommunityImage"
+                                           class="form-control font" type="file">
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col">
+                                    <span class="font">게시글 상세 이미지 등록</span>
+                                </div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col">
+                                    <input id="updateMultipleSellerCommunityImageList" name="multipleSellerCommunityImageList"
+                                           class="form-control font" type="file" multiple>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col">
+                                    <span class="font">게시글 내용</span>
+                                </div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col">
+                                    <textarea rows="10" style="padding-bottom: 1%;" class="form-control font"
+                                              id="updateSellerCommunityContent" name="sellerCommunityContent"
+                                              placeholder="바꿀 내용을 입력해주세요"></textarea>
+                                </div>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col"></div>
+                                <div class="col-2 text-end">
+                                    <input class="btn btn-danger" type="submit" value="수정">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

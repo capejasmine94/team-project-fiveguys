@@ -108,9 +108,6 @@ function getSellerCommunityList(currentPage,searchWord,sortedOption,sellerSort){
             if(response.login===false){
                 window.location.href="/login/sellerLogin";
             }
-            console.log(response.totalPage);
-
-
 
             const sellerInfo = document.querySelector("#sellerInfo");
             sellerInfo.innerText=response.sellerDto.sellerName;
@@ -436,6 +433,339 @@ function sellerCommunityLike(){
 
 
 
+//완료
+function deleteArticle(sellerCommunityNumber){
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentPage = urlParams.get('currentPage') || 1;
+    const searchWord = urlParams.get("searchWord")|| "";
+    const sortedOption = urlParams.get("sortedOption")||"recent";
+    const sellerSort = urlParams.get("sellerSort")||[];
+
+
+    const sellerCommunityDetailPage =bootstrap.Modal.getOrCreateInstance(document.getElementById("sellerCommunityDetail"));
+
+    const url="/api/seller/deleteSellerCommunityDetail?sellerCommunityNumber="+sellerCommunityNumber;
+    fetch(url)
+        .then(response=>response.json())
+        .then(response=>{
+            if(response.success===true){
+                lineChart();
+                dayChart();
+                pieChart();
+                sellerCommunityDetailPage.hide();
+                getSellerCommunityList(currentPage,searchWord,sortedOption,sellerSort);
+                setTimeout(() => {
+                    alert("게시글이 삭제되었습니다.");
+                }, 500);
+            }
+
+        });
+}
+
+//해결 완료
+function deleteComment(sellerCommunityCommentNumber,element){
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentPage = urlParams.get('currentPage') || 1;
+    const searchWord = urlParams.get("searchWord")|| "";
+    const sortedOption = urlParams.get("sortedOption")||"recent";
+    const sellerSort = urlParams.get("sellerSort")||[];
+    const sellerCommunityNumber = document.querySelector("#sellerCommunityNumber").value;
+
+    const updatedElementParent = element.closest(".chatContainer");
+    const updatedElement = updatedElementParent.querySelector(".addReply");
+    const sellerCommunityCommentNumberInput = updatedElement.querySelector(".sellerCommunityCommentNumberInput").value;
+
+    console.log(sellerCommunityNumber);
+
+    const url="/api/seller/deleteSellerCommunityComment?sellerCommunityCommentNumber="+sellerCommunityCommentNumber;
+    fetch(url)
+        .then(response=>response.json())
+        .then(response=>{
+            if(response.success===true) {
+                lineChart();
+                dayChart();
+                pieChart();
+                getSellerCommunityList(currentPage, searchWord, sortedOption, sellerSort);
+                sellerCommunityDetailPage(sellerCommunityNumber, sellerCommunityCommentNumberInput);
+            }
+        });
+}
+
+
+
+//해결완료
+function deleteReply(sellerCommunityReplyNumber,element){
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentPage = urlParams.get('currentPage') || 1;
+    const searchWord = urlParams.get("searchWord")|| "";
+    const sortedOption = urlParams.get("sortedOption")||"recent";
+    const sellerSort = urlParams.get("sellerSort")||[];
+    const sellerCommunityNumber = document.querySelector("#sellerCommunityNumber").value;
+
+    const addReply1 = element.closest(".addReply");
+    const sellerCommunityCommentNumberInput = addReply1.querySelector(".sellerCommunityCommentNumberInput").value;
+
+    const url="/api/seller/deleteSellerCommunityReply?sellerCommunityReplyNumber="+sellerCommunityReplyNumber;
+    fetch(url)
+        .then(response=>response.json())
+        .then(response=>{
+            if(response.success===true) {
+                lineChart();
+                dayChart();
+                pieChart();
+                getSellerCommunityList(currentPage,searchWord,sortedOption,sellerSort);
+                sellerCommunityDetailPage(sellerCommunityNumber,sellerCommunityCommentNumberInput);
+            }
+
+        });
+}
+
+function commentUpdateModal(){
+    const sellerCommunityUpdateModal =bootstrap.Modal.getOrCreateInstance(document.getElementById("sellerCommunityUpdateModal"));
+
+    const updateSellerCommunityTitle = document.querySelector("#updateSellerCommunityTitle");
+    updateSellerCommunityTitle.value= document.querySelector("#sellerCommunityTitle").innerText;
+
+    const updateSellerCommunityContent = document.querySelector("#updateSellerCommunityContent");
+    updateSellerCommunityContent.value= document.querySelector("#sellerCommunityContent").innerText;
+
+    sellerCommunityUpdateModal.show();
+}
+
+function updateSellerCommunity(event){
+    event.preventDefault();
+
+    const sellerCommunityUpdateModal =bootstrap.Modal.getOrCreateInstance(document.getElementById("sellerCommunityUpdateModal"));
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentPage = urlParams.get('currentPage') || 1;
+    const searchWord = urlParams.get("searchWord")|| "";
+    const sortedOption = urlParams.get("sortedOption")||"recent";
+    const sellerSort = urlParams.get("sellerSort")||[];
+
+    const sellerCommunityUpdateForm = document.querySelector("#sellerCommunityUpdateForm");
+
+    const updateSellerCommunityTitle = document.querySelector("#updateSellerCommunityTitle").value;
+    //파일이 한개인 경우 file[0]으로 첫번째 배열만 받는다
+    const updateOneSellerCommunityImage = document.querySelector("#updateOneSellerCommunityImage").files[0];
+    //여러개의 파일을 제출할 경우 files로 받는다
+    const updateMultipleSellerCommunityImageList = document.querySelector("#updateMultipleSellerCommunityImageList").files;
+    const updateSellerCommunityContent = document.querySelector("#updateSellerCommunityContent").value;
+
+    const sellerCommunityNumber = document.querySelector("#sellerCommunityNumber").value;
+
+
+    const formData = new FormData();
+    formData.append('sellerCommunityTitle', updateSellerCommunityTitle);
+    formData.append('sellerCommunityContent', updateSellerCommunityContent);
+    formData.append('oneSellerCommunityImage', updateOneSellerCommunityImage);
+    formData.append('sellerCommunityNumber', sellerCommunityNumber);
+
+    // 여러개의 파일은 반복문을 돌려서 FormData에 추가
+    for (let i = 0; i < updateMultipleSellerCommunityImageList.length; i++) {
+        formData.append('multipleSellerCommunityImageList', updateMultipleSellerCommunityImageList[i]);
+    }
+
+
+    const url="/api/seller/updateSellerCommunityDetail";
+
+    fetch(url,{
+        method:"post",
+        body: formData //form 데이터를 body 에 추가시켜서 넘긴다 스프링에서 파라미터로 받을 곳
+    })
+        .then(response=>response.json())
+        .then(response=>{
+            if(response.inputSuccess===true){
+
+                sellerCommunityUpdateModal.hide();
+                getSellerCommunityList(currentPage,searchWord,sortedOption,sellerSort);
+                sellerCommunityDetailPage(sellerCommunityNumber,"");
+            }
+        });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+//해결완료
+function updateComment(element){
+
+    const commentContentParent = element.closest(".chatContainer");
+    const commentContent = commentContentParent.querySelector(".commentContent");
+
+    if(commentContent.tagName==="TEXTAREA"){
+        const spanElement = document.createElement('span');
+        spanElement.innerText = commentContent.value;
+        spanElement.classList.add("commentContent","text-break");
+        commentContent.parentNode.replaceChild(spanElement, commentContent);
+    }else{
+        const commentContentValue = commentContent.innerText.trim();
+
+        const inputElement = document.createElement('textarea');
+        inputElement.type = 'text';
+        inputElement.classList.add("commentContent","text-break","form-control");
+        inputElement.style.resize="none";
+        inputElement.style.overflowY="hidden";
+        inputElement.style.height="auto";
+        inputElement.value = commentContentValue;
+
+        commentContent.parentNode.replaceChild(inputElement, commentContent);
+        inputElement.focus();
+
+        const save = commentContentParent.querySelector(".submitComment");
+        save.classList.remove("d-none");
+
+    }
+
+
+}
+//해결완료
+function submitComment(element){
+
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentPage = urlParams.get('currentPage') || 1;
+    const searchWord = urlParams.get("searchWord")|| "";
+    const sortedOption = urlParams.get("sortedOption")||"recent";
+    const sellerSort = urlParams.get("sellerSort")||[];
+
+    const updatedElementParent = element.closest(".chatContainer");
+
+    const commentContent = updatedElementParent.querySelector(".commentContent");
+
+    const sellerCommunityNumber = document.querySelector("#sellerCommunityNumber").value;
+
+    const sellerCommunityCommentNumberInput = updatedElementParent.querySelector(".sellerCommunityCommentNumberInput").value;
+
+    let commentContentValue=null;
+    if(commentContent.tagName==="TEXTAREA"){
+        console.log(commentContentValue=commentContent.value);
+        commentContentValue=commentContent.value;
+    }else{
+        commentContentValue=commentContent.innerText;
+        console.log( commentContentValue=commentContent.innerText);
+    }
+
+    const data={
+        sellerCommunityCommentContent:commentContentValue,
+        sellerCommunityCommentNumber:sellerCommunityCommentNumberInput
+    };
+
+    const url="/api/seller/updateSellerCommunityComment"
+    fetch(url,{
+        method:"post",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+        .then(response=>response.json())
+        .then(response=>{
+                getSellerCommunityList(currentPage,searchWord,sortedOption,sellerSort);
+                sellerCommunityDetailPage(sellerCommunityNumber,sellerCommunityCommentNumberInput);
+        });
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//해결완료
+function updateReply(element){
+    const replyContentParent = element.closest(".chatReplyContainer");
+    let replyContent = replyContentParent.querySelector(".replyContent");
+
+    if(replyContent.tagName==="TEXTAREA"){
+        const spanElement = document.createElement('span');
+        spanElement.innerText = replyContent.value;
+        spanElement.classList.add("replyContent","text-break");
+        replyContent.parentNode.replaceChild(spanElement, replyContent);
+    }else{
+        const replyContentValue = replyContent.innerText.trim();
+
+        const inputReplyElement = document.createElement('textarea');
+        inputReplyElement.type = 'text';
+        inputReplyElement.classList.add("replyContent","text-break","form-control");
+        inputReplyElement.style.resize="none";
+        inputReplyElement.style.overflowY="hidden";
+        inputReplyElement.style.height="auto";
+        inputReplyElement.value = replyContentValue;
+
+        replyContent.parentNode.replaceChild(inputReplyElement, replyContent);
+        inputReplyElement.focus();
+
+        const save = replyContentParent.querySelector(".submitReply");
+        save.classList.remove("d-none");
+    }
+
+}
+//해결완료
+function submitReply(element){
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentPage = urlParams.get('currentPage') || 1;
+    const searchWord = urlParams.get("searchWord")|| "";
+    const sortedOption = urlParams.get("sortedOption")||"recent";
+    const sellerSort = urlParams.get("sellerSort")||[];
+
+    const chatReplyContainer = document.querySelector(".chatReplyContainer");
+    const replyContent = chatReplyContainer.querySelector(".replyContent");
+
+    const sellerCommunityReplyNumber = chatReplyContainer.querySelector(".sellerCommunityReplyNumber").value;
+
+    let replyContentValue=null;
+    if(replyContent.tagName==="TEXTAREA"){
+        replyContentValue=replyContent.value;
+    }else{
+        replyContentValue=replyContent.innerText;
+    }
+
+    const sellerCommunityNumber = document.querySelector("#sellerCommunityNumber").value;
+    const addReply1 = element.closest(".addReply");
+    const sellerCommunityCommentNumberInput = addReply1.querySelector(".sellerCommunityCommentNumberInput").value;
+
+    const data={
+        sellerCommunityReplyContent:replyContentValue,
+        sellerCommunityReplyNumber:sellerCommunityReplyNumber
+    }
+
+    const url="/api/seller/updateSellerCommunityReply"
+    fetch(url,{
+        method:"post",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+        .then(response=>response.json())
+        .then(response=>{
+            if(response.success===true) {
+                updateReply(element);
+                getSellerCommunityList(currentPage,searchWord,sortedOption,sellerSort);
+                sellerCommunityDetailPage(sellerCommunityNumber,sellerCommunityCommentNumberInput);
+            }
+        });
+
+
+}
 
 function sellerCommunityDetailPage(sellerCommunityNumber,sellerCommunityCommentNumberInputInput){
 
@@ -451,6 +781,17 @@ function sellerCommunityDetailPage(sellerCommunityNumber,sellerCommunityCommentN
             sellerCommunityCreatedAt.innerText=response.sellerCommunityDetail.selectSellerCommunityById.sellerCommunityCreatedAt;
             const sellerCommunityVisitCount = document.querySelector("#sellerCommunityVisitCount");
             sellerCommunityVisitCount.innerText=response.sellerCommunityDetail.selectSellerCommunityById.sellerCommunityVisitCount;
+
+            const updateDeleteArticleContainer = document.querySelector("#updateDeleteArticleContainer");
+            const deleteArticle = document.querySelector("#deleteArticle");
+
+            deleteArticle.setAttribute("onclick",`deleteArticle(${response.sellerCommunityDetail.selectSellerCommunityById.sellerCommunityNumber})`);
+
+            if(response.sellerCommunityDetail.selectSellerCommunityById.sellerNumber===response.sellerDto.sellerNumber){
+                updateDeleteArticleContainer.classList.remove("d-none");
+            }else{
+                updateDeleteArticleContainer.classList.add("d-none");
+            }
 
             const sellerCommunityTitle = document.querySelector("#sellerCommunityTitle");
             sellerCommunityTitle.innerText=response.sellerCommunityDetail.selectSellerCommunityById.sellerCommunityTitle;
@@ -504,8 +845,19 @@ function sellerCommunityDetailPage(sellerCommunityNumber,sellerCommunityCommentN
                 const commentCreatedAt = newChatContainer.querySelector(".commentCreatedAt");
                 commentCreatedAt.innerText=e.sellerCommunityCommentDto.sellerCommunityCommentCreatedAt;
 
+                const updateDeleteCommentContainer = newChatContainer.querySelector(".updateDeleteCommentContainer");
+                if(e.sellerCommunityCommentDto.sellerNumber===response.sellerDto.sellerNumber){
+                    updateDeleteCommentContainer.classList.remove("d-none");
+                }else{
+                    updateDeleteCommentContainer.classList.add("d-none");
+                }
+
+                const deleteComment = newChatContainer.querySelector(".deleteComment");
+                deleteComment.setAttribute("onclick",`deleteComment(${e.sellerCommunityCommentDto.sellerCommunityCommentNumber},this)`);
+
                 const commentContent = newChatContainer.querySelector(".commentContent");
                 commentContent.innerText=e.sellerCommunityCommentDto.sellerCommunityCommentContent;
+                console.log(commentContent.innerText);
 
                 const commentReplyCount = newChatContainer.querySelector(".commentReplyCount");
                 commentReplyCount.innerText=e.selectEachSellerCommentReplyCount;
@@ -572,6 +924,16 @@ function sellerCommunityDetailPage(sellerCommunityNumber,sellerCommunityCommentN
 
                     const replyCreatedAt = replyChatContainer.querySelector(".replyCreatedAt");
                     replyCreatedAt.innerText=i.selectSellerCommunityReply.sellerCommunityReplyCreatedAt;
+
+                    const updateDeleteReplyContainer = replyChatContainer.querySelector(".updateDeleteReplyContainer");
+                    if(i.selectSellerCommunityReply.sellerNumber===response.sellerDto.sellerNumber){
+                        updateDeleteReplyContainer.classList.remove("d-none");
+                    }else{
+                        updateDeleteReplyContainer.classList.add("d-none");
+                    }
+
+                    const deleteReply = replyChatContainer.querySelector(".deleteReply");
+                    deleteReply.setAttribute("onclick",`deleteReply(${i.selectSellerCommunityReply.sellerCommunityReplyNumber},this)`);
 
                     const replyContent = replyChatContainer.querySelector(".replyContent");
                     replyContent.innerText=i.selectSellerCommunityReply.sellerCommunityReplyContent;
@@ -719,6 +1081,7 @@ function sellerCommunityLikeProcess(){
 
     const sellerCommunityNumber = document.querySelector("#sellerCommunityNumber").value;
     const sellerNumber = document.querySelector("#sellerNumber").value;
+    const sellerCommunityCommentNumberInput = document.querySelector(".sellerCommunityCommentNumberInput").value;
 
     const likeData ={
         sellerNumber:sellerNumber,
@@ -738,15 +1101,19 @@ function sellerCommunityLikeProcess(){
             if(response.success===false){
                 window.location.href = "/login/sellerLogin";
             }
-            sellerCommunityDetailPage(sellerCommunityNumber);
+            sellerCommunityDetailPage(sellerCommunityNumber,sellerCommunityCommentNumberInput);
         });
 
 }
+
 //댓글달기
 function sellerCommunityCommentInsertProcess(event){
     event.preventDefault();
+    const sellerCommunityCommentNumberInput = document.querySelector(".sellerCommunityCommentNumberInput").value;
+
 
     const sellerCommunityCommentForm = document.querySelector("#sellerCommunityCommentForm");
+    console.log(sellerCommunityCommentNumberInput);
 
     const sellerCommunityNumber = document.querySelector("#sellerCommunityNumber").value;
     const sellerNumber = document.querySelector("#sellerNumber").value;
@@ -776,7 +1143,10 @@ function sellerCommunityCommentInsertProcess(event){
                 window.location.href="/login/sellerLogin";
                 sellerCommunityCommentForm.reset();
             }
-            sellerCommunityDetailPage(sellerCommunityNumber);
+            lineChart();
+            dayChart();
+            pieChart();
+            sellerCommunityDetailPage(sellerCommunityNumber,sellerCommunityCommentNumberInput);
 
         });
 
@@ -818,10 +1188,12 @@ function sellerCommunityReplyInsertProcess(event){
                 window.location.href="/login/sellerLogin";
                 sellerCommunityReplyInsertForm.reset();
             }
+            lineChart();
+            dayChart();
+            pieChart();
             sellerCommunityDetailPage(sellerCommunityNumberInput,sellerCommunityCommentNumberInput);
 
         });
-
 
 
 }
@@ -833,6 +1205,7 @@ function commentLikeStatus(target){
 
 
     const sellerCommunityNumberInput = clickedElementParent.querySelector(".sellerCommunityNumberInput").value;
+
     const sellerCommunityCommentNumberInput = clickedElementParent.querySelector(".sellerCommunityCommentNumberInput").value;
     const sellerNumberInput = clickedElementParent.querySelector(".sellerNumberInput").value;
     const sellerCommentLikeStatus = clickedElement.querySelector(".sellerCommentLikeStatus").value;

@@ -349,11 +349,45 @@ public class SellerCommunityRestController {
     //게시글 수정 삭제
 
     @RequestMapping("updateSellerCommunityDetail")
-    public Map<String,Object> updateSellerCommunityDetail(SellerCommunityDto sellerCommunityDto, SellerCommunityImageDetailDto sellerCommunityImageDetailDto){
-        Map<String,Object> response = new HashMap<>();
-        sellerCommunityService.updateSellerCommunity(sellerCommunityDto);
-        sellerCommunityService.deleteSellerCommunity(sellerCommunityDto.getSellerCommunityNumber());
-        response.put("success", true);
+    public Map<String,Object> updateSellerCommunityDetail(
+            HttpSession session,
+            SellerCommunityDto sellerCommunityDtoParam,
+            @RequestPart("oneSellerCommunityImage") MultipartFile oneSellerCommunityImage,
+            @RequestPart("multipleSellerCommunityImageList") List<MultipartFile> multipleSellerCommunityImageList){
+
+        SellerDto sellerDto = (SellerDto) session.getAttribute("sellerDto");
+        Map<String, Object> response = new HashMap<>();
+
+        sellerCommunityService.deleteSellerCommunityDetailImage(sellerCommunityDtoParam.getSellerCommunityNumber());
+
+        if(sellerDto!=null){
+            List<SellerCommunityImageDetailDto> sellerCommunityImageDetailDtoList = new ArrayList<>();
+
+            // 대표 이미지 저장 및 경로 설정
+            if (!oneSellerCommunityImage.isEmpty()) {
+                String mainImagePath = saveFile(oneSellerCommunityImage);
+                sellerCommunityDtoParam.setSellerCommunityImage(mainImagePath);
+            }
+
+            // 상세 이미지 저장 및 경로 설정
+            if (multipleSellerCommunityImageList != null) {
+                for (MultipartFile file : multipleSellerCommunityImageList) {
+                    if (!file.isEmpty()) {
+                        String imagePath = saveFile(file);
+
+                        // 상품 상세 이미지 DB에 저장
+                        SellerCommunityImageDetailDto sellerCommunityImageDetailDto = new SellerCommunityImageDetailDto();
+                        sellerCommunityImageDetailDto.setSellerCommunityImageList(imagePath);
+                        sellerCommunityImageDetailDto.setSellerCommunityNumber(sellerCommunityDtoParam.getSellerCommunityNumber());
+                        sellerCommunityImageDetailDtoList.add(sellerCommunityImageDetailDto);
+                    }
+                }
+            }
+            sellerCommunityService.updateSellerCommunity(sellerCommunityDtoParam,sellerCommunityImageDetailDtoList);
+            response.put("inputSuccess",true);
+        }else{
+            response.put("inputSuccess", false);
+        }
         return response;
     }
     @RequestMapping("deleteSellerCommunityDetail")
@@ -366,7 +400,7 @@ public class SellerCommunityRestController {
     }
 
     @RequestMapping("updateSellerCommunityComment")
-    public Map<String,Object> updateSellerCommunityComment(SellerCommunityCommentDto sellerCommunityCommentDto){
+    public Map<String,Object> updateSellerCommunityComment(@RequestBody SellerCommunityCommentDto sellerCommunityCommentDto){
         Map<String,Object> response = new HashMap<>();
         sellerCommunityService.updateSellerCommunityComment(sellerCommunityCommentDto);
         response.put("success", true);
@@ -382,7 +416,7 @@ public class SellerCommunityRestController {
     }
 
     @RequestMapping("updateSellerCommunityReply")
-    public Map<String,Object> updateSellerCommunityReply(SellerCommunityReplyDto sellerCommunityReplyDto){
+    public Map<String,Object> updateSellerCommunityReply(@RequestBody SellerCommunityReplyDto sellerCommunityReplyDto){
         Map<String,Object> response = new HashMap<>();
         sellerCommunityService.updateSellerCommunityReply(sellerCommunityReplyDto);
         response.put("success", true);

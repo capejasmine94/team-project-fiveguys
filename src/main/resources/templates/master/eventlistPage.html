@@ -431,8 +431,12 @@
             const location = target.closest(".yesMasterYesReplyTemplete");
             location.innerHTML = ""; // 해당 위치의 HTML을 비웁니다.
 
-            const position = document.getElementById("updateMasterReplyTemplete"); // updatetemplete ID를 가진 요소를 선택합니다.
-            const positionCopy = position.cloneNode(true); // 선택한 요소의 복제본을 생성합니다.
+            const updateMasterReplyTempleteLocation = document.getElementById("updateMasterReplyTempleteLocation"); // updatetemplete ID를 가진 요소를 선택합니다.
+            const updateMasterReplyTemplete = updateMasterReplyTempleteLocation.querySelector(".updateMasterReplyTemplete");
+            const positionCopy = updateMasterReplyTemplete.cloneNode(true); // 선택한 요소의 복제본을 생성합니다.
+
+            const beforeMasterReply = location.querySelector(".masterReply");
+            
             
             location.appendChild(positionCopy);
         }
@@ -841,7 +845,7 @@
 </div>
 
 <!-- 마스터 댓글 수정 -->
-<div class="d-none" id="updateMasterReplyTemplete">
+<div class="d-none" id="updateMasterReplyTempleteLocation">
     <div class="updateMasterReplyTemplete col ">
         <div class="row mt-3">
             <div class="col">

@@ -209,7 +209,7 @@ public class SellerController {
 
 
     @RequestMapping("insertSellerReview")
-    public String insertSellerReview(SellerReviewDto sellerReviewDto, MultipartFile[] uploadFiles) {
+    public String insertSellerReview(SellerReviewDto sellerReviewDto, @RequestParam("uploadFiles") MultipartFile[] uploadFiles) {
 
         List<SellerReviewImageDto> sellerReviewImageDtoList = new ArrayList<>();
 
@@ -219,7 +219,7 @@ public class SellerController {
                     continue;
                 }
 
-                String rootPath = "/Users/fiveguys_image/";
+                String rootPath = "C:/fiveguys_image/";
 
                 //날짜 별 폴더 생성
 

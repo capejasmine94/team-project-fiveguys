@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class SellerCustomerService {
@@ -15,163 +14,155 @@ public class SellerCustomerService {
     private SellerCustomerSqlMapper sellerCustomerSqlMapper;
 
     public List<SellerDto> selectAllSellers() {
-
         return sellerCustomerSqlMapper.selectAllSellers();
     }
 
-    public SellerDto selectSellersByNumber(int sellerNumber) {
 
+    public SellerDto selectSellersByNumber(int sellerNumber) {
         return sellerCustomerSqlMapper.selectSellersByNumber(sellerNumber);
     }
 
-    public List<ProductCategoryDto> selectProductCategoryNameList() {
+    // 지점 메뉴 카테고리 리스트
+    public Map<String, List<CustomerMenuDto>> selectMenuCategoryList() {
 
-        return sellerCustomerSqlMapper.selectProductCategoryNameList();
-    }
+        Map<String, List<CustomerMenuDto>> result = new LinkedHashMap<>();
 
-    public ProductCategoryDto selectProductCategoryByNumber(int productCategoryNumber) {
-
-        return sellerCustomerSqlMapper.selectProductCategoryByNumber(productCategoryNumber);
-    }
-
-    public List<Map<String,Object>> selectProductList(int productCategoryNumber) {
-
-        List<Map<String,Object>> result = new ArrayList<>();
-
-        List<ProductDto> list = sellerCustomerSqlMapper.selectProductList(productCategoryNumber);
-        for (ProductDto productDto : list) {
-            int categoryPk = productDto.getProductCategoryNumber();
-            ProductCategoryDto productCategoryDto = sellerCustomerSqlMapper.selectProductCategoryByNumber(categoryPk);
-
-            Map<String,Object> map = new HashMap<>();
-            map.put("productCategoryDto", productCategoryDto);
-            map.put("productDto", productDto);
-
-            result.add(map);
-        }
-        return result;
-    }
-
-    public ProductDto selectProductDetailMenu(int productNumber) {
-
-        return sellerCustomerSqlMapper.selectProductDetailMenu(productNumber);
-    }
-
-    // 메뉴옵션
-    public Map<String, List<ProductOptionsWithValuesDto>> selectProductOptionsWithValuesList(int productNumber) {
-
-        Map<String, List<ProductOptionsWithValuesDto>> result = new HashMap<>();
-
-        List<ProductOptionsWithValuesDto> list = sellerCustomerSqlMapper.selectProductOptionsWithValuesList(productNumber);
-        List<String> filteredList = list.stream() // 필터링메서드
-                .map(ProductOptionsWithValuesDto::getOptionName)  //
-                .distinct().toList();
-        // .distinct() 중복제거
-
-        for(String optionName : filteredList){
-            List<ProductOptionsWithValuesDto> productOptionsWithValuesList = list.stream()
-                    .filter(f -> f.getOptionName().equals(optionName))
-                    .toList();
-            result.put(optionName, productOptionsWithValuesList);
-        }
-        return result;
-    }
-    // 메뉴 사이드 옵션
-    public Map<String, List<ProductCategoryJoinDto>> selectProductCategoryJoinList(List<Integer> productCategoryNumbers) {
-        // 쿼리에서 받은대로 순서대로 정렬하려면 LinkedHashMap<>(); 사용 hashMap은 랜덤으로 출력
-        Map<String, List<ProductCategoryJoinDto>> result = new LinkedHashMap<>();
-
-        List<ProductCategoryJoinDto> list = sellerCustomerSqlMapper.selectProductCategoryJoinList(productCategoryNumbers);
+        List<CustomerMenuDto> list = sellerCustomerSqlMapper.selectMenuCategoryList();
         List<String> filteredList = list.stream() //
-                .map(ProductCategoryJoinDto::getProductCategoryName)  //
-                .distinct().toList();
+                .map(CustomerMenuDto::getMenuCategory)  //
+                .distinct()
+                .limit(4)
+                .toList();
 
-        for(String categoryName : filteredList){
-            List<ProductCategoryJoinDto> productOptionsWithValuesList = list.stream()
-                    .filter(f -> f.getProductCategoryName().equals(categoryName))
-                    .collect(Collectors.toList());
-            result.put(categoryName, productOptionsWithValuesList);
+        for (String menuCategory : filteredList) {
+            List<CustomerMenuDto> customerMenuDtoList = list.stream()
+                    .filter(f -> f.getMenuCategory().equals(menuCategory))
+                    .toList();
+            result.put(menuCategory, customerMenuDtoList);
         }
 
         return result;
     }
 
-    // 장바구니 추가
-    public void insertOrderMenu(OrderMenuDto orderMenuDto) {
-        sellerCustomerSqlMapper.insertOrderMenu(orderMenuDto);
-    }
-//    // 장바구니 메뉴 중복 체크
-//    public OrderMenuDto selectOrderMenuDuplicateCheck(int productNumber) {
-//        return sellerCustomerSqlMapper.selectOrderMenuDuplicateCheck(productNumber);
-//    }
-//    // 장바구니 메뉴 리스트
-//    public List<OrderMenuProductDto> selectOrderMenuList() {
-//        return sellerCustomerSqlMapper.selectOrderMenuList();
-//    }
-//    // 장바구니 메뉴 삭제
-//    public void deleteOrderMenu(int customerOrderNumber) {
-//        sellerCustomerSqlMapper.deleteOrderMenu(customerOrderNumber);
-//    }
-//    // 장바구니 메뉴 수량 변경
-//    public void updateOrderMenuQuantity(OrderMenuQuantityUpdateDto updateDto) {
-//        sellerCustomerSqlMapper.updateOrderMenuQuantity(updateDto);
-//    }
-
-    // 주소등록
-    public void insertCustomerAddress(CustomerAddressDto customerAddressDto) {
-        sellerCustomerSqlMapper.insertCustomerAddress(customerAddressDto);
-    }
-    // 주소리스트
-    public List<CustomerAddressDto> selectCustomerAddressList(int customerNumber) {
-        return sellerCustomerSqlMapper.selectCustomerAddressList(customerNumber);
-    }
-    // 주문 주소 출력
-    public String selectCustomerAddress(int customerNumber){
-        return sellerCustomerSqlMapper.selectCustomerAddress(customerNumber);
+    // 지점 메뉴 상세보기(장바구니 등록전)
+    public CustomerMenuDto selectMenuDetail(int menuNumber) {
+        return sellerCustomerSqlMapper.selectMenuDetail(menuNumber);
     }
 
+    // 지점 메뉴 상세보기_메인 옵션 리스트
+    public Map<String, List<CustomerMenuOptionDto>> selectMenuOptionList(int menuNumber) {
 
+        Map<String, List<CustomerMenuOptionDto>> result = new LinkedHashMap<>();
 
+        List<CustomerMenuOptionDto> list = sellerCustomerSqlMapper.selectMenuOptionList(menuNumber);
+        List<String> filteredList = list.stream() //
+                .map(CustomerMenuOptionDto::getMenuOptionName)  //
+                .distinct().toList();
 
+        for (String menuOptionName : filteredList) {
+            List<CustomerMenuOptionDto> customerMenuOptionDtoList = list.stream()
+                    .filter(f -> f.getMenuOptionName().equals(menuOptionName))
+                    .toList();
+            result.put(menuOptionName, customerMenuOptionDtoList);
+        }
 
+        return result;
+    }
 
-
-
-
-
-
-
-
-
-//  메뉴 옵션 나중에 해볼것
-//    public List<ProductOptionDto> selectProductOptionList(int productNumber) {
-//
-//        return sellerCustomerSqlMapper.selectProductOptionList(productNumber);
+    // 장바구니 등록
+    public void insertCustomerCart(CustomerCartDto customerCartDto) {
+        sellerCustomerSqlMapper.insertCustomerCart(customerCartDto);
+    }
+    // 장바구니 삭제
+//    public void deleteCustomerCart(int customerNumber){
+//        sellerCustomerSqlMapper.deleteCustomerCart(customerNumber);
 //    }
-//
-//    public List<Map<String, Object>> selectProductOptionsWithValues(int productNumber) {
-//
-//        return sellerCustomerSqlMapper.selectProductOptionsWithValues(productNumber);
-//    }
-//
-//    public Map<String, List<String>> getFormattedProductsByCategories() {
-//        List<Map<String, Object>> products = sellerCustomerSqlMapper.getProductsByCategoryNumbers();
-//
-//        // Use a Map to group product names by category name
-//        Map<String, List<String>> categoryProductsMap = new LinkedHashMap<>();
-//
-//        for (Map<String, Object> product : products) {
-//            String category = (String) product.get("productCategoryName");
-//            String productName = (String) product.get("productName");
-//            categoryProductsMap
-//                    .computeIfAbsent(category, k -> new ArrayList<>())
-//                    .add(productName);
+
+    // 메뉴, 메뉴옵션 가격 받기
+    public int menuAndMenuOptionPrice(List<CustomerCartDto> customerCartDtoList) {
+        int totalPrice = 0;
+        for (CustomerCartDto cartDto : customerCartDtoList) {
+            int menuOptionNumber = cartDto.getMenuOptionNumber();
+            int menuOptionPrice = sellerCustomerSqlMapper.selectMenuOptionPrice(menuOptionNumber);
+            totalPrice += menuOptionPrice;
+        }
+        return totalPrice;
+    }
+
+    // 주문
+    public void customerPlaceOrder(int customerNumber, int sellerNumber) {
+        int totalAmount = 0;
+        List<CustomerCartDto> customerCartDtoList = sellerCustomerSqlMapper.selectCustomerCartList(customerNumber);
+        // 총 주문 통합가격
+        if (!customerCartDtoList.isEmpty()) {
+            CustomerCartDto firstCartDto = customerCartDtoList.get(0); // 첫 번째 메뉴만 처리
+
+            totalAmount = sellerCustomerSqlMapper.selectMenuPrice(firstCartDto.getMenuNumber());
+        }
+        int totalPrice = menuAndMenuOptionPrice(customerCartDtoList);
+        totalPrice += totalAmount;
+        //구매자주문 등록
+//        if(customerCartDtoList.isEmpty()){
+//            throw new IllegalStateException("장바구니가 비어있습니다.");
 //        }
-//
-//        // Sort product names within each category
-//        categoryProductsMap.forEach((category, productNames) -> Collections.sort(productNames));
-//
-//        return categoryProductsMap;
-//    }
+        CustomerOrderDto customerOrderDto = new CustomerOrderDto();
+        customerOrderDto.setCustomerNumber(customerNumber);
+        customerOrderDto.setSellerNumber(sellerNumber);
+        customerOrderDto.setCustomerOrderTotalPrice(totalPrice);
+        sellerCustomerSqlMapper.insertCustomerOrder(customerOrderDto);
 
+        //주문메뉴
+        for (CustomerCartDto customerCartDto : customerCartDtoList) {
+            CustomerOrderMenuDto customerOrderMenuDto = new CustomerOrderMenuDto();
+            customerOrderMenuDto.setCustomerNumber(customerNumber);
+            customerOrderMenuDto.setCustomerOrderNumber(customerOrderDto.getCustomerOrderNumber());
+            customerOrderMenuDto.setMenuNumber(customerCartDto.getMenuNumber());
+            customerOrderMenuDto.setMenuOptionNumber(customerCartDto.getMenuOptionNumber());
+            customerOrderMenuDto.setOrderMenuQuantity(customerCartDto.getCartQuantity());
+            sellerCustomerSqlMapper.insertCustomerOrderMenu(customerOrderMenuDto);
+        }
+        // 장바구니 삭제
+        sellerCustomerSqlMapper.deleteCustomerCart(customerNumber);
+    }
+
+    // 장바구니 통합 리스트 // 중요함
+    public Map<String, List<CustomerOrderTotalDto>> selectOrderTotalList(int customerNumber) {
+
+        List<CustomerOrderTotalDto> customerOrderTotalList = sellerCustomerSqlMapper.selectOrderTotalList(customerNumber);
+
+        // 중복 없는 메뉴 이름, 가격, 이미지 조합 리스트 추출
+        List<String> filteredList = customerOrderTotalList.stream()
+                .map(dto -> dto.getMenuName() + "_" + dto.getMenuPrice() + "_" + dto.getMenuImage() + "_" + dto.getCustomerOrderTotalPrice())
+                .distinct()
+                .toList();
+
+        // 결과를 담을 맵
+        Map<String, List<CustomerOrderTotalDto>> result = new LinkedHashMap<>();
+        for (String key : filteredList) {
+            List<CustomerOrderTotalDto> filteredOrders = customerOrderTotalList.stream()
+                    .filter(dto -> (dto.getMenuName() + "_" + dto.getMenuPrice() + "_" + dto.getMenuImage() + "_" + dto.getCustomerOrderTotalPrice()).equals(key))
+                    .toList();
+            result.put(key, filteredOrders);
+        }
+
+        return result;
+    }
+
+    // 장바구니 삭제
+    public void deleteCustomerOrder(int customerNumber) {
+        sellerCustomerSqlMapper.deleteCustomerOrder(customerNumber);
+    }
 }
+
+//    // 주소등록
+//    public void insertCustomerAddress(CustomerAddressDto customerAddressDto) {
+//        sellerCustomerSqlMapper.insertCustomerAddress(customerAddressDto);
+//    }
+//    // 주소리스트
+//    public List<CustomerAddressDto> selectCustomerAddressList(int customerNumber) {
+//        return sellerCustomerSqlMapper.selectCustomerAddressList(customerNumber);
+//    }
+//    // 주문 주소 출력
+//    public String selectCustomerAddress(int customerNumber){
+//        return sellerCustomerSqlMapper.selectCustomerAddress(customerNumber);
+//    }

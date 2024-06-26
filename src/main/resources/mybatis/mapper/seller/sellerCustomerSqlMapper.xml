@@ -10,78 +10,75 @@
     <select id="selectSellersByNumber" resultType="SellerDto">
         SELECT * FROM fc_seller WHERE sellerNumber = #{sellerNumber}
     </select>
-
-    <select id="selectProductCategoryByNumber" resultType="ProductCategoryDto">
-        SELECT * FROM fc_productCategory WHERE productCategoryNumber = #{productCategoryNumber};
+    <!-- 지점 메뉴 카테고리 출력 -->
+    <select id="selectMenuCategoryList" resultType="CustomerMenuDto">
+        SELECT * FROM fc_menu ORDER By menuNumber ASC
     </select>
-
-    <select id="selectProductCategoryNameList" resultType="ProductCategoryDto">
-        SELECT * FROM fc_productCategory ORDER By productCategoryNumber asc
+    <!-- 지점 메뉴 상세보기(장부구니 등록전)-->
+    <select id="selectMenuDetail" resultType="CustomerMenuDto">
+        SELECT * FROM fc_menu WHERE menuNumber = #{menuNumber}
     </select>
-
-    <select id="selectProductList" resultType="ProductDto">
-        SELECT * FROM fc_product WHERE productCategoryNumber = #{productCategoryNumber}
+    <!-- 지점 메뉴 상세보기_옵션 리스트 -->
+    <select id="selectMenuOptionList" resultType="CustomerMenuOptionDto">
+        SELECT * FROM fc_menuOption WHERE menuNumber = #{menuNumber}
     </select>
-
-    <select id="selectProductDetailMenu" resultType="ProductDto">
-        SELECT * FROM fc_product WHERE productNumber = #{productNumber}
-    </select>
-
-    <!-- 지점 메인메뉴 옵션 리스트 -->
-    <select id="selectProductOptionsWithValuesList" resultType="ProductOptionsWithValuesDto">
-        SELECT o.*, ov.optionValueName , ov.additionalPrice
-        FROM fc_productOption o
-                 JOIN fc_productOptionValue ov ON o.optionValueNumber = ov.optionValueNumber
-        WHERE o.productNumber = #{productNumber}
-    </select>
-    <!-- 지점 메뉴 사이드 옵션 리스트 -->
-    <select id="selectProductCategoryJoinList" resultType="ProductCategoryJoinDto">
-        SELECT p.productNumber, pc.productCategoryName, p.productName, p.productPrice FROM fc_product p
-        JOIN fc_productCategory pc ON p.productCategoryNumber = pc.productCategoryNumber
-        WHERE pc.productCategoryNumber IN
-        <foreach collection="productCategoryNumbers" item="productCategoryNumber" open="(" separator="," close=")">
-            #{productCategoryNumber}
-        </foreach>
-        ORDER BY pc.productCategoryNumber ASC
-    </select>
-    <!-- collection : 파라미터값 / item= : 파라미터랑 일치하는값 반환  -->
-
     <!-- 장바구니 등록 -->
-    <insert id="insertOrderMenu">
-        INSERT INTO fc_orderMenu(
-            productNumber, productOptionNumber, orderMenuPrice, orderMenuQuantity, orderMenuState
-        )
+    <insert id="insertCustomerCart">
+        INSERT INTO fc_customerCart
+        (customerNumber, sellerNumber, menuNumber, menuOptionNumber, cartQuantity)
         values
-        ( #{productNumber}, #{productOptionNumber}, #{orderMenuPrice}, 1 , #{orderMenuState})
+            (#{customerNumber}, #{sellerNumber}, #{menuNumber}, #{menuOptionNumber}, 1)
     </insert>
-
-
-    <!-- 장바구니 중복메뉴-->
-<!--    <select id="selectOrderMenuDuplicateCheck" resultType="OrderMenuDto">-->
-<!--        SELECT * FROM fc_orderMenu WHERE productNumber = #{productNumber}-->
-<!--    </select>-->
-
-<!--    <select id="selectOrderMenuList" resultType="OrderMenuProductDto">-->
-<!--        SELECT o.*, p.productName,p.productImage-->
-<!--        FROM fc_orderMenu o-->
-<!--                 JOIN fc_product p ON o.productNumber = p.productNumber-->
-<!--        ORDER By orderMenuPrice DESC;-->
-<!--    </select>-->
-
-<!--    <delete id="deleteOrderMenu">-->
-<!--        DELETE FROM fc_orderMenu WHERE customerOrderNumber = #{customerOrderNumber}-->
-<!--    </delete>-->
-
-<!--    <update id="updateOrderMenuQuantity">-->
-<!--        UPDATE fc_orderMenu o-->
-<!--        INNER JOIN fc_product p ON o.productNumber = p.productNumber-->
-<!--        SET o.orderMenuPrice = p.productPrice * #{orderMenuQuantity},-->
-<!--	        o.orderMenuQuantity = #{orderMenuQuantity}-->
-<!--        WHERE o.customerOrderNumber = #{customerOrderNumber}-->
-<!--    </update>-->
-
-
-
+    <!-- 장바구니 리스트 -->
+    <select id="selectCustomerCartList" resultType="CustomerCartDto">
+        SELECT * FROM fc_customerCart WHERE customerNumber = #{customerNumber}
+    </select>
+    <!-- 장바구니 삭제 -->
+    <delete id="deleteCustomerCart">
+        DELETE FROM fc_customerCart WHERE customerNumber = #{customerNumber};
+    </delete>
+    <!-- 구매자주문(장바구니에 있는거 저장하기) -->
+    <insert id="insertCustomerOrder" useGeneratedKeys="true" keyProperty="customerOrderNumber">
+        INSERT INTO fc_customerOrder
+            (customerNumber, sellerNumber, customerOrderTotalPrice)
+        VALUES
+            (#{customerNumber} ,#{sellerNumber},#{customerOrderTotalPrice})
+    </insert>
+    <!-- 구매자 주문 메뉴 -->
+    <insert id="insertCustomerOrderMenu">
+        INSERT INTO fc_customerOrderMenu
+        (customerNumber, customerOrderNumber, menuNumber, menuOptionNumber, orderMenuQuantity)
+        VALUES
+            (#{customerNumber}, #{customerOrderNumber}, #{menuNumber}, #{menuOptionNumber}, #{orderMenuQuantity})
+    </insert>
+    <!--통합가격을 위한 메뉴테이블 셀렉-->
+    <select id="selectMenuPrice" resultType="int">
+        SELECT menuPrice
+        FROM fc_menu
+        WHERE menuNumber = #{menuNumber}
+    </select>
+    <!--통합가격을 위한 메뉴옵션 셀렉-->
+    <select id="selectMenuOptionPrice" resultType="int">
+        SELECT menuOptionPrice
+        FROM fc_menuOption
+        WHERE menuOptionNumber = #{menuOptionNumber}
+    </select>
+    <!-- 장바구니 통합 리스트 -->
+    <select id="selectOrderTotalList" resultType="CustomerOrderTotalDto">
+        SELECT com.customerNumber ,com.orderMenuQuantity,
+               mo.menuOptionName, mo.menuOptionContent, mo.menuOptionPrice,
+               m.menuName, m.menuPrice ,m.menuImage,
+               co.customerOrderTotalPrice,co.customerOrderCreatedAt
+        FROM fc_customerOrderMenu com
+                 JOIN fc_menuOption mo ON mo.menuOptionNumber = com.menuOptionNumber
+                 JOIN fc_menu m ON m.menuNumber = com.menuNumber
+                 JOIN fc_customerOrder co ON co.customerOrderNumber = com.customerOrderNumber
+        WHERE com.customerNumber = #{customerNumber}
+    </select>
+    <!-- 장바구니 삭제 -->
+    <delete id="deleteCustomerOrder">
+        DELETE FROM fc_customerOrderMenu WHERE customerNumber = #{customerNumber};
+    </delete>
     <!-- 주소 등록 -->
     <insert id="insertCustomerAddress">
         INSERT INTO fc_customerAddress (customerNumber, deliveryAddress) values(#{customerNumber}, #{deliveryAddress});

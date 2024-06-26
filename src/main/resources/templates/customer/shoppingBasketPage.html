@@ -14,12 +14,11 @@
 <body>
 
 <!--장바구니  네비 상단-->
-<div class="container-fluid fixed-top py-2">
+<div class="container-fluid fixed-top py-2 bg-light">
     <div class="row">
         <div class="col">
             <form action="/customer/storesDetailPage#menu" method="get">
                 <input type="hidden" name="sellerNumber" th:value="${param.sellerNumber}">
-                <input type="hidden" name="productCategoryNumber" th:value="${param.productCategoryNumber}">
                 <button type="submit" class="border-0 ps-0" style="background-color: transparent">
                 <span class="fs-3" style="color: black">
                     <i class="bi bi-chevron-left"></i>
@@ -54,51 +53,109 @@
 </div>
 
 <!--장바구니 주문 네비 상단-->
-<div class="container-fluid bg-light" style="margin-top: 3rem;" th:if="${session.customerDto != null}">
-    <div class="row py-3 border-bottom">
-        <div class="col fs-4">
-            주문 매장
-        </div>
-        <div class="col fs-4 text-end">
-            <span th:text="${sellerDto.sellerName}"></span>
+<div class="container-fluid" style="margin-top: 3rem;" th:if="${session.customerDto != null}">
+    <div class="row px-2 pt-3">
+        <div class="col">
+            <span>배달-포장</span>
+            <span>1</span>
         </div>
     </div>
-    <!-- 장바구니 리스트    -->
-    <div class="row py-3 border-bottom" th:each="orderMenuList : ${selectOrderMenuList}">
-        <div class="col-4">
-            <img th:src="${orderMenuList.productImage}" style="width: 6rem; height: 6rem">
+    <div class="row  py-3 px-2">
+        <div class="col-auto fw-bold" style="font-size: 0.9rem">
+            <span>파이브가이즈</span>
+            <span class="ms-1">강남남나남남</span><span><i class="bi bi-chevron-right"></i></span>
         </div>
-        <div class="col p-0 mt-2">
-            <div class="row mb-1">
+        <div class="col text-end" style="font-size: 0.9rem">
+            <span><i class="bi bi-stopwatch"></i></span>
+            <span>48~63분 후 도착</span>
+        </div>
+    </div>
+    <!-- 메뉴 리스트 -->
+    <div class="row mx-2 pt-1 border rounded-4 px-2">
+        <div class="col">
+
+            <div class="row mt-2" th:each="orderTotalMap : ${selectOrderTotalList}">
                 <div class="col">
-                    <span th:text="${orderMenuList.productName}">레드윙</span>
+
+                    <div class="row">
+                        <div class="col">
+
+                            <!-- 메뉴 목록-->
+                            <div class="row py-1">
+                                <div class="col">
+                                    <div class="row">
+                                        <div class="col">
+                                            <span class="fw-bold" th:text="${#strings.arraySplit(orderTotalMap.getKey(), '_')[0]}">메뉴이름</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col" style="font-size: 0.9rem">
+                                            <span th:text="|가격 : ${#strings.arraySplit(orderTotalMap.getKey(), '_')[1]}|">메뉴가격</span>
+                                        </div>
+                                    </div>
+                                    <div class="row" th:each="side : ${orderTotalMap.getValue()}">
+                                        <div class="col" style="font-size: 0.9rem">
+                                            <span th:text="${side.menuOptionName} + ' : '"></span>
+                                            <span th:text="${side.menuOptionContent}">순사라</span>
+                                            <span th:text="|(${#numbers.formatInteger(side.menuOptionPrice, 0, 'COMMA')})|">치킨가격</span>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col">
+                                            <span th:text="|${#numbers.formatInteger(orderTotalMap.getKey().split('_')[3], 0, 'COMMA')}원|">치킨가격</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-3 text-end g-0">
+                                    <img class="basket-img" th:src="${#strings.arraySplit(orderTotalMap.getKey(), '_')[2]}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row pb-2 g-0 border-bottom">
+                        <div class="col p-">
+                            <a th:href="@{/customer/deleteOrderMenu(customerNumber=${session.customerDto.getCustomerNumber()}, sellerNumber=${param.sellerNumber})}">
+                                <span>삭제</span>
+                            </a>
+                            </a>
+                        </div>
+                        <div class="col pe-3 text-end">
+                            <span>수량~~</span>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="row mb-1">
-                <div class="col">
-                    <span th:text="|${#numbers.formatInteger(orderMenuList.orderMenuPrice, 0, 'COMMA')}원|">치킨가격</span>
+            <!-- 메뉴 추가 : 지점이동 -->
+            <div class="row border-top">
+                <div class="col py-2 text-center">
+                    <span>+메뉴추가</span>
                 </div>
             </div>
 
-            <div class="row">
-                <!-- 수량 수정 -->
-                <form class="col" action="/customer/updateOrderMenu" method="get">
-                    <input type="number" name="orderMenuQuantity" th:value="${orderMenuList.orderMenuQuantity}" class="mt-1" style="width: 5rem">
-                    <input type="hidden" name="customerOrderNumber" th:value="${orderMenuList.customerOrderNumber}">
-                    <input type="hidden" name="sellerNumber" th:value="${param.sellerNumber}">
-                </form>
-                <!-- 삭제 -->
-                <div class="col p-0 text-end me-3">
-                    <form action="/customer/deleteOrderMenu" method="get">
-                        <input type="hidden" name="customerOrderNumber" th:value="${orderMenuList.customerOrderNumber}">
-                        <input type="hidden" name="sellerNumber" th:value="${param.sellerNumber}">
-                        <button class="btn" type="submit">삭제</button>
-                    </form>
-                </div>
-            </div>
         </div>
     </div>
+    <!-- 장바구니 리스트    -->
+
+    <!--            <div class="row">-->
+    <!-- 수량 수정 -->
+    <!--                <form class="col" action="/customer/updateOrderMenu" method="get">-->
+    <!--                    <input type="number" name="orderMenuQuantity" th:value="${orderMenuList.orderMenuQuantity}" class="mt-1" style="width: 5rem">-->
+    <!--                    <input type="hidden" name="customerOrderNumber" th:value="${orderMenuList.customerOrderNumber}">-->
+    <!--                    <input type="hidden" name="sellerNumber" th:value="${param.sellerNumber}">-->
+    <!--                </form>-->
+    <!--                &lt;!&ndash; 삭제 &ndash;&gt;-->
+    <!--                <div class="col p-0 text-end me-3">-->
+    <!--                    <form action="/customer/deleteOrderMenu" method="get">-->
+    <!--                        <input type="hidden" name="customerOrderNumber" th:value="${orderMenuList.customerOrderNumber}">-->
+    <!--                        <input type="hidden" name="sellerNumber" th:value="${param.sellerNumber}">-->
+    <!--                        <button class="btn" type="submit">삭제</button>-->
+    <!--                    </form>-->
 </div>
+</div>
+</div>
+</div>
+</div>
+
 <div class="container-fluid py-2 fixed-bottom border bg-light">
     <div class="row mx-1">
         <div class="col border rounded-3 text-center py-1" style="background-color: #D72239">

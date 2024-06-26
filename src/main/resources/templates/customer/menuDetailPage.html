@@ -1,4 +1,7 @@
-<!doctype html>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.mn.js"></script>
+<script src="https://kit.fontawesome.com/7b271bba58.js" crossorigin="anonymous"></script>
+</body>
+</html><!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" >
 <head>
     <meta charset="UTF-8">
@@ -25,9 +28,9 @@
 <!--매장 주문 네비 상단-->
 <div class="container-fluid fixed-top py-2">
     <div class="row">
-        <form class="col text-start" action="/customer/storesDetailPage#menu" method="get">
+        <form class="col text-start" action="/customer/storesDetailPage" method="get">
             <input type="hidden" name="sellerNumber" th:value="${param.sellerNumber}">
-            <input type="hidden" name="productCategoryNumber" th:value="${param.productCategoryNumber}">
+            <input type="hidden" name="menuCategory" th:value="${param.menuCategory}">
             <button type="submit" class="border-0 ps-0" style="background-color: transparent">
                 <span class="fs-3" style="color: black">
                     <i class="bi bi-chevron-left"></i>
@@ -37,129 +40,78 @@
         <div class="col text-center"></div>
     </div>
 </div>
-
-<!--<div class="container">-->
-<!--    &lt;!&ndash; 메뉴 이미지 &ndash;&gt;-->
-<!--    <div class="row" style="height: 20rem">-->
-<!--        <div class="col g-0">-->
-<!--            <img th:src="${productDto.productImage}" class="orderMenuDetailImg">-->
-<!--        </div>-->
-<!--    </div>-->
-<!--    <div class="row px-2">-->
-<!--        <div class="col fw-bold">-->
-<!--            <span class="fs-3" th:text="${productDto.productName}"></span>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--    <div class="row px-2 mt-2">-->
-<!--        <div class="col">-->
-<!--            <span th:text="'# ' + ${productDto.productInformation}"></span>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--    <div class="row px-2 py-3 orderMenuBottomB">-->
-<!--        <div class="col">-->
-<!--            <span class="fs-3 fw-bold">가격</span>-->
-<!--        </div>-->
-<!--        <div class="col text-end">-->
-<!--            <span class="fs-3 fw-bold" th:text="|${#numbers.formatInteger(productDto.productPrice, 0, 'COMMA')}원|">치킨가격</span>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
 <!--메뉴 상세 -->
 <div class="container">
-    <!-- 메뉴 이미지 -->
-    <div class="row" style="height: 20rem">
-        <div class="col g-0">
-             <img th:src="${productDto.productImage}" class="orderMenuDetailImg">
-        </div>
-    </div>
-    <div class="row px-2">
-        <div class="col fw-bold">
-            <span class="fs-3" th:text="${productDto.productName}"></span>
-        </div>
-    </div>
-    <div class="row px-2 mt-2">
+    <div class="row">
         <div class="col">
-            <span th:text="'# ' + ${productDto.productInformation}"></span>
-        </div>
-    </div>
-    <div class="row px-2 py-3">
-        <div class="col">
-            <span class="fs-3 fw-bold">가격</span>
-        </div>
-        <div class="col text-end">
-            <span class="fs-3 fw-bold" th:text="|${#numbers.formatInteger(productDto.productPrice, 0, 'COMMA')}원|">치킨가격정보</span>
+            <!-- 메뉴 목록-->
+            <div class="row" style="height: 20rem">
+                <div class="col g-0">
+                    <img th:src="${MenuDetail.menuImage}" class="orderMenuDetailImg">
+                </div>
+            </div>
+            <form action="/customer/addToShoppingBasket" method="get">
+                <div class="row px-2">
+                    <div class="col fw-bold">
+                        <span class="fs-3" th:text="${MenuDetail.menuName}">메뉴이름</span>
+                    </div>
+                </div>
+                <div class="row px-2 mt-2">
+                    <div class="col">
+                        <span th:text="'# ' + ${MenuDetail.menuInformation}">메뉴설명</span>
+                    </div>
+                </div>
+                <div class="row px-2 py-3">
+                    <div class="col">
+                        <span class="fs-3 fw-bold">가격</span>
+                    </div>
+                    <div class="col text-end">
+                        <span class="fs-3 fw-bold" th:text="|${#numbers.formatInteger(MenuDetail.menuPrice, 0, 'COMMA')}원|">치킨가격정보</span>
+                    </div>
+                </div>
+                <!-- 치킨 옵션 -->
+                <div class="row" th:each="menuOptionMap : ${menuOptionDtoList}">
+                    <div class="col">
+                        <div class="row py-1 px-2 bg-light">
+                            <div class="col">
+                                <span th:text="${menuOptionMap.getKey()}">옵션이름</span>
+                            </div>
+                            <div class="col text-end">
+                                <span>필수</span>
+                            </div>
+                        </div>
+                        <div class="row my-2 px-2" th:each="menuOptionValue, subIter : ${menuOptionMap.getValue()}">
+                            <div class="col" th:if="${menuOptionValue.menuOptionName == '부위선택'}">
+                                <input type="radio" name="menuOptionNumber" th:value="${menuOptionValue.menuOptionNumber}" th:checked="${subIter.index == 0}">
+                                <span class="ms-1" th:text="${menuOptionValue.menuOptionContent}">메인 옵션</span>
+                            </div>
+                            <div class="col" th:unless="${menuOptionValue.menuOptionName == '부위선택'}">
+                                <input type="checkbox" name="menuOptionNumber" th:value="${menuOptionValue.menuOptionNumber}">
+                                <span class="ms-1" th:text="${menuOptionValue.menuOptionContent}">사이드 옵션</span>
+                            </div>
+                            <div class="col text-end">
+                                <span th:text="|+${#numbers.formatInteger(menuOptionValue.menuOptionPrice, 0, 'COMMA')}원|">옵션가격</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 결제하기 하단 네비 -->
+                <div class="row mx-1 py-2 px-2 fixed-bottom border bg-light">
+                    <div class="col border rounded-3 text-center py-1" style="background-color: #D72239">
+                        <input type="hidden" name="sellerNumber" th:value="${param.sellerNumber}">
+                        <input type="hidden" name="menuNumber" th:value="${param.menuNumber}">
+                        <button class="btn border-0 fs-2" style="color:white;">
+                            <span><i class="bi bi-bag"></i></span>
+                            <span>장바구니</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>
-<form action="/customer/test" method="get">
-<!--<form action="/customer/addToShoppingBasket" method="get">-->
-<div class="container">
-    <!-- 치킨 옵션    -->
-    <div class="row" th:each="optionMap : ${optionWithValuesList}">
-        <div class="col">
-            <div class="row py-1 px-2 bg-light">
-                <div class="col">
-                    <span th:text="${optionMap.getKey()}"></span>
-                </div>
-                <div class="col text-end">
-                    <span>필수</span>
-                </div>
-            </div>
-            <div class="row my-2 px-2" th:each="optionValue, subIter : ${optionMap.getValue()}">
-                <div class="col">
-                    <input type="radio" name="productOptionNumber" th:value="${optionValue.productOptionNumber}" th:checked="${subIter.index == 0}">
-                    <span class="ms-1" th:text="${optionValue.optionValueName}">한마리</span>
-                </div>
-                <div class="col text-end">
-                    <span th:text="|+${#numbers.formatInteger(optionValue.additionalPrice, 0, 'COMMA')}원|">치킨옵션가격</span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- 사이드 -->
-    <div class="row" th:each="categoryJoinMap : ${categoryJoinList}">
-        <div class="col">
-            <div class="row py-1 px-2 bg-light">
-                <div class="col">
-                    <span th:text="${categoryJoinMap.getKey()}"></span>
-                </div>
-                <div class="col text-end">
-                    <span>선택</span>
-                </div>
-            </div>
-            <div class="row my-2 px-2" th:each="categoryJoinValue, subIter : ${categoryJoinMap.getValue()}">
-                <div class="col">
-                     <input type="checkbox" name="productNumber" th:value="${categoryJoinValue.productNumber}">
-                    <span class="ms-1" th:text="${categoryJoinValue.productName}">사이드,음료,소스</span>
-                </div>
-                <div class="col text-end">
-                    <span th:text="|+${#numbers.formatInteger(categoryJoinValue.productPrice, 0, 'COMMA')}원|">사이드옵션가격</span>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="container-fluid" style="margin-top: 3rem"></div>
-<!-- 결제하기 하단 네비 -->
-<div  class="container-fluid py-2 fixed-bottom border bg-light">
-    <div class="row mx-1">
-        <div class="col border rounded-3 text-center py-1" style="background-color: #D72239">
-<!--            <form action="/customer/addToShoppingBasket" method="post">-->
-                <input type="hidden" name="sellerNumber" th:value="${param.sellerNumber}">
-                <input type="hidden" name="productNumber" th:value="${param.productNumber}">
-                <input type="hidden" name="orderMenuPrice" th:value="${productDto.productPrice}">
-                <input type="hidden" name="productCategoryNumber" th:value="${param.productCategoryNumber}">
-                <button class="btn border-0 fs-2" style="color:white;">
-                    <span><i class="bi bi-bag"></i></span>
-                    <span>장바구니</span>
-                </button>
-<!--            </form>-->
-        </div>
-    </div>
-</div>
-</form>
+<div class="container-fluid" style="margin-top: 6rem"></div>
 
-<div class="container-fluid" style="margin-top: 8rem"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.mn.js"></script>
 <script src="https://kit.fontawesome.com/7b271bba58.js" crossorigin="anonymous"></script>

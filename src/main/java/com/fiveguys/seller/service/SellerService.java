@@ -282,6 +282,19 @@ public class SellerService {
     }
 
 
+    //통계 시작
+
+
+    public int selectOrderTotalPrice(int id) {
+
+        SellerOrderDto sellerOrderDto = sellerSqlMapper.selectSellerOrderInform(id);
+
+        int orderTotalPrice = sellerSqlMapper.selectOrderTotalPrice(sellerOrderDto);
+
+        return orderTotalPrice;
+    }
+
+
 
 
 

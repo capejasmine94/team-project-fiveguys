@@ -117,23 +117,22 @@
                         <thead>
                         <tr>
                             <th class="text-center" scope="col">번호</th>
-                            <th scope="col">지점명</th>
-                            <th scope="col">내용</th>
-                            <th scope="col">리뷰작성일</th>
+                            <th class="text-center" scope="col">지점명</th>
+                            <th class="text-center" scope="col">내용</th>
+                            <th class="text-center" scope="col">리뷰작성일</th>
+                            <th class="text-center" scope="col"></th>
                         </tr>
                         </thead>
 
                         <tbody>
                         <tr th:each="reviewInform : ${reviewInform}">
                             <td class="text-center" th:text="${reviewInform.sellerReviewDto.sellerReviewNumber}"></td>
-                            <td th:text="${reviewInform.sellerDto.sellerName}"></td>
-                            <td>
-                                <a th:href="@{/seller/reviewDetailPage(id=${reviewInform.sellerReviewDto.sellerReviewNumber})}"
-                                   th:text="${#strings.length(reviewInform.sellerReviewDto.sellerReviewContent) > 7 ? #strings.substring(reviewInform.sellerReviewDto.sellerReviewContent, 0, 7) + '...' : reviewInform.sellerReviewDto.sellerReviewContent}"
-                                   class="text-decoration-none fw-bold text-black">
-                                </a>
+                            <td class="text-center" th:text="${reviewInform.sellerDto.sellerName}"></td>
+                            <td class="text-center" th:text="${#strings.length(reviewInform.sellerReviewDto.sellerReviewContent) > 7 ? #strings.substring(reviewInform.sellerReviewDto.sellerReviewContent, 0, 7) + '...' : reviewInform.sellerReviewDto.sellerReviewContent}"></td>
+                            <td class="text-center" th:text="${#dates.format(reviewInform.sellerReviewDto.sellerReviewCreatedAt, 'yyyy-MM-dd')}"></td>
+                            <td class="text-center">
+                                <a class="btn btn-dark btn-sm" th:href="@{/seller/reviewDetailPage(id=${reviewInform.sellerReviewDto.sellerReviewNumber})}">리뷰보기</a>
                             </td>
-                            <td th:text="${#dates.format(reviewInform.sellerReviewDto.sellerReviewCreatedAt, 'yyyy-MM-dd')}"></td>
 
                         </tr>
                         </tbody>

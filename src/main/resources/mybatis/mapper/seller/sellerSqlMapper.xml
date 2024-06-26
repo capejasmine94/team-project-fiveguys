@@ -172,6 +172,14 @@
 
 
 
+    <select id="selectOrderTotalPrice">
+        select sum(fs.sellerOrderQuantity * fm.materialPrice) from fc_sellerOrder fs
+        inner join fc_material fm
+        on fs.materialNumber = fm.materialNumber
+        where sellerNumber = #{sellerNumber} and sellerOrderCreatedAt = #{sellerOrderCreatedAt}
+    </select>
+
+
 
 
 

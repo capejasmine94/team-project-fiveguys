@@ -173,8 +173,10 @@ public class SellerController {
     @RequestMapping("orderDetailCheckPage")
     public String orderDetailCheckPage(Model model, SellerOrderDto sellerOrderDto, int id) {
 
+        int totalPrice = sellerService.selectOrderTotalPrice(id);
         List<Map<String, Object>> sellerOrderList = sellerService.selectSameSellerOrder(sellerOrderDto, id);
         model.addAttribute("sellerOrderList", sellerOrderList);
+        model.addAttribute("totalPrice", totalPrice);
 
         return "/seller/orderDetailCheckPage";
     }

@@ -59,6 +59,8 @@ public interface SellerSqlMapper {
 
     public void updateReview(SellerReviewDto sellerReviewDto);
 
+    public int selectOrderTotalPrice(SellerOrderDto sellerOrderDto);
+
 
 
 

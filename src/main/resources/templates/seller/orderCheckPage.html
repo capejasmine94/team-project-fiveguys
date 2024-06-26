@@ -124,8 +124,8 @@
                             <td class="text-center" th:text="${sellerOrderList.sellerOrderDto.sellerOrderNumber}"></td>
                             <td class="text-center" th:text="${sellerOrderList.sellerDto.sellerName}"></td>
                             <td class="text-center" th:text="${#dates.format(sellerOrderList.sellerOrderDto.sellerOrderCreatedAt, 'yyyy-MM-dd')}"></td>
-                            <td th:text="${sellerOrderList.sellerOrderDto.sellerOrderStatus}"></td>
-                            <td><a class="btn btn-dark btn-sm" th:href="@{/seller/orderDetailCheckPage(id=${sellerOrderList.sellerOrderDto.sellerOrderNumber})}">상세보기</a></td>
+                            <td class="text-center" th:text="${sellerOrderList.sellerOrderDto.sellerOrderStatus}"></td>
+                            <td class="text-center"><a class="btn btn-dark btn-sm" th:href="@{/seller/orderDetailCheckPage(id=${sellerOrderList.sellerOrderDto.sellerOrderNumber})}">상세보기</a></td>
                         </tr>
                         </tbody>
                     </table>

@@ -253,6 +253,14 @@ public class MasterService {
         return sellerOrderList;
     }
 
+    public int selectOrderTotalPrice(int id) {
+        SellerOrderDto sellerOrderDto = masterSqlMapper.selectSellerOrder(id);
+        int totalPrice = masterSqlMapper.selectOrderTotalPrice(sellerOrderDto);
+        return totalPrice;
+    }
+
+
+
 
 
 

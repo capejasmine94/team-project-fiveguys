@@ -55,6 +55,11 @@
 
 
             <div class="row">
+                <div class="col text-end fs-6 fw-semibold" th:text="'주문총액 : ' + ${#numbers.formatInteger(totalPrice, 3 , 'COMMA')} + '₩'"></div>
+            </div>
+
+
+            <div class="row">
                 <div class="col-5"></div>
                 <a href="/seller/orderCheckPage" class="col-2 btn btn-dark fw-bold bi bi-backspace-fill"></a>
                 <div class="col-5"></div>

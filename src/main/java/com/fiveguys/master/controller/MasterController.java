@@ -119,11 +119,13 @@ public class MasterController {
 
 
         SellerOrderDto sellerOrderDtos = masterService.selectSellerOrder(id);
+        int totalPrice = masterService.selectOrderTotalPrice(id);
 
         List<Map<String, Object>> sellerOrderInform = masterService.selectSameSellerOrder(sellerOrderDto, id);
 
         model.addAttribute("sellerOrderInform", sellerOrderInform);
         model.addAttribute("sellerOrderDto", sellerOrderDtos);
+        model.addAttribute("totalPrice", totalPrice);
 
         return "/master/orderDetailPage";
     }

@@ -58,5 +58,9 @@ public interface MasterSqlMapper {
 
     public MasterReplyDto selectMasterReplyByReviewNumber(int sellerReviewNumber);
 
+    public int selectOrderTotalPrice(SellerOrderDto sellerOrderDto);
+
+
+
 
 }

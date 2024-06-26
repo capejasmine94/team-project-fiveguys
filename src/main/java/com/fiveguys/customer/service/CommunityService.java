@@ -35,14 +35,14 @@ public class CommunityService {
             CustomerDto customerDto = communitySqlMapper.selectCustomerNumber(writerPk);
 
             //좋아요 카운트
-            int communiyNumber = communityDto.getCommunityNumber();
-            int likeCount = communitySqlMapper.selectCountCommunityLike(communiyNumber);
+            int communityNumber = communityDto.getCommunityNumber();
+            int likeCount = communitySqlMapper.selectCountCommunityLike(communityNumber);
 
             //댓글 카운트
-            int commentCount = communitySqlMapper.selectCountCommentNumber(communiyNumber);
+            int commentCount = communitySqlMapper.selectCountCommentNumber(communityNumber);
 
             //이미지 처리
-            List<CommunityDetailImageDto> communityImageDtoFile = communitySqlMapper.selectCommunityDatailImageDtoList(communiyNumber);
+            List<CommunityDetailImageDto> communityImageDtoFile = communitySqlMapper.selectCommunityDatailImageDtoList(communityNumber);
 
             Map<String, Object> map = new HashMap<>();
 
@@ -112,7 +112,7 @@ public class CommunityService {
             map.put("communityCommentDto", communityCommentDto);
             map.put("customerDto", customerDto);
 
-            //세민
+
 //            int CommentWriterPk = (int)communityCommentDto.get("commentNumber");
 //            CustomerDto customerDto = communitySqlMapper.selectCustomerNumber(CommentWriterPk);
 

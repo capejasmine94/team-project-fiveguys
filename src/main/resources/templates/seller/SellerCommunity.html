@@ -238,7 +238,6 @@
                                         </div>
                                         <div class="col text-center">
                                             <span id="firstPageContainer" style="cursor:pointer;"   class="px-3 pt-3">
-                                                <span id="firstPage"></span>
                                                 <span>...</span>
                                             </span>
 
@@ -345,7 +344,7 @@
                                                 <span><i class="bi-eye"></i></span>
                                                 <span id="sellerCommunityVisitCount"></span>
                                             </div>
-                                            <div id="updateDeleteArticleContainer" class="col text-end me-2 day-top">
+                                            <div id="updateDeleteArticleContainer" class="col text-end me-2 ">
                                                 <span onclick="commentUpdateModal()" style="cursor:pointer;">
                                                      <i id="updateArticle" class="bi bi-pencil"></i>
                                                      <span>수정</span>
@@ -382,8 +381,8 @@
                                     </div>
                                 </div>
                                 <div class="row py-2 justify-content-center">
-                                    <div onclick="sellerCommunityLikeProcess()" class="col-2 text-center border border-danger-subtle rounded py-2" style="cursor: pointer">
-                                        <i class="heart bi-heart text-danger"></i>
+                                    <div onclick="sellerCommunityLikeProcess()" class="likeStatusContainer col-2 text-center border border-dark-subtle rounded py-2" style="cursor: pointer">
+                                        <i class="heart bi-heart text-dark"></i>
                                         <span>좋아요</span>
                                         <span id="detailLikeCount"></span>
                                     </div>
@@ -411,7 +410,7 @@
                                               name="sellerCommunityCommentContent" placeholder="댓글쓰기"></textarea>
                                     </div>
                                     <div class="col">
-                                        <input class=" form-control btn btn-danger py-3" type="submit" value="작성">
+                                        <input class=" form-control btn btn-outline-danger py-3" type="submit" value="작성">
                                     </div>
                                 </form>
                             </div>
@@ -510,7 +509,7 @@
 
                     </div>
                     <div class="col">
-                        <input class="form-control btn btn-danger py-3 " type="submit" value="작성">
+                        <input class="form-control btn btn-outline-danger py-3 " type="submit" value="작성">
                     </div>
                 </form>
                 <div onclick="addReply(this)" class="row py-2" style="cursor: pointer;">

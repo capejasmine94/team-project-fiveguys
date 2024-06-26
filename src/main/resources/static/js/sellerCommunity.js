@@ -116,79 +116,6 @@ function getSellerCommunityList(currentPage,searchWord,sortedOption,sellerSort){
             const sellerCommentWrapper = document.querySelector(".sellerCommentWrapper");
             sellerCommunityBox.innerHTML = '';
 
-            if(response.selectSellerCommunityByPopularity !==null){
-                for(let e of response.selectSellerCommunityByPopularity){
-
-                    sellerCommentWrapper.classList.add("bg-body-secondary");
-
-                    const newSellerCommentWrapper = sellerCommentWrapper.cloneNode(true);
-                    const sellerCommentMain =newSellerCommentWrapper.querySelector(".sellerCommentMain");
-
-
-                    const badge = newSellerCommentWrapper.querySelector(".badgeShow");
-                    badge.classList.add("badge","rounded-pill","text-bg-danger","align-top");
-                    badge.innerText="인기";
-
-                    sellerCommentMain.setAttribute("onclick",`sellerCommunityDetailPage(${e.sellerCommunityDto.sellerCommunityNumber})`);
-                    const sellerCommentTitle = newSellerCommentWrapper.querySelector(".sellerCommentTitle");
-                    sellerCommentTitle.innerText=e.sellerCommunityDto.sellerCommunityTitle;
-
-
-                    const sellerCommentContent = newSellerCommentWrapper.querySelector(".sellerCommentContent");
-                    sellerCommentContent.innerText=e.sellerCommunityDto.sellerCommunityContent;
-
-                    const sellerCommentInfo = newSellerCommentWrapper.querySelector(".sellerCommentInfo");
-                    if(e.textLength<=100){
-                        sellerCommentInfo.classList.remove("mt-4");
-                        sellerCommentInfo.classList.add("mt-5");
-                    }else{
-                        sellerCommentInfo.classList.add("mt-4");
-                        sellerCommentInfo.classList.remove("mt-5");
-                    }
-
-                    const sellerCommentSellerName = newSellerCommentWrapper.querySelector(".sellerCommentSellerName");
-                    sellerCommentSellerName.innerText=e.sellerName.sellerName;
-
-                    const sellerCommentSellerCreatedAt = newSellerCommentWrapper.querySelector(".sellerCommentSellerCreatedAt");
-                    sellerCommentSellerCreatedAt.innerText=e.sellerCommunityDto.sellerCommunityCreatedAt;
-
-                    const sellerCommentSellerVisitCount = newSellerCommentWrapper.querySelector(".sellerCommentSellerVisitCount");
-                    sellerCommentSellerVisitCount.innerText=e.sellerCommunityDto.sellerCommunityVisitCount;
-
-                    const sellerCommentSellerNameLikeCount = newSellerCommentWrapper.querySelector(".sellerCommentSellerNameLikeCount");
-                    sellerCommentSellerNameLikeCount.innerText=e.selectSellerCommunityLikeCount;
-
-                    const sellerCommentSellerNameReplyCount = newSellerCommentWrapper.querySelector(".sellerCommentSellerNameReplyCount");
-                    sellerCommentSellerNameReplyCount.innerText=e.selectTotalCommentReplyCount;
-
-                    const sellerCommunityImageContainer =newSellerCommentWrapper.querySelector(".sellerCommunityImageContainer");
-                    sellerCommunityImageContainer.setAttribute("onclick",`sellerCommunityDetailPage(${e.sellerCommunityDto.sellerCommunityNumber})`);
-
-                    const sellerCommunityImage = newSellerCommentWrapper.querySelector(".sellerCommunityImage");
-                    const setSrc = "/images/"+e.sellerCommunityDto.sellerCommunityImage;
-                    sellerCommunityImage.setAttribute("src",setSrc);
-
-                    //게시판 아이디를 식별할수 잇게 하는 인풋태그
-                    const sellerCommunityNumber = newSellerCommentWrapper.querySelector(".sellerCommunityNumber");
-                    sellerCommunityNumber.value=e.sellerCommunityDto.sellerCommunityNumber;
-
-                    //세션별 좋아요 싫어요
-                    const checkIfSellerCommunityLikeExists = newSellerCommentWrapper.querySelector(".likeDislikeStatus");
-                    if(e.checkIfSellerCommunityLikeExists!==0){
-
-                        checkIfSellerCommunityLikeExists.classList.add("bi-heart-fill");
-                        checkIfSellerCommunityLikeExists.classList.remove("bi-heart");
-                    }else{
-                        checkIfSellerCommunityLikeExists.classList.remove("bi-heart-fill");
-                        checkIfSellerCommunityLikeExists.classList.add("bi-heart");
-                    }
-
-                    newSellerCommentWrapper.classList.remove("d-none");
-                    sellerCommunityBox.appendChild(newSellerCommentWrapper);
-                }
-            }
-
-
             for(let e of response.sellerCommunity){
 
                 sellerCommentWrapper.classList.remove("bg-body-secondary");
@@ -208,7 +135,9 @@ function getSellerCommunityList(currentPage,searchWord,sortedOption,sellerSort){
 
 
                 const sellerCommentContent = newSellerCommentWrapper.querySelector(".sellerCommentContent");
-                sellerCommentContent.innerText=e.sellerCommunityDto.sellerCommunityContent;
+                let mainContent = e.sellerCommunityDto.sellerCommunityContent;
+                mainContent.replace("\n","");
+                sellerCommentContent.innerHTML=mainContent;
 
                 const sellerCommentInfo = newSellerCommentWrapper.querySelector(".sellerCommentInfo");
                 if(e.textLength<=100){
@@ -291,6 +220,7 @@ function getSellerCommunityList(currentPage,searchWord,sortedOption,sellerSort){
             }
 
             //페이징 아래쪽
+
             const previousPage = document.querySelector("#previousPage");
             const previousPageContainer = document.querySelector("#previousPageContainer");
 
@@ -301,10 +231,6 @@ function getSellerCommunityList(currentPage,searchWord,sortedOption,sellerSort){
                 previousPageContainer.classList.add("text-black-50");
                 previousPage.onclick=null;
             }
-
-
-
-
 
             const firstPageContainer = document.querySelector("#firstPageContainer");
             const firstPage = document.querySelector("#firstPage");
@@ -321,7 +247,6 @@ function getSellerCommunityList(currentPage,searchWord,sortedOption,sellerSort){
             const pageList = document.querySelector(".pageList");
 
             pageNumbers.innerHTML="";
-
 
             for(let e=1; e<=response.sellerCommunityPaginationDto.endPage; e++){
 
@@ -369,7 +294,9 @@ function getSellerCommunityList(currentPage,searchWord,sortedOption,sellerSort){
 
             nextPage.setAttribute("onclick",`movePage(${response.sellerCommunityPaginationDto.paginationPage})`)
 
-            if(response.sellerCommunityPaginationDto.endPage < response.sellerCommunityPaginationDto.paginationPage){
+
+
+            if(response.sellerCommunityPaginationDto.endPage < response.sellerCommunityPaginationDto.paginationPage ){
                 nextPageContainer.classList.remove("text-black-50");
             }else{
                 nextPage.onclick=null;
@@ -379,7 +306,7 @@ function getSellerCommunityList(currentPage,searchWord,sortedOption,sellerSort){
             const noResultMessage = document.querySelector("#noResultMessage");
             const paginationContainer = document.querySelector("#paginationContainer");
             if(response.totalPage===0){
-                noResultMessage.innerText="조회된 결과가 없습니다";
+                noResultMessage.innerText="게시글이 존재하지 않습니다";
                 paginationContainer.classList.add("d-none");
             }else{
                 noResultMessage.innerText="";
@@ -796,8 +723,12 @@ function sellerCommunityDetailPage(sellerCommunityNumber,sellerCommunityCommentN
 
             const sellerCommunityTitle = document.querySelector("#sellerCommunityTitle");
             sellerCommunityTitle.innerText=response.sellerCommunityDetail.selectSellerCommunityById.sellerCommunityTitle;
+
+
             const sellerCommunityContent = document.querySelector("#sellerCommunityContent");
-            sellerCommunityContent.innerText=response.sellerCommunityDetail.selectSellerCommunityById.sellerCommunityContent;
+            let textFormat=response.sellerCommunityDetail.selectSellerCommunityById.sellerCommunityContent;
+            textFormat.replace("<br>", '\n');
+            sellerCommunityContent.innerHTML=textFormat;
 
             const imageContainer = document.querySelector("#imageContainer");
             const imageWrapper = document.querySelector(".imageWrapper");
@@ -861,7 +792,9 @@ function sellerCommunityDetailPage(sellerCommunityNumber,sellerCommunityCommentN
                 deleteComment.setAttribute("onclick",`deleteComment(${e.sellerCommunityCommentDto.sellerCommunityCommentNumber},this)`);
 
                 const commentContent = newChatContainer.querySelector(".commentContent");
-                commentContent.innerText=e.sellerCommunityCommentDto.sellerCommunityCommentContent;
+                let commentFormat = e.sellerCommunityCommentDto.sellerCommunityCommentContent;
+                commentFormat.replace("\n", "");
+                commentContent.innerHTML=commentFormat;
 
                 const commentReplyCount = newChatContainer.querySelector(".commentReplyCount");
                 commentReplyCount.innerText=e.selectEachSellerCommentReplyCount;
@@ -942,7 +875,9 @@ function sellerCommunityDetailPage(sellerCommunityNumber,sellerCommunityCommentN
                     deleteReply.setAttribute("onclick",`deleteReply(${i.selectSellerCommunityReply.sellerCommunityReplyNumber},this)`);
 
                     const replyContent = replyChatContainer.querySelector(".replyContent");
-                    replyContent.innerText=i.selectSellerCommunityReply.sellerCommunityReplyContent;
+                    let replyFormat = i.selectSellerCommunityReply.sellerCommunityReplyContent;
+                    replyFormat.replace("\n", "");
+                    replyContent.innerHTML=replyFormat;
 
                     const sellerCommunityReplyNumber = replyChatContainer.querySelector(".sellerCommunityReplyNumber");
                     sellerCommunityReplyNumber.value=i.sellerCommunityReplyLikeStatusDto.sellerCommunityReplyNumber;
@@ -1480,8 +1415,6 @@ function lineChart(){
                             },
                             max: 100 // y축 최대값 설정
                         },
-                        responsive: false,  // 반응형 디자인 활성화
-                        maintainAspectRatio: false // 비율 유지 비활성화
                     },
                     plugins: {
                         legend: {

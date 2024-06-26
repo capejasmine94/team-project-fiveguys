@@ -19,9 +19,6 @@ public interface SellerCommunitySqlMapper {
     public SellerCommunityDto selectSellerCommunityById(int sellerCommunityNumber);
     public List<SellerCommunityImageDetailDto> selectImageListById(int sellerCommunityNumber);
 
-    //최상단 인기게시물 노출
-   public List<SellerCommunityDto> selectSellerCommunityByPopularity(SellerCommunityPaginationDto sellerCommunityPaginationDto);
-
    //메인페이지 노출
    public List<Map<String,Object>> selectSellerCommunityMainPage();
 

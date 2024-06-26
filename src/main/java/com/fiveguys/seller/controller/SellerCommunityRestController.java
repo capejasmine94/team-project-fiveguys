@@ -29,6 +29,8 @@ public class SellerCommunityRestController {
 
         //페이지네이션 처리
         int totalPage = sellerCommunityService.selectSellerCommunityCount(sellerCommunityPaginationDto);
+        System.out.println(totalPage);
+
 
         int lastPageNumber = (int)Math.ceil((double)totalPage/sellerCommunityPaginationDto.getItemsPerPage());
 
@@ -44,8 +46,8 @@ public class SellerCommunityRestController {
         sellerCommunityPaginationDto.setEndPage(endPage);
         sellerCommunityPaginationDto.setPaginationPage(lastPageNumber);
 
-        result.put("sellerCommunityPaginationDto", sellerCommunityPaginationDto);
 
+        result.put("sellerCommunityPaginationDto", sellerCommunityPaginationDto);
 
         SellerDto sellerDto = (SellerDto) session.getAttribute("sellerDto");
         if(sellerDto!=null){
@@ -53,14 +55,6 @@ public class SellerCommunityRestController {
             result.put("login", true);
             result.put("sellerDto", sellerDto);
             result.put("totalPage", totalPage);
-
-            if(sellerCommunityPaginationDto.getCurrentPage()==1){
-                sellerCommunityPaginationDto.setItemsPerPage(3);
-                result.put("selectSellerCommunityByPopularity",sellerCommunityService.selectSellerCommunityByPopularity(sellerCommunityPaginationDto,sellerDto.getSellerNumber()));
-            }else{
-                result.put("selectSellerCommunityByPopularity",null);
-            }
-
             result.put("sellerCommunity", sellerCommunityService.selectSellerCommunityList(sellerCommunityPaginationDto, sellerDto.getSellerNumber()));
         }else{
             result.put("login", false);

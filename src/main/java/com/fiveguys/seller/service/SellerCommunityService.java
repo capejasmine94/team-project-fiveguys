@@ -39,7 +39,6 @@ public class SellerCommunityService {
         List<Map<String,Object>> result = new ArrayList<>();
         List<SellerCommunityDto> sellerCommunityDtoList = sellerCommunitySqlMapper.selectSellerCommunityList(sellerCommunityPaginationDto);
 
-        System.out.println(sellerCommunitySqlMapper.selectSellerCommunityList(sellerCommunityPaginationDto));
         for (SellerCommunityDto sellerCommunityDto : sellerCommunityDtoList) {
             Map<String,Object> map = new HashMap<>();
 
@@ -60,37 +59,11 @@ public class SellerCommunityService {
         return result;
     }
 
-    public List<Map<String,Object>> selectSellerCommunityByPopularity(SellerCommunityPaginationDto sellerCommunityPaginationDto, int sellerNumber){
-        List<Map<String,Object>> result = new ArrayList<>();
-        List<SellerCommunityDto> sellerCommunityDtoList = sellerCommunitySqlMapper.selectSellerCommunityByPopularity(sellerCommunityPaginationDto);
-
-        for (SellerCommunityDto sellerCommunityDto : sellerCommunityDtoList) {
-            Map<String,Object> map = new HashMap<>();
-
-
-            SellerCommunityLikeDto sellerCommunityLikeDto = new SellerCommunityLikeDto();
-            sellerCommunityLikeDto.setSellerNumber(sellerNumber);
-            sellerCommunityLikeDto.setSellerCommunityNumber(sellerCommunityDto.getSellerCommunityNumber());
-
-            int textLength = sellerCommunityDto.getSellerCommunityContent().length();
-            map.put("checkIfSellerCommunityLikeExists",sellerCommunitySqlMapper.checkIfSellerCommunityLikeExists(sellerCommunityLikeDto));
-            map.put("textLength", textLength);
-            map.put("sellerCommunityDto", sellerCommunityDto);
-            map.put("selectTotalCommentReplyCount",sellerCommunitySqlMapper.selectTotalCommentCount(sellerCommunityDto.getSellerCommunityNumber())+sellerCommunitySqlMapper.selectTotalReplyCount(sellerCommunityDto.getSellerCommunityNumber()));
-            map.put("selectSellerCommunityLikeCount",sellerCommunitySqlMapper.selectSellerCommunityLikeCount(sellerCommunityDto.getSellerCommunityNumber()));
-            map.put("sellerName",sellerCommunitySqlMapper.selectSeller(sellerCommunityDto.getSellerCommunityNumber()));
-            result.add(map);
-        }
-        return result;
-    }
 
     public Map<String,Object> selectSellerCommunityById(int sellerCommunityNumber){
         Map<String,Object> map = new HashMap<>();
 
         SellerCommunityDto sellerCommunityDto =sellerCommunitySqlMapper.selectSellerCommunityById(sellerCommunityNumber);
-        String escapedContent = StringUtils.escapeXml(sellerCommunityDto.getSellerCommunityContent());
-        escapedContent=escapedContent.replaceAll("\n","<br>");
-        sellerCommunityDto.setSellerCommunityContent(escapedContent);
 
         map.put("sellerName",sellerCommunitySqlMapper.selectSeller(sellerCommunityNumber));
         map.put("selectSellerCommunityById",sellerCommunityDto);

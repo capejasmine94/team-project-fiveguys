@@ -73,52 +73,22 @@
             </if>
         </where>
         order by
-            <choose>
-                <when test="sortedOption =='recent'">
-                    s.sellerCommunityCreatedAt desc
-                </when>
-                <when test="sortedOption =='view'">
-                    s.sellerCommunityVisitCount desc
-                </when>
-                <when test="sortedOption =='like'">
-                    heart desc
-                </when>
-                <otherwise>
-                    s.sellerCommunityCreatedAt DESC
-                </otherwise>
-            </choose>
+        <choose>
+            <when test="sortedOption =='recent'">
+                s.sellerCommunityCreatedAt desc
+            </when>
+            <when test="sortedOption =='view'">
+                s.sellerCommunityVisitCount desc
+            </when>
+            <when test="sortedOption =='like'">
+                heart desc
+            </when>
+            <otherwise>
+                heart desc,
+                sellerCommunityCreatedAt desc
+            </otherwise>
+        </choose>
         limit #{offset},#{itemsPerPage}
-    </select>
-    <select id="selectSellerCommunityByPopularity">
-        select
-            s.sellerCommunityNumber,
-            s.sellerNumber,
-            s.sellerCommunityImage,
-            s.sellerCommunityTitle,
-            s.sellerCommunityContent,
-            s.sellerCommunityVisitCount,
-            CASE
-                WHEN FLOOR(TIMESTAMPDIFF(MONTH, s.sellerCommunityCreatedAt, NOW()) / 12) >= 1 THEN CONCAT(FLOOR(TIMESTAMPDIFF(MONTH, s.sellerCommunityCreatedAt, NOW()) / 12), '년전')
-                WHEN TIMESTAMPDIFF(MONTH, s.sellerCommunityCreatedAt, NOW()) >= 1 THEN CONCAT(TIMESTAMPDIFF(MONTH, s.sellerCommunityCreatedAt, NOW()), '달전')
-                WHEN DATEDIFF(CURRENT_DATE, s.sellerCommunityCreatedAt) >= 1 THEN CONCAT(DATEDIFF(CURRENT_DATE, s.sellerCommunityCreatedAt), '일전')
-                WHEN TIMESTAMPDIFF(HOUR, s.sellerCommunityCreatedAt, NOW()) >= 1 THEN CONCAT(TIMESTAMPDIFF(HOUR, s.sellerCommunityCreatedAt, NOW()), '시간전')
-                ELSE CONCAT(TIMESTAMPDIFF(MINUTE, s.sellerCommunityCreatedAt, NOW()), '분전')
-                end as sellerCommunityCreatedAt,
-            (select count(*) from fc_sellerCommunityLike fsc where fsc.sellerCommunityNumber=s.sellerCommunityNumber) as heart
-        from fc_sellerCommunity s
-        <where>
-            <if test="searchWord!=null and searchWord != ''">
-                and s.sellerCommunityTitle like concat('%',#{searchWord},'%')
-            </if>
-            <if test="sellerSort !=null and sellerSort.size() > 0">
-                and s.sellerNumber in
-                <foreach collection="sellerSort" item="seller" open="(" close=")" separator=",">
-                    #{seller}
-                </foreach>
-            </if>
-        </where>
-        order by heart desc
-        limit 2
     </select>
     <select id="selectSellerCommunityById">
         select

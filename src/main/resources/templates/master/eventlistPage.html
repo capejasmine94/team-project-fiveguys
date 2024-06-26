@@ -325,120 +325,159 @@
             offcanvas.show();
         }
 
-        function updateEventProcess(){
+        function updateEventProcess() {
             document.getElementById('upadteUploadData').onsubmit = function(event) {
-            event.preventDefault();
-            const offcanvas = bootstrap.Offcanvas.getOrCreateInstance('#offcanvasUpdateBottom');
+                event.preventDefault();
+                const offcanvas = bootstrap.Offcanvas.getOrCreateInstance('#offcanvasUpdateBottom');
 
-            
-            // FormData 객체 생성
-            const formData = new FormData();
+                // FormData 객체 생성
+                const formData = new FormData();
 
-            // 추가 데이터 추가
-            const offcanvasUpdateEventTitle = document.getElementById("offcanvasUpdateEventTitle").value;
-            console.log(offcanvasUpdateEventTitle);
-            formData.append('eventTitle', offcanvasUpdateEventTitle);
+                // 정규식 패턴들
+                const titlePattern = /\S+/; // 공백이 아닌 문자가 최소 하나 이상 있는지
+                const datePattern = /^\d{4}-\d{2}-\d{2}$/; // YYYY-MM-DD 형식인지
 
-            const offcanvasUpdateEventStartDay = document.getElementById("offcanvasUpdateEventStartDay").value;
-            formData.append('eventStartDay', offcanvasUpdateEventStartDay);
+                // 추가 데이터 추가
+                const offcanvasUpdateEventTitle = document.getElementById("offcanvasUpdateEventTitle").value.trim();
+                if (!titlePattern.test(offcanvasUpdateEventTitle)) {
+                    alert('이벤트 제목을 입력하세요.');
+                    return;
+                }
+                formData.append('eventTitle', offcanvasUpdateEventTitle);
 
-            const offcanvasUpdateEventEndDay = document.getElementById("offcanvasUpdateEventEndDay").value;
-            formData.append('eventEndDay', offcanvasUpdateEventEndDay);
+                const offcanvasUpdateEventStartDay = document.getElementById("offcanvasUpdateEventStartDay").value.trim();
+                if (!datePattern.test(offcanvasUpdateEventStartDay)) {
+                    alert('올바른 시작일 형식(YYYY-MM-DD)으로 입력하세요.');
+                    return;
+                }
+                formData.append('eventStartDay', offcanvasUpdateEventStartDay);
 
-            const offcanvasUpdateEventNumber = document.getElementById("offcanvasUpdateEventNumber").value;
-            formData.append('eventNumber', offcanvasUpdateEventNumber);
+                const offcanvasUpdateEventEndDay = document.getElementById("offcanvasUpdateEventEndDay").value.trim();
+                if (!datePattern.test(offcanvasUpdateEventEndDay)) {
+                    alert('올바른 종료일 형식(YYYY-MM-DD)으로 입력하세요.');
+                    return;
+                }
+                formData.append('eventEndDay', offcanvasUpdateEventEndDay);
 
-            // 이미지 파일 추가
-            const offcanvasUpdateUploadFile = document.getElementById("offcanvasUpdateUploadFile").files;
-            formData.append("uploadFile",offcanvasUpdateUploadFile[0]);
-            const offcanvasUpdateUploadFiles = document.getElementById('offcanvasUpdateUploadFiles').files;
-            for (const image of offcanvasUpdateUploadFiles) {
-                formData.append('uploadFiles', image);
-            }
+                const offcanvasUpdateEventNumber = document.getElementById("offcanvasUpdateEventNumber").value.trim();
+                formData.append('eventNumber', offcanvasUpdateEventNumber);
 
-            const url = "/api/event/updateEventProcess";
-            // Fetch API를 사용하여 데이터 전송
-            fetch(url, {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data);
+                // 이미지 파일 추가
+                const offcanvasUpdateUploadFile = document.getElementById("offcanvasUpdateUploadFile").files;
+                if (offcanvasUpdateUploadFile.length === 0) {
+                    alert('이벤트 대표 이미지를 선택하세요.');
+                    return;
+                }
+                formData.append("uploadFile", offcanvasUpdateUploadFile[0]);
 
-                masterEventListPage();
-                document.getElementById("offcanvasUpdateEventTitle").value = "";
-                document.getElementById("offcanvasUpdateEventStartDay").value = "";
-                document.getElementById("offcanvasUpdateEventEndDay").value = "";
-                document.getElementById("offcanvasUpdateUploadFile").value = "";
-                document.getElementById("offcanvasUpdateUploadFiles").value = "";
-                offcanvas.hide();
+                const offcanvasUpdateUploadFiles = document.getElementById('offcanvasUpdateUploadFiles').files;
+                if (offcanvasUpdateUploadFiles.length === 0) {
+                    alert('상세 이미지 파일을 선택하세요.');
+                    return;
+                }
+                for (const image of offcanvasUpdateUploadFiles) {
+                    formData.append('uploadFiles', image);
+                }
 
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-            
+                const url = "/api/event/updateEventProcess";
+                // Fetch API를 사용하여 데이터 전송
+                fetch(url, {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success:', data);
+
+                        masterEventListPage();
+                        document.getElementById("offcanvasUpdateEventTitle").value = "";
+                        document.getElementById("offcanvasUpdateEventStartDay").value = "";
+                        document.getElementById("offcanvasUpdateEventEndDay").value = "";
+                        document.getElementById("offcanvasUpdateUploadFile").value = "";
+                        document.getElementById("offcanvasUpdateUploadFiles").value = "";
+                        offcanvas.hide();
+
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+
             };
-            
-
         }
 
-        function insertEventProcess(){
-            console.log("여기가 몇번");
-            document.getElementById('uploadData').onsubmit= function(event) {
-            event.preventDefault();
-            const offcanvas = bootstrap.Offcanvas.getOrCreateInstance('#offcanvasBottom');
+        function insertEventProcess() {
+            document.getElementById('uploadData').onsubmit = function(event) {
+                event.preventDefault();
+                const offcanvas = bootstrap.Offcanvas.getOrCreateInstance('#offcanvasBottom');
 
-            
-            // FormData 객체 생성
-            const formData = new FormData();
+                // 정규식 패턴들
+                const titlePattern = /\S+/; // 공백이 아닌 문자가 최소 하나 이상 있는지
+                const datePattern = /^\d{4}-\d{2}-\d{2}$/; // YYYY-MM-DD 형식인지
 
-            // 추가 데이터 추가
-            const offcanvasEventTitle = document.getElementById("offcanvasEventTitle").value;
-            formData.append('eventTitle', offcanvasEventTitle);
+                // FormData 객체 생성
+                const formData = new FormData();
 
-            const offcanvasEventStartDay = document.getElementById("offcanvasEventStartDay").value;
-            formData.append('eventStartDay', offcanvasEventStartDay);
+                // 추가 데이터 추가
+                const offcanvasEventTitle = document.getElementById("offcanvasEventTitle").value.trim();
+                if (!titlePattern.test(offcanvasEventTitle)) {
+                    alert('이벤트 제목을 입력하세요.');
+                    return;
+                }
+                formData.append('eventTitle', offcanvasEventTitle);
 
-            const offcanvasEventEndDay = document.getElementById("offcanvasEventEndDay").value;
-            formData.append('eventEndDay', offcanvasEventEndDay);
+                const offcanvasEventStartDay = document.getElementById("offcanvasEventStartDay").value.trim();
+                if (!datePattern.test(offcanvasEventStartDay)) {
+                    alert('올바른 시작일 형식(YYYY-MM-DD)으로 입력하세요.');
+                    return;
+                }
+                formData.append('eventStartDay', offcanvasEventStartDay);
 
-            // 이미지 파일 추가
-            const offcanvasUploadFile = document.getElementById("offcanvasUploadFile").files;
-            formData.append("uploadFile",offcanvasUploadFile[0]);
-            const offcanvasUploadFiles = document.getElementById('offcanvasUploadFiles').files;
-            for (const image of offcanvasUploadFiles) {
-                formData.append('uploadFiles', image);
-            }
+                const offcanvasEventEndDay = document.getElementById("offcanvasEventEndDay").value.trim();
+                if (!datePattern.test(offcanvasEventEndDay)) {
+                    alert('올바른 종료일 형식(YYYY-MM-DD)으로 입력하세요.');
+                    return;
+                }
+                formData.append('eventEndDay', offcanvasEventEndDay);
 
-            const url = "/api/event/insertEventProcess"
-            // Fetch API를 사용하여 데이터 전송
-            fetch(url, {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data); 
-                document.getElementById("offcanvasEventTitle").value = "";
-                document.getElementById("offcanvasEventStartDay").value = "";
-                document.getElementById("offcanvasEventEndDay").value = "";
-                document.getElementById("offcanvasUploadFile").value = "";
-                document.getElementById("offcanvasUploadFiles").value = "";
-                offcanvas.hide();
-                masterEventListPage();
+                // 이미지 파일 추가
+                const offcanvasUploadFile = document.getElementById("offcanvasUploadFile").files;
+                if (offcanvasUploadFile.length === 0) {
+                    alert('이벤트 대표 이미지를 선택하세요.');
+                    return;
+                }
+                formData.append("uploadFile", offcanvasUploadFile[0]);
 
+                const offcanvasUploadFiles = document.getElementById('offcanvasUploadFiles').files;
+                if (offcanvasUploadFiles.length === 0) {
+                    alert('상세 이미지 파일을 선택하세요.');
+                    return;
+                }
+                for (const image of offcanvasUploadFiles) {
+                    formData.append('uploadFiles', image);
+                }
 
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-            
+                const url = "/api/event/insertEventProcess"
+                // Fetch API를 사용하여 데이터 전송
+                fetch(url, {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success:', data);
+                        document.getElementById("offcanvasEventTitle").value = "";
+                        document.getElementById("offcanvasEventStartDay").value = "";
+                        document.getElementById("offcanvasEventEndDay").value = "";
+                        document.getElementById("offcanvasUploadFile").value = "";
+                        document.getElementById("offcanvasUploadFiles").value = "";
+                        offcanvas.hide();
+                        masterEventListPage();
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+
             };
-            
-
-
         }
 
         function updateMasterReplyProcessFunction(afterMasterReply,commentNumber){

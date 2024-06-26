@@ -2,6 +2,7 @@ package com.fiveguys.seller.mapper;
 
 import com.fiveguys.dto.*;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -33,22 +34,13 @@ public interface SellerCustomerSqlMapper {
     // 장바구니 통합 리스트
     public List<CustomerOrderTotalDto> selectOrderTotalList(int customerNumber);
     // 장바구니 삭제
-    public void deleteCustomerOrder(int customerNumber);
-
-//    // 장바구니 메뉴 중복 체크
-//    public OrderMenuDto selectOrderMenuDuplicateCheck(int productNumber);
-//    // 장바구니 메뉴 리스트
-//    public List<OrderMenuProductDto> selectOrderMenuList();
-//    // 장바구니 메뉴 삭제
-//    public void deleteOrderMenu(int customerOrderNumber);
-//
-//    public void updateOrderMenuQuantity(OrderMenuQuantityUpdateDto updateDto);
-
+    public void deleteCustomerOrder(int customerOrderNumber);
     // 주소등록
     public void insertCustomerAddress(CustomerAddressDto customerAddressDto);
     // 주소 리스트
     public List<CustomerAddressDto> selectCustomerAddressList(int customerNumber);
     // 주문 주소 출력
     public String selectCustomerAddress(int customerNumber);
+
 
 }

@@ -44,6 +44,16 @@ public class CustomerController {
         return "customer/myPage";
     }
 
+    @RequestMapping("menuPage")
+    public String menuPage(Model model) {
+
+        Map<String, List<CustomerMenuDto>> menuCategoryDtoList = sellerCustomerService.MenuPageCategoryList();
+        model.addAttribute("menuCategoryDtoList", menuCategoryDtoList);
+
+
+        return "customer/menuPage";
+    }
+
     @RequestMapping("selectAllStoresPage")
     public String selectAllStoresPage(Model model) {
 
@@ -77,7 +87,6 @@ public class CustomerController {
         model.addAttribute("MenuDetail", MenuDetail);
         // 옵션 list
         Map<String, List<CustomerMenuOptionDto>> menuOptionDtoList = sellerCustomerService.selectMenuOptionList(menuNumber);
-        System.out.println(menuOptionDtoList);
         model.addAttribute("menuOptionDtoList", menuOptionDtoList);
 
 
@@ -127,69 +136,78 @@ public class CustomerController {
         sellerCustomerService.customerPlaceOrder(customerDto.getCustomerNumber(), sellerNumber);
 
         Map<String, List<CustomerOrderTotalDto>> selectOrderTotalList = sellerCustomerService.selectOrderTotalList(customerDto.getCustomerNumber());
+
+        System.out.println("selectOrderTotalList: " + selectOrderTotalList);
         model.addAttribute("selectOrderTotalList", selectOrderTotalList);
-        System.out.println("주문확인 : " + selectOrderTotalList);
 
 
         return "customer/shoppingBasketPage";
     }
 
     @RequestMapping("deleteOrderMenu")
-    public String deleteOrderMenu(@RequestParam(name = "customerNumber") int customerNumber,
-                                  @RequestParam(name = "sellerNumber") int sellerNumber) {
+    public String deleteOrderMenu(@RequestParam(name = "sellerNumber") int sellerNumber,
+                                  @RequestParam(name = "customerOrderNumber") int customerOrderNumber) {
 
-        sellerCustomerService.deleteCustomerOrder(customerNumber);
+        sellerCustomerService.deleteCustomerOrder(customerOrderNumber);
 
         return "redirect:/customer/shoppingBasketPage?sellerNumber=" + sellerNumber;
     }
+    // 여기서부터 가라
+    //더보기 페이지
+    @RequestMapping("viewMorePage")
+    public String viewMorePage() {
+
+        return "customer/viewMorePage";
+    }
+    // 더보기 -> 나의정보
+    @RequestMapping("customerInformationPage")
+    public String customerInformationPage() {
 
 
+        return "customer/customerInformationPage";
+    }
+    // 주소 페이지
+    @RequestMapping("addressManagementPage")
+    public String addressManagementPage(Model model,
+                                        @RequestParam("customerNumber") int customerNumber)  {
 
-//    //더보기 페이지
-//    @RequestMapping("viewMorePage")
-//    public String viewMorePage() {
-//
-//        return "customer/viewMorePage";
-//    }
-//    // 더보기 -> 나의정보
-//    @RequestMapping("customerInformationPage")
-//    public String customerInformationPage() {
-//
-//
-//        return "customer/customerInformationPage";
-//    }
-//    // 주소 페이지
-//    @RequestMapping("addressManagementPage")
-//    public String addressManagementPage(Model model,
-//                                        @RequestParam("customerNumber") int customerNumber)  {
-//
-//        List<CustomerAddressDto> customerAddressList = sellerCustomerService.selectCustomerAddressList(customerNumber);
-//        model.addAttribute("customerAddressList", customerAddressList);
-//
-//        return "customer/addressManagementPage";
-//    }
-//    // 주소 등록
-//    @RequestMapping("addressManagementProcess")
-//    public String addressManagementProcess(@ModelAttribute CustomerAddressDto addressDto) {
-//
-//        sellerCustomerService.insertCustomerAddress(addressDto);
-//
-//        return "redirect:/customer/addressManagementPage?customerNumber=" + addressDto.getCustomerNumber();
-//    }
-//
-//    @RequestMapping("settlementPage")
-//    public String settlementPage(Model model, HttpSession session,
-//                                 @RequestParam("sellerNumber") int sellerNumber) {
-//
-//        SellerDto sellerDto = sellerCustomerService.selectSellersByNumber(sellerNumber);
-//        model.addAttribute("sellerDto", sellerDto);
-//
-//        CustomerDto customerNumber = (CustomerDto) session.getAttribute("customerDto");
-//        String deliveryAddress = sellerCustomerService.selectCustomerAddress(customerNumber.getCustomerNumber());
-//        model.addAttribute("deliveryAddress", deliveryAddress);
-//
-//        return "customer/settlementPage";
-//    }
+        List<CustomerAddressDto> customerAddressList = sellerCustomerService.selectCustomerAddressList(customerNumber);
+        model.addAttribute("customerAddressList", customerAddressList);
+
+        return "customer/addressManagementPage";
+    }
+    // 주소 등록
+    @RequestMapping("addressManagementProcess")
+    public String addressManagementProcess(@ModelAttribute CustomerAddressDto addressDto) {
+
+        sellerCustomerService.insertCustomerAddress(addressDto);
+
+        return "redirect:/customer/addressManagementPage?customerNumber=" + addressDto.getCustomerNumber();
+    }
+
+    @RequestMapping("settlementPage")
+    public String settlementPage(Model model, HttpSession session,
+                                 @RequestParam("sellerNumber") int sellerNumber) {
+
+        SellerDto sellerDto = sellerCustomerService.selectSellersByNumber(sellerNumber);
+        model.addAttribute("sellerDto", sellerDto);
+
+        CustomerDto customerNumber = (CustomerDto) session.getAttribute("customerDto");
+        String deliveryAddress = sellerCustomerService.selectCustomerAddress(customerNumber.getCustomerNumber());
+        model.addAttribute("deliveryAddress", deliveryAddress);
+
+        return "customer/settlementPage";
+    }
+    @RequestMapping("orderHistoryPage")
+    public String orderHistoryPage( ) {
+        return "customer/orderHistoryPage";
+    }
+    @RequestMapping("orderDetailHistoryPage")
+    public String orderDetailHistoryPage() {
+        return "customer/orderDetailHistoryPage";
+    }
+
+
 }
 
 

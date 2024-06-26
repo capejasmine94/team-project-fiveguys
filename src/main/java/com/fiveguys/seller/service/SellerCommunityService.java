@@ -30,6 +30,11 @@ public class SellerCommunityService {
         }
     }
 
+    //메인에 노출할 게시물
+    public List<Map<String,Object>> selectSellerCommunityMainPage(){
+        return sellerCommunitySqlMapper.selectSellerCommunityMainPage();
+    }
+
     public List<Map<String,Object>> selectSellerCommunityList(SellerCommunityPaginationDto sellerCommunityPaginationDto, int sellerNumber){
         List<Map<String,Object>> result = new ArrayList<>();
         List<SellerCommunityDto> sellerCommunityDtoList = sellerCommunitySqlMapper.selectSellerCommunityList(sellerCommunityPaginationDto);
@@ -294,5 +299,34 @@ public class SellerCommunityService {
 
     public List<Map<String,Object>> getPieRegisterCount(){
         return sellerCommunitySqlMapper.getPieRegisterCount();
+    }
+
+
+    //게시글 수정,삭제
+    public void updateSellerCommunity(SellerCommunityDto sellerCommunityDto, List<SellerCommunityImageDetailDto> sellerCommunityImageDetailDtoList){
+        sellerCommunitySqlMapper.updateSellerCommunity(sellerCommunityDto);
+        for(SellerCommunityImageDetailDto sellerCommunityImageDetailDto : sellerCommunityImageDetailDtoList){
+            sellerCommunitySqlMapper.insertSellerCommunityImageDetail(sellerCommunityImageDetailDto);
+        }
+    }
+    public void deleteSellerCommunity(int sellerCommunityNumber){
+        sellerCommunitySqlMapper.deleteSellerCommunity(sellerCommunityNumber);
+    }
+    public void deleteSellerCommunityDetailImage(int sellerCommunityNumber){
+        sellerCommunitySqlMapper.deleteSellerCommunityDetailImage(sellerCommunityNumber);
+    }
+
+    //댓글 수정 삭제
+    public void updateSellerCommunityComment(SellerCommunityCommentDto sellerCommunityCommentDto){
+        sellerCommunitySqlMapper.updateSellerCommunityComment(sellerCommunityCommentDto);
+    }
+    public void deleteSellerCommunityComment(int sellerCommunityCommentNumber){
+        sellerCommunitySqlMapper.deleteSellerCommunityComment(sellerCommunityCommentNumber);
+    }
+    public void updateSellerCommunityReply(SellerCommunityReplyDto sellerCommunityReplyDto){
+        sellerCommunitySqlMapper.updateSellerCommunityReply(sellerCommunityReplyDto);
+    }
+    public void deleteSellerCommunityReply(int sellerCommunityReplyNumber){
+        sellerCommunitySqlMapper.deleteSellerCommunityReply(sellerCommunityReplyNumber);
     }
 }

@@ -22,6 +22,9 @@ public interface SellerCommunitySqlMapper {
     //최상단 인기게시물 노출
    public List<SellerCommunityDto> selectSellerCommunityByPopularity(SellerCommunityPaginationDto sellerCommunityPaginationDto);
 
+   //메인페이지 노출
+   public List<Map<String,Object>> selectSellerCommunityMainPage();
+
     //전체 게시물 개수 가져오기, 검색된 후의 게시물도 포함
     public Integer selectSellerCommunityCount(SellerCommunityPaginationDto sellerCommunityPaginationDto);
 
@@ -73,4 +76,15 @@ public interface SellerCommunitySqlMapper {
     public List<Map<String,Object>> getChartRegisterCount();
 
     public List<Map<String,Object>> getPieRegisterCount();
+
+    //게시글 수정,삭제
+    public void updateSellerCommunity(SellerCommunityDto sellerCommunityDto);
+    public void deleteSellerCommunity(int sellerCommunityNumber);
+    public void deleteSellerCommunityDetailImage(int sellerCommunityNumber);
+
+    //댓글 수정 삭제
+    public void updateSellerCommunityComment(SellerCommunityCommentDto sellerCommunityCommentDto);
+    public void deleteSellerCommunityComment(int sellerCommunityCommentNumber);
+    public void updateSellerCommunityReply(SellerCommunityReplyDto sellerCommunityReplyDto);
+    public void deleteSellerCommunityReply(int sellerCommunityReplyNumber);
 }

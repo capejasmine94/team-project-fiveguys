@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.fiveguys.seller.mapper.SellerCommunitySqlMapper">
+
     <insert id="insertSellerCommunityWrite">
         <selectKey order="AFTER" keyProperty="sellerCommunityNumber" resultType="int">
             select max(sellerCommunityNumber) from fc_sellerCommunity;
@@ -34,6 +35,13 @@
         inner join fc_sellerCommunity fsc
         on fs.sellerNumber =fsc.sellerNumber
         where fsc.sellerCommunityNumber=#{sellerCommunityNumber}
+    </select>
+    <!--메인에 노출할 점주 커뮤니티 3개-->
+    <select id="selectSellerCommunityMainPage">
+        select fs.sellerName,fsc.sellerCommunityTitle,fsc.sellerCommunityCreatedAt  from fc_seller fs
+        inner join fc_sellerCommunity fsc
+        on fs.sellerNumber =fsc.sellerNumber
+        limit 3;
     </select>
     <select id="selectSellerCommunityList" >
         <bind name="offset" value="(currentPage - 1) * itemsPerPage"/>
@@ -382,4 +390,45 @@
         ORDER BY counts DESC
             LIMIT 3;
     </select>
+
+    <!--게시글 수정,삭제-->
+    <update id="updateSellerCommunity">
+        update fc_sellerCommunity
+        set
+            sellerCommunityImage=#{sellerCommunityImage},
+            sellerCommunityTitle =#{sellerCommunityTitle},
+            sellerCommunityContent=#{sellerCommunityContent}
+        where sellerCommunityNumber=#{sellerCommunityNumber}
+    </update>
+    <delete id="deleteSellerCommunity">
+        delete from fc_sellerCommunity
+        where sellerCommunityNumber=#{sellerCommunityNumber}
+    </delete>
+    <delete id="deleteSellerCommunityDetailImage">
+        delete from fc_sellerCommunityImageDetail
+        where sellerCommunityNumber=#{sellerCommunityNumber}
+    </delete>
+
+
+    <!--댓글 수정,삭제-->
+    <update id="updateSellerCommunityComment">
+        update fc_sellerCommunityComment
+        set
+            sellerCommunityCommentContent=#{sellerCommunityCommentContent}
+        where sellerCommunityCommentNumber=#{sellerCommunityCommentNumber}
+    </update>
+    <delete id="deleteSellerCommunityComment">
+        delete from fc_sellerCommunityComment
+        where sellerCommunityCommentNumber=#{sellerCommunityCommentNumber}
+    </delete>
+    <!--대댓글 수정,삭제-->
+    <update id="updateSellerCommunityReply">
+        update fc_sellerCommunityReply
+        set sellerCommunityReplyContent=#{sellerCommunityReplyContent}
+        where sellerCommunityReplyNumber=#{sellerCommunityReplyNumber}
+    </update>
+    <delete id="deleteSellerCommunityReply">
+        delete from fc_sellerCommunityReply
+        where sellerCommunityReplyNumber=#{sellerCommunityReplyNumber}
+    </delete>
 </mapper>

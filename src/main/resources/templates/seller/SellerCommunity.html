@@ -19,6 +19,18 @@
             font-size: 0.8em;
         }
 
+        .day {
+            font-size: 0.7em;
+        }
+
+        .font-top {
+            font-size: 0.9em;
+        }
+
+        .day-top {
+            font-size: 0.8em;
+        }
+
         a {
             text-decoration: none;
             color: black;
@@ -26,6 +38,10 @@
 
         ul, li, ol {
             list-style: none;
+        }
+
+        .replayBackground{
+            background-color: rgb(245,245,245);
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -125,8 +141,8 @@
                                                 <div class="col-2"></div>
                                                 <div class="col text-center">
                                                      <span><i class="bi bi-list-ul fs-5 position-absolute"
-                                                              style="top:4px; left:53px;"></i></span>
-                                                    <select onchange="sortedOption();" id="sortedOption" class="form-select " aria-label="Large select example" style="padding-left:40px; ">
+                                                              style="top:4px; left:57px;"></i></span>
+                                                    <select onchange="sortedOption();" id="sortedOption" class="form-select " aria-label="Large select example" style="padding-left:45px; ">
                                                         <option value="recent" selected>최신순</option>
                                                         <option value="view">조회순</option>
                                                         <option value="like">추천순</option>
@@ -222,7 +238,6 @@
                                         </div>
                                         <div class="col text-center">
                                             <span id="firstPageContainer" style="cursor:pointer;"   class="px-3 pt-3">
-                                                <span id="firstPage"></span>
                                                 <span>...</span>
                                             </span>
 
@@ -255,7 +270,7 @@
 <span class="px-3 pt-3 pageList d-none"></span>
 <!--탬플릿-->
 <div class="row border shadow-sm py-2 mt-1 rounded sellerCommentWrapper d-none">
-    <div class="col">
+    <div class="col-10">
         <input class="sellerCommunityNumber" type="hidden">
         <div class="row sellerCommentMain" style="cursor:pointer;">
             <div class="col">
@@ -267,7 +282,7 @@
                 </div>
                 <div class="row mt-2">
                     <div class="col line-limit">
-                        <span class="font sellerCommentContent"></span>
+                        <span class="font sellerCommentContent text-break"></span>
                     </div>
                 </div>
             </div>
@@ -301,7 +316,7 @@
 
 <!-- Modal -->
 <div class="modal fade" id="sellerCommunityDetail" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -309,128 +324,154 @@
             <div class="modal-body">
                 <!--게시판 상세페이지 모달로 로드-->
                 <div class="row">
-                    <div class="row pt-3" id="bigContainer">
-                        <div class="col">
-                            <div class="row ">
-                                <div class="col-md-auto">
-                                    <span><i class="bi-person-circle fs-2"></i></span>
-                                </div>
-                                <div class="col g-0">
-                                    <div class="row">
-                                        <div class="col">
-                                            <span id="sellerName" class="fw-bold"></span>
-                                        </div>
+                    <div class="col">
+                        <div class="row" id="bigContainer">
+                            <div class="col">
+                                <div class="row ">
+                                    <div class="col-md-auto">
+                                        <span><i class="bi-person-circle fs-1"></i></span>
                                     </div>
-                                    <div class="row">
-                                        <div class="col">
-                                            <span id="sellerCommunityCreatedAt"></span>
-                                            <span><i class="bi-dot"></i></span>
-                                            <span><i class="bi-eye"></i></span>
-                                            <span id="sellerCommunityVisitCount"></span>
+                                    <div class="col g-0 mt-2">
+                                        <div class="row">
+                                            <div class="col">
+                                                <span id="sellerName" class="fw-bold font-top"></span>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row pb-5 pt-3">
-                                <div class="col">
-                                    <div class="row">
-                                        <div class="col">
-                                            <span id="sellerCommunityTitle" class="fw-bold fs-1"></span>
-                                        </div>
-                                    </div>
-                                    <!--이미지컨테이너-->
-                                    <div class="row">
-                                        <div class="col" id="imageContainer">
-
+                                        <div class="row">
+                                            <div class="col day-top">
+                                                <span id="sellerCommunityCreatedAt"></span>
+                                                <span><i class="bi-dot"></i></span>
+                                                <span><i class="bi-eye"></i></span>
+                                                <span id="sellerCommunityVisitCount"></span>
+                                            </div>
+                                            <div id="updateDeleteArticleContainer" class="col text-end me-2 ">
+                                                <span onclick="commentUpdateModal()" style="cursor:pointer;">
+                                                     <i id="updateArticle" class="bi bi-pencil"></i>
+                                                     <span>수정</span>
+                                                </span>
+                                                <span id="deleteArticle" style="cursor:pointer;">
+                                                    <i class="bi bi-trash ms-2"></i>
+                                                    <span>삭제</span>
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
 
-                                    <div class="row">
-                                        <div class="col">
-                                            <span id="sellerCommunityContent" style="white-space: pre-wrap;"></span>
+                                </div>
+
+                                <div class="row pb-5 pt-3">
+                                    <div class="col">
+                                        <div class="row">
+                                            <div class="col">
+                                                <span id="sellerCommunityTitle" class="fw-bold fs-1"></span>
+                                            </div>
+                                        </div>
+                                        <!--이미지컨테이너-->
+                                        <div class="row">
+                                            <div class="col" id="imageContainer">
+
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col">
+                                                <span id="sellerCommunityContent" class="text-break" ></span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="row border-top border-dark py-2">
-                                <div class="col">
-                                    <i onclick="sellerCommunityLikeProcess()" class="heart bi-heart text-danger"></i>
-                                    <span>좋아요</span>
-                                    <span id="detailLikeCount"></span>
-                                    <span class="ms-2"><i class="bi bi-chat-dots"></i></span>
-                                    <span>댓글</span>
-                                    <span id="detailDislikeCount"></span>
+                                <div class="row py-2 justify-content-center">
+                                    <div onclick="sellerCommunityLikeProcess()" class="likeStatusContainer col-2 text-center border border-dark-subtle rounded py-2" style="cursor: pointer">
+                                        <i class="heart bi-heart text-dark"></i>
+                                        <span>좋아요</span>
+                                        <span id="detailLikeCount"></span>
+                                    </div>
                                 </div>
-                            </div>
-                            <!--댓글컨테이너-->
-                            <div class="row">
-                                <div class="col" id="commentContainer">
-
+                                <div class="row border-top border-bottom  py-2">
+                                    <div class="col">
+                                        <span><i class="bi bi-chat-dots"></i></span>
+                                        <span>댓글</span>
+                                        <span id="detailDislikeCount"></span>
+                                    </div>
                                 </div>
-                            </div>
-                            <form id="sellerCommunityCommentForm"
-                                  action="/api/seller/sellerCommunityCommentInsertProcess"
-                                  onsubmit="sellerCommunityCommentInsertProcess(event)" method="post" class="row mt-2">
-                                <input id="sellerCommunityNumber" type="hidden" name="sellerCommunityNumber">
-                                <input id="sellerNumber" type="hidden" name="sellerNumber">
-                                <div class="col-11">
+                                <!--댓글컨테이너-->
+                                <div class="row">
+                                    <div class="col" id="commentContainer">
+
+                                    </div>
+                                </div>
+                                <form id="sellerCommunityCommentForm"
+                                      action="/api/seller/sellerCommunityCommentInsertProcess"
+                                      onsubmit="sellerCommunityCommentInsertProcess(event)" method="post" class="row py-2">
+                                    <input id="sellerCommunityNumber" type="hidden" name="sellerCommunityNumber">
+                                    <input id="sellerNumber" type="hidden" name="sellerNumber">
+                                    <div class="col-10">
                                     <textarea class="form-control py-1" id="sellerCommunityCommentContent"
                                               name="sellerCommunityCommentContent" placeholder="댓글쓰기"></textarea>
-                                </div>
-                                <div class="col">
-                                    <input class=" form-control btn btn-danger py-3" type="submit" value="작성">
-                                </div>
-                            </form>
+                                    </div>
+                                    <div class="col">
+                                        <input class=" form-control btn btn-outline-danger py-3" type="submit" value="작성">
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-2"></div>
-            </div>
-            <div class="row border-top py-3">
-                <div class="col ms-2">
+                <div class="row border-top pt-3">
+                    <div class="col ms-2">
                     <span id="previousArticle" style="cursor:pointer">
                         <span><i class="bi bi-arrow-left-circle"></i></span>
                         <span>이전글</span>
                     </span>
-                </div>
-                <div class="col text-center" style="cursor:pointer">
-                    <span data-bs-dismiss="modal">목록으로</span>
-                </div>
-                <div class="col text-end me-2">
+                    </div>
+                    <div class="col text-center" style="cursor:pointer">
+                        <span data-bs-dismiss="modal">목록으로</span>
+                    </div>
+                    <div class="col text-end me-2">
                     <span id="nextArticle" style="cursor:pointer">
                          <span>다음글</span>
                         <span><i class="bi bi-arrow-right-circle"></i></span>
                     </span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="row border-top border-bottom chatContainer d-none">
+<div class="row border-bottom chatContainer d-none">
     <div class="col">
         <div class="row">
-            <div class="col-md-auto">
+            <div class="col-md-auto pe-0">
                 <span><i class="bi-person-circle fs-2"></i></span>
             </div>
-            <div class="col">
-                <div class="row mt-2">
+            <div class="col mt-1">
+                <div class="row ">
                     <div class="col">
-                        <span class="fw-bold commentSellerName"></span>
+                        <span class="fw-bold commentSellerName font"></span>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col">
-                        <span class="commentCreatedAt"></span>
+                        <span class="commentCreatedAt align-top day"></span>
                     </div>
                 </div>
             </div>
+            <div class="updateDeleteCommentContainer col text-end me-2 mt-1">
+                <span onclick="submitComment(this)" class="submitComment d-none" style="cursor:pointer;">
+                    <i class="bi bi-floppy"></i>
+                </span>
+                <span onclick="updateComment(this)" style="cursor:pointer;">
+                     <i class="updateComment bi bi-pencil ms-2"></i>
+                </span>
+                <span style="cursor:pointer;">
+                    <i class="deleteComment bi bi-trash ms-2"></i>
+                </span>
+            </div>
         </div>
-        <div class="row mt-1">
+        <div class="row">
             <div class="col">
-                <span class="commentContent"></span>
+                <span class="commentContent text-break"></span>
             </div>
         </div>
         <div class="row py-2">
@@ -450,25 +491,31 @@
         </div>
         <div class="row addReply d-none aaa">
             <div class="col">
+                <!--대댓글 컨테이너-->
+                <div class="row replayBackground">
+                    <div class="col replyContainer">
+
+                    </div>
+                </div>
                 <form onsubmit="sellerCommunityReplyInsertProcess(event)"
                       action="/api/seller/sellerCommunityReplyInsertProcess" method="post"
-                      class="sellerCommunityReplyInsertForm row  py-2">
+                      class="sellerCommunityReplyInsertForm row  py-2 border-top">
                     <input class="sellerCommunityNumberInput" type="hidden" name="sellerCommunityNumber">
                     <input class="sellerCommunityCommentNumberInput" type="hidden" name="sellerCommunityCommentNumber">
                     <input class="sellerNumberInput" type="hidden" name="sellerNumber">
-                    <div class="col-11">
+                    <div class="col-10">
                         <textarea class="form-control py-1 sellerCommunityReplyContent"
                                   name="sellerCommunityReplyContent" placeholder="대댓글쓰기"></textarea>
 
                     </div>
                     <div class="col">
-                        <input class="form-control btn btn-danger py-3 " type="submit" value="작성">
+                        <input class="form-control btn btn-outline-danger py-3 " type="submit" value="작성">
                     </div>
                 </form>
-                <!--대댓글 컨테이너-->
-                <div class="row bg-body-secondary">
-                    <div class="col replyContainer">
-
+                <div onclick="addReply(this)" class="row py-2" style="cursor: pointer;">
+                    <div class="col text-center">
+                        <span>답글접기</span>
+                        <span><i class="bi bi-chevron-up"></i></span>
                     </div>
                 </div>
             </div>
@@ -480,20 +527,31 @@
 <div class="row border-top chatReplyContainer d-none">
     <div class="col ms-5">
         <div class="row">
-            <div class="col-md-auto">
+            <div class="col-md-auto pe-0">
                 <span><i class="bi-person-circle fs-2"></i></span>
             </div>
             <div class="col">
-                <div class="row mt-2">
+                <div class="row mt-1">
                     <div class="col">
-                        <span class="fw-bold replySellerName"></span>
+                        <span class="fw-bold replySellerName font"></span>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col">
-                        <span class="replyCreatedAt"></span>
+                        <span class="replyCreatedAt day align-top"></span>
                     </div>
                 </div>
+            </div>
+            <div class="updateDeleteReplyContainer col text-end me-2 mt-1">
+                 <span onclick="submitReply(this)" class="submitReply d-none"  style="cursor:pointer;">
+                    <i class="bi bi-floppy"></i>
+                </span>
+                <span onclick="updateReply(this)" style="cursor:pointer;">
+                     <i class="updateReply bi bi-pencil ms-2"></i>
+                </span>
+                <span style="cursor:pointer;">
+                    <i class="deleteReply bi bi-trash ms-2"></i>
+                </span>
             </div>
         </div>
         <div class="row">
@@ -601,6 +659,86 @@
 
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 
+            </div>
+        </div>
+    </div>
+</div>
+<!--게시글 수정 모달-->
+<div class="modal fade" id="sellerCommunityUpdateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mt-2">
+                    <div class="col">
+                        <span class="fw-bold fs-3">게시글 수정</span>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col">
+                        <form id="sellerCommunityUpdateForm" method="post" action="/api/seller/updateSellerCommunityDetail"
+                              onsubmit="updateSellerCommunity(event)" enctype="multipart/form-data">
+                            <div class="row">
+                                <div class="col">
+                                    <span id="updateSuccessMessage"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <span class="font">게시글제목</span>
+                                </div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col">
+                                    <input class="form-control font" type="text" id="updateSellerCommunityTitle"
+                                           name="sellerCommunityTitle" placeholder="수정할 제목 입력">
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col">
+                                    <span class="font">게시글 대표 이미지 등록</span>
+                                </div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col">
+                                    <input id="updateOneSellerCommunityImage" name="oneSellerCommunityImage"
+                                           class="form-control font" type="file">
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col">
+                                    <span class="font">게시글 상세 이미지 등록</span>
+                                </div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col">
+                                    <input id="updateMultipleSellerCommunityImageList" name="multipleSellerCommunityImageList"
+                                           class="form-control font" type="file" multiple>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col">
+                                    <span class="font">게시글 내용</span>
+                                </div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col">
+                                    <textarea rows="10" style="padding-bottom: 1%;" class="form-control font"
+                                              id="updateSellerCommunityContent" name="sellerCommunityContent"
+                                              placeholder="바꿀 내용을 입력해주세요"></textarea>
+                                </div>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col"></div>
+                                <div class="col-2 text-end">
+                                    <input class="btn btn-danger" type="submit" value="수정">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

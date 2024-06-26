@@ -137,61 +137,79 @@
         </div>
     </div>
 </div>
-
 <!--메뉴 선택창 -->
 <div class="container-fluid sticky-nav">
     <div class="row no-wrap-scroll bg-light fw-bold">
-        <div class="col colScroll" th:each="categoryList : ${categoryNameList}">
+        <div class="col colScroll" th:each="menuCategoryMap : ${menuCategoryDtoList}">
             <form action="customer/storesDetailMenu" method="get" >
                 <input type="hidden" name="sellerNumber" th:value="${param.sellerNumber}">
-                <input type="hidden" name="productCategoryNumber" th:value="${categoryList.productCategoryNumber}">
-                <input type="hidden" name="productCategoryNumber" th:value="${categoryList.productCategoryNumber}">
-                <button type="submit" formaction="#menu" formmethod="get" class="btn nav-link">
-                    <span th:text="${categoryList.productCategoryName}"></span>
+                <input type="hidden" name="menuCategory" th:value="${menuCategoryMap.getKey()}">
+                <button type="submit" th:formaction="'#menu-' + ${menuCategoryMap.getKey()}" th:formmethod="get" class="btn nav-link">
+                    <span th:text="${menuCategoryMap.getKey()}"></span>
                 </button>
             </form>
         </div>
     </div>
 </div>
-<!--메뉴 보기 -->
-<div class="container mt-4 content-section" id="menu">
-    <!-- 메뉴 카테고리 -->
+<!--메뉴 목록 -->
+<div class="container mt-4 content-section" th:id="'menu-' + ${menuCategoryMap.getKey()}"  th:each="menuCategoryMap : ${menuCategoryDtoList}">
+    <!-- 메뉴 카테고리 이름-->
     <div class="row">
         <div class="col">
             <div class="row mx-2 py-2 orderMenuBorder">
                 <div class="col">
-                    <span class="fw-bold" th:text="${productCategoryDto.productCategoryName}">카테고리이름</span>
+                    <span class="fw-bold" th:text="${menuCategoryMap.getKey()}">카테고리이름</span>
+                </div>
+            </div>
+            <!-- 각 메뉴 출력 -->
+            <div class="row" th:each="menuList : ${menuCategoryMap.getValue()}">
+                <a class="col" th:href="@{/customer/menuDetailPage(sellerNumber=${sellerDto.sellerNumber}, menuNumber=${menuList.menuNumber})}" style="color: black; text-decoration: none">
+                    <div class="row mx-2 py-4 orderMenuBorder">
+                        <div class="col">
+                            <div class="row">
+                                <div class="col">
+                                    <span class="fw-bold" th:text="${menuList.menuName}">치킨이름</span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col fw-bold">
+                                    <span th:text="|${#numbers.formatInteger(menuList.menuPrice, 0, 'COMMA')}원|">치킨가격</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col text-end">
+                            <img th:src="@{${menuList.menuImage}}" class="orderMenuImg">
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="row px-1 border-top bg-light">
+        <div class="row">
+            <div class="row">
+                <div class="col mt-3 fw-bold" style="font-size: 0.8rem">
+                    유의사항
+                </div>
+            </div>
+            <div class="row">
+                <div class="col mt-1 pe-0" style="font-size: 0.7rem">
+                    <span>•메뉴 사진은 연출된 이미지로 실제 조리된 음식과 다를 수 있습니다.</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col mt-1 pe-0" style="font-size: 0.7rem">
+                    <span>•상단 메뉴 및 가격은 본사에서 제공한 정보를 기준으로 작성되었으며 변동될수 있습니다.</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col mt-1 mb-3 pe-0" style="font-size: 0.7rem">
+                    <span>•메누별 리뷰 개수는 해당 메뉴가 표햔된 주문에 대하여 고객이 넘겨주신 리뷰를 기반으로 산출된 것입니다.</span>
                 </div>
             </div>
         </div>
     </div>
-    <!-- 메뉴  -->
-
-    <div class="row" th:each="productList : ${productMenuList}" >
-        <a class="col" th:href="@{/customer/menuDetailPage(sellerNumber=${sellerDto.sellerNumber}, productCategoryNumber=${productList.productCategoryDto.productCategoryNumber}, productNumber=${productList.productDto.productNumber})}"
-           style="color: black; text-decoration: none">
-            <div class="row mx-2 py-4 orderMenuBorder" >
-                <div class="col">
-                    <div class="row">
-                        <div class="col">
-                            <span class="fw-bold" th:text="${productList.productDto.productName}">치킨이름</span>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col fw-bold">
-                            <span th:text="|${#numbers.formatInteger(productList.productDto.productPrice, 0, 'COMMA')}원|">치킨가격</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col text-end">
-                    <img th:src="${productList.productDto.productImage}" class="orderMenuImg">
-                </div>
-            </div>
-        </a>
-    </div>
 </div>
-
-
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.mn.js"></script>
 <script src="https://kit.fontawesome.com/7b271bba58.js" crossorigin="anonymous"></script>

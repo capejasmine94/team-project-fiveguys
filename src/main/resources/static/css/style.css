@@ -87,7 +87,9 @@
 .colScroll {
     flex: 0 0 auto;
     width: auto;
-    padding: 0.5rem 0;
+    padding: 0.3rem 0;
+    /*margin-bottom: 1rem;*/
+    padding-left: 0.7rem;
 }
 .nav-link {
     display: block;
@@ -110,4 +112,10 @@
 
 .settlementTopB {
     border-top: 8px solid #F9F9F9;
+}
+/*장바구니 이미지*/
+.basket-img {
+    width: 100%;
+    height: 5rem;
+    object-fit: cover;
 }

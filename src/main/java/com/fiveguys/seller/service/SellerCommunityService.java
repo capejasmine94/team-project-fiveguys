@@ -30,6 +30,11 @@ public class SellerCommunityService {
         }
     }
 
+    //메인에 노출할 게시물
+    public List<Map<String,Object>> selectSellerCommunityMainPage(){
+        return sellerCommunitySqlMapper.selectSellerCommunityMainPage();
+    }
+
     public List<Map<String,Object>> selectSellerCommunityList(SellerCommunityPaginationDto sellerCommunityPaginationDto, int sellerNumber){
         List<Map<String,Object>> result = new ArrayList<>();
         List<SellerCommunityDto> sellerCommunityDtoList = sellerCommunitySqlMapper.selectSellerCommunityList(sellerCommunityPaginationDto);

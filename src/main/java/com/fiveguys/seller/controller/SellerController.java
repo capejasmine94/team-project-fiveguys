@@ -1,6 +1,7 @@
 package com.fiveguys.seller.controller;
 
 import com.fiveguys.dto.*;
+import com.fiveguys.seller.service.SellerCommunityService;
 import com.fiveguys.seller.service.SellerService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class SellerController {
     @Autowired
     SellerService sellerService;
 
+    @Autowired
+    private SellerCommunityService sellerCommunityService;
+
 
 
     @RequestMapping("mainPage")
@@ -32,7 +36,7 @@ public class SellerController {
         List<Map<String, Object>> sellerOrderList = sellerService.selectRecentSellerOrder(sellerNumber);
 
         model.addAttribute("sellerOrderList", sellerOrderList);
-
+        model.addAttribute("selectSellerCommunityMainPage", sellerCommunityService.selectSellerCommunityMainPage());
         return "seller/mainPage";
     }
 

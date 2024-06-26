@@ -193,5 +193,9 @@ public class EventService {
         return eventSqlMapper.selectEventBoardNumerByEventCommentNumber(eventCommentNumber);
     }
 
+    public List<EventBoardDto> selectEventBoardLimit() {
+        return eventSqlMapper.selectEventBoardLimit();
+    }
+
    
 }

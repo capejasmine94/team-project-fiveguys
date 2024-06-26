@@ -22,6 +22,9 @@ public interface SellerCommunitySqlMapper {
     //최상단 인기게시물 노출
    public List<SellerCommunityDto> selectSellerCommunityByPopularity(SellerCommunityPaginationDto sellerCommunityPaginationDto);
 
+   //메인페이지 노출
+   public List<Map<String,Object>> selectSellerCommunityMainPage();
+
     //전체 게시물 개수 가져오기, 검색된 후의 게시물도 포함
     public Integer selectSellerCommunityCount(SellerCommunityPaginationDto sellerCommunityPaginationDto);
 

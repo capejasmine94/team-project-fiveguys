@@ -232,6 +232,8 @@ public class CommunityController {
     //대댓글 쓰기
     @RequestMapping("communityCommentReplyProcess")
     public String communityCommentReplyProcess(HttpSession session, @RequestParam("commentNumber") int commentNumber, @RequestParam("communityCommentReplyText") String communityCommentReplyText, @RequestParam("communityNumber") int communityNumber){
+
+        System.out.println("commentNumber"+commentNumber);
         CustomerDto customerDto = (CustomerDto)session.getAttribute("customerDto");
 
         CommunityCommentReplyDto communityCommentReplyDto  = new CommunityCommentReplyDto();
@@ -242,6 +244,13 @@ public class CommunityController {
         communityService.insertCommunityCommentReply(communityCommentReplyDto);
 
         return "redirect:/customer/communityReadPage?communityNumber=" + communityNumber;
+    }
+
+    @RequestMapping("communityActivityHistory")
+    public String communityActivityHistory(){
+
+
+        return "/customer/communityActivityHistory";
     }
 
 

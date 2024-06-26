@@ -164,7 +164,11 @@
                     const month = String(commentCreatedAt.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
                     const day = String(commentCreatedAt.getDate()).padStart(2, '0');
 
-                    const formattedDate = `${year}-${month}-${day}`;
+                    const hours = String(commentCreatedAt.getHours()).padStart(2, '0');
+                    const minutes = String(commentCreatedAt.getMinutes()).padStart(2, '0');
+                    const seconds = String(commentCreatedAt.getSeconds()).padStart(2, '0');
+
+                    const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 
                     eventCommentCreatedAt.textContent = formattedDate;
                     
@@ -209,7 +213,11 @@
                         const month = String(commentCreatedAt.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
                         const day = String(commentCreatedAt.getDate()).padStart(2, '0');
 
-                        const formattedDate = `${year}-${month}-${day}`;
+                        const hours = String(commentCreatedAt.getHours()).padStart(2, '0');
+                        const minutes = String(commentCreatedAt.getMinutes()).padStart(2, '0');
+                        const seconds = String(commentCreatedAt.getSeconds()).padStart(2, '0');
+
+                        const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 
                         masterReplyCreatedAt.textContent = formattedDate;
 
@@ -232,8 +240,11 @@
                         const year = commentCreatedAt.getFullYear();
                         const month = String(commentCreatedAt.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
                         const day = String(commentCreatedAt.getDate()).padStart(2, '0');
+                        const hours = String(commentCreatedAt.getHours()).padStart(2, '0');
+                        const minutes = String(commentCreatedAt.getMinutes()).padStart(2, '0');
+                        const seconds = String(commentCreatedAt.getSeconds()).padStart(2, '0');
 
-                        const formattedDate = `${year}-${month}-${day}`;
+                        const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 
                         masterReplyCreatedAt.textContent = formattedDate;
 
@@ -314,120 +325,159 @@
             offcanvas.show();
         }
 
-        function updateEventProcess(){
+        function updateEventProcess() {
             document.getElementById('upadteUploadData').onsubmit = function(event) {
-            event.preventDefault();
-            const offcanvas = bootstrap.Offcanvas.getOrCreateInstance('#offcanvasUpdateBottom');
+                event.preventDefault();
+                const offcanvas = bootstrap.Offcanvas.getOrCreateInstance('#offcanvasUpdateBottom');
 
-            
-            // FormData 객체 생성
-            const formData = new FormData();
+                // FormData 객체 생성
+                const formData = new FormData();
 
-            // 추가 데이터 추가
-            const offcanvasUpdateEventTitle = document.getElementById("offcanvasUpdateEventTitle").value;
-            console.log(offcanvasUpdateEventTitle);
-            formData.append('eventTitle', offcanvasUpdateEventTitle);
+                // 정규식 패턴들
+                const titlePattern = /\S+/; // 공백이 아닌 문자가 최소 하나 이상 있는지
+                const datePattern = /^\d{4}-\d{2}-\d{2}$/; // YYYY-MM-DD 형식인지
 
-            const offcanvasUpdateEventStartDay = document.getElementById("offcanvasUpdateEventStartDay").value;
-            formData.append('eventStartDay', offcanvasUpdateEventStartDay);
+                // 추가 데이터 추가
+                const offcanvasUpdateEventTitle = document.getElementById("offcanvasUpdateEventTitle").value.trim();
+                if (!titlePattern.test(offcanvasUpdateEventTitle)) {
+                    alert('이벤트 제목을 입력하세요.');
+                    return;
+                }
+                formData.append('eventTitle', offcanvasUpdateEventTitle);
 
-            const offcanvasUpdateEventEndDay = document.getElementById("offcanvasUpdateEventEndDay").value;
-            formData.append('eventEndDay', offcanvasUpdateEventEndDay);
+                const offcanvasUpdateEventStartDay = document.getElementById("offcanvasUpdateEventStartDay").value.trim();
+                if (!datePattern.test(offcanvasUpdateEventStartDay)) {
+                    alert('올바른 시작일 형식(YYYY-MM-DD)으로 입력하세요.');
+                    return;
+                }
+                formData.append('eventStartDay', offcanvasUpdateEventStartDay);
 
-            const offcanvasUpdateEventNumber = document.getElementById("offcanvasUpdateEventNumber").value;
-            formData.append('eventNumber', offcanvasUpdateEventNumber);
+                const offcanvasUpdateEventEndDay = document.getElementById("offcanvasUpdateEventEndDay").value.trim();
+                if (!datePattern.test(offcanvasUpdateEventEndDay)) {
+                    alert('올바른 종료일 형식(YYYY-MM-DD)으로 입력하세요.');
+                    return;
+                }
+                formData.append('eventEndDay', offcanvasUpdateEventEndDay);
 
-            // 이미지 파일 추가
-            const offcanvasUpdateUploadFile = document.getElementById("offcanvasUpdateUploadFile").files;
-            formData.append("uploadFile",offcanvasUpdateUploadFile[0]);
-            const offcanvasUpdateUploadFiles = document.getElementById('offcanvasUpdateUploadFiles').files;
-            for (const image of offcanvasUpdateUploadFiles) {
-                formData.append('uploadFiles', image);
-            }
+                const offcanvasUpdateEventNumber = document.getElementById("offcanvasUpdateEventNumber").value.trim();
+                formData.append('eventNumber', offcanvasUpdateEventNumber);
 
-            const url = "/api/event/updateEventProcess";
-            // Fetch API를 사용하여 데이터 전송
-            fetch(url, {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data);
+                // 이미지 파일 추가
+                const offcanvasUpdateUploadFile = document.getElementById("offcanvasUpdateUploadFile").files;
+                if (offcanvasUpdateUploadFile.length === 0) {
+                    alert('이벤트 대표 이미지를 선택하세요.');
+                    return;
+                }
+                formData.append("uploadFile", offcanvasUpdateUploadFile[0]);
 
-                masterEventListPage();
-                document.getElementById("offcanvasUpdateEventTitle").value = "";
-                document.getElementById("offcanvasUpdateEventStartDay").value = "";
-                document.getElementById("offcanvasUpdateEventEndDay").value = "";
-                document.getElementById("offcanvasUpdateUploadFile").value = "";
-                document.getElementById("offcanvasUpdateUploadFiles").value = "";
-                offcanvas.hide();
+                const offcanvasUpdateUploadFiles = document.getElementById('offcanvasUpdateUploadFiles').files;
+                if (offcanvasUpdateUploadFiles.length === 0) {
+                    alert('상세 이미지 파일을 선택하세요.');
+                    return;
+                }
+                for (const image of offcanvasUpdateUploadFiles) {
+                    formData.append('uploadFiles', image);
+                }
 
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-            
+                const url = "/api/event/updateEventProcess";
+                // Fetch API를 사용하여 데이터 전송
+                fetch(url, {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success:', data);
+
+                        masterEventListPage();
+                        document.getElementById("offcanvasUpdateEventTitle").value = "";
+                        document.getElementById("offcanvasUpdateEventStartDay").value = "";
+                        document.getElementById("offcanvasUpdateEventEndDay").value = "";
+                        document.getElementById("offcanvasUpdateUploadFile").value = "";
+                        document.getElementById("offcanvasUpdateUploadFiles").value = "";
+                        offcanvas.hide();
+
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+
             };
-            
-
         }
 
-        function insertEventProcess(){
-            console.log("여기가 몇번");
-            document.getElementById('uploadData').onsubmit= function(event) {
-            event.preventDefault();
-            const offcanvas = bootstrap.Offcanvas.getOrCreateInstance('#offcanvasBottom');
+        function insertEventProcess() {
+            document.getElementById('uploadData').onsubmit = function(event) {
+                event.preventDefault();
+                const offcanvas = bootstrap.Offcanvas.getOrCreateInstance('#offcanvasBottom');
 
-            
-            // FormData 객체 생성
-            const formData = new FormData();
+                // 정규식 패턴들
+                const titlePattern = /\S+/; // 공백이 아닌 문자가 최소 하나 이상 있는지
+                const datePattern = /^\d{4}-\d{2}-\d{2}$/; // YYYY-MM-DD 형식인지
 
-            // 추가 데이터 추가
-            const offcanvasEventTitle = document.getElementById("offcanvasEventTitle").value;
-            formData.append('eventTitle', offcanvasEventTitle);
+                // FormData 객체 생성
+                const formData = new FormData();
 
-            const offcanvasEventStartDay = document.getElementById("offcanvasEventStartDay").value;
-            formData.append('eventStartDay', offcanvasEventStartDay);
+                // 추가 데이터 추가
+                const offcanvasEventTitle = document.getElementById("offcanvasEventTitle").value.trim();
+                if (!titlePattern.test(offcanvasEventTitle)) {
+                    alert('이벤트 제목을 입력하세요.');
+                    return;
+                }
+                formData.append('eventTitle', offcanvasEventTitle);
 
-            const offcanvasEventEndDay = document.getElementById("offcanvasEventEndDay").value;
-            formData.append('eventEndDay', offcanvasEventEndDay);
+                const offcanvasEventStartDay = document.getElementById("offcanvasEventStartDay").value.trim();
+                if (!datePattern.test(offcanvasEventStartDay)) {
+                    alert('올바른 시작일 형식(YYYY-MM-DD)으로 입력하세요.');
+                    return;
+                }
+                formData.append('eventStartDay', offcanvasEventStartDay);
 
-            // 이미지 파일 추가
-            const offcanvasUploadFile = document.getElementById("offcanvasUploadFile").files;
-            formData.append("uploadFile",offcanvasUploadFile[0]);
-            const offcanvasUploadFiles = document.getElementById('offcanvasUploadFiles').files;
-            for (const image of offcanvasUploadFiles) {
-                formData.append('uploadFiles', image);
-            }
+                const offcanvasEventEndDay = document.getElementById("offcanvasEventEndDay").value.trim();
+                if (!datePattern.test(offcanvasEventEndDay)) {
+                    alert('올바른 종료일 형식(YYYY-MM-DD)으로 입력하세요.');
+                    return;
+                }
+                formData.append('eventEndDay', offcanvasEventEndDay);
 
-            const url = "/api/event/insertEventProcess"
-            // Fetch API를 사용하여 데이터 전송
-            fetch(url, {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data); 
-                document.getElementById("offcanvasEventTitle").value = "";
-                document.getElementById("offcanvasEventStartDay").value = "";
-                document.getElementById("offcanvasEventEndDay").value = "";
-                document.getElementById("offcanvasUploadFile").value = "";
-                document.getElementById("offcanvasUploadFiles").value = "";
-                offcanvas.hide();
-                masterEventListPage();
+                // 이미지 파일 추가
+                const offcanvasUploadFile = document.getElementById("offcanvasUploadFile").files;
+                if (offcanvasUploadFile.length === 0) {
+                    alert('이벤트 대표 이미지를 선택하세요.');
+                    return;
+                }
+                formData.append("uploadFile", offcanvasUploadFile[0]);
 
+                const offcanvasUploadFiles = document.getElementById('offcanvasUploadFiles').files;
+                if (offcanvasUploadFiles.length === 0) {
+                    alert('상세 이미지 파일을 선택하세요.');
+                    return;
+                }
+                for (const image of offcanvasUploadFiles) {
+                    formData.append('uploadFiles', image);
+                }
 
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-            
+                const url = "/api/event/insertEventProcess"
+                // Fetch API를 사용하여 데이터 전송
+                fetch(url, {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success:', data);
+                        document.getElementById("offcanvasEventTitle").value = "";
+                        document.getElementById("offcanvasEventStartDay").value = "";
+                        document.getElementById("offcanvasEventEndDay").value = "";
+                        document.getElementById("offcanvasUploadFile").value = "";
+                        document.getElementById("offcanvasUploadFiles").value = "";
+                        offcanvas.hide();
+                        masterEventListPage();
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+
             };
-            
-
-
         }
 
         function updateMasterReplyProcessFunction(afterMasterReply,commentNumber){
@@ -549,7 +599,7 @@
                                     <div class="col-2">
                                         이벤트 분류
                                     </div>
-                                    <div class="col-2">
+                                    <div class="col">
                                         <select class="form-select form-select-sm" name="haha">
                                             <option selected>선택</option>
                                             <option value="1">진행중인 이벤트</option>
@@ -563,9 +613,13 @@
                                         등록일
                                     </div>
                                     <div class="col">
-                                        <input type="date">
+                                        <input type="date" class="form-control form-control-sm">
+                                    </div>
+                                    <div class="col-1 text-center">
                                         <span>~</span>
-                                        <input type="date">
+                                    </div>
+                                    <div class="col">
+                                        <input type="date" class="form-control form-control-sm">
                                     </div>
                                 </div>
                                 <div class="row mt-1">
@@ -781,8 +835,20 @@
             <div class="row">
                 <div class="col">
                     <div class="row">
+                        <div class="col-1 me-2">
+                            <span class="fs-2 p-0"><i class="bi bi-person-circle"></i></span>
+                        </div>
                         <div class="col">
-                            <span class="customerName fw-bolder" style="font-size:0.9em;" ></span>
+                            <div class="row">
+                                <div class="col" style="font-size: 0.8rem;">
+                                    <span class="customerName fw-bolder"  ></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col" style="font-size: 0.8rem;">
+                                    <span class="eventCommentCreatedAt"></span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -794,11 +860,6 @@
             </div>
             <div class="row">
                 <div class="col">
-                    <span style="font-size:0.8em;" class="eventCommentCreatedAt"></span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
                     <input type="hidden" class="commentNumber">
                 </div>
             </div>
@@ -806,7 +867,7 @@
                 <div class="col">
                     <div class="row">
                         <div class="col">
-                            <div class="masterReplyLocation row border rounded pe-0">
+                            <div class="masterReplyLocation row pe-0">
                                 <!-- 마스터 댓글 -->
                             </div>
                         </div>
@@ -826,7 +887,7 @@
         </div>
         <div class="row mt-2">
             <div class="col text-end mb-3">
-                <span class="writebutton btn btn-primary">댓글쓰기</span>
+                <span class="writebutton btn text-white" style="background-color: #B41E30;">댓글쓰기</span>
             </div>
         </div>
     </div>
@@ -864,21 +925,32 @@
 
 <!-- 마스터 로그인 성공 댓글 확인 -->
 <div class="d-none" id="yesMasterYesReplyTempleteLocation" >
-    <div class="yesMasterYesReplyTemplete col bg-body-tertiary py-1" >
+    <div class="yesMasterYesReplyTemplete col py-1" >
         <div class="row">
-            <div class="col-1"></div>
-            <div class="col">
+            <div class="col ms-3 border-start border-2 ps-2">
                 <div class="row">
                     <div class="col">
                         <div class="row">
+                            <div class="col-1 me-2">
+                                <span class="fs-2 p-0"><i class="bi bi-person-circle"></i></span>
+                            </div>
                             <div class="col">
-                                <span class="fw-bolder" style="font-size:0.9em;" >운영자</span>
+                                <div class="row">
+                                    <div class="col">
+                                        <span class="fw-bolder" style="font-size:0.9em;" >운영자</span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <span style="font-size:0.8em;" class="masterReplyCreatedAt"></span>
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-auto text-end pe-0">
-                                <span style="font-size:0.8em;" onclick="updateMasterReply(this)">수정</span>
+                                <span style="font-size:0.8em; cursor: pointer;" onclick="updateMasterReply(this)">수정</span>
                             </div>
                             <div class="col-auto text-end">
-                                <span style="font-size:0.8em;" onclick="updateDeleteMasterReply(this)">삭제</span>
+                                <span style="font-size:0.8em; cursor: pointer;" onclick="updateDeleteMasterReply(this)">삭제</span>
                             </div>
                         </div>
                     </div>
@@ -915,7 +987,7 @@
 </div>
 
 
-<div class="offcanvas offcanvas-bottom" style="height: 80%;" tabindex="-1" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
+<div class="offcanvas offcanvas-bottom" style="height: 48%;" tabindex="-1" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="offcanvasBottomLabel">이벤트 등록</h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -924,61 +996,61 @@
         <div class="container">
             <div class="row">
                 <div class="col">
-                    <form class="row mt-3" id="uploadData">
+                    <form class="row mt-1" id="uploadData">
                         <div class="col">
-                            <div class="row mt-2">
-                                <div class="col-auto text-center">
+                            <div class="row ">
+                                <div class="col-auto pt-1 text-center">
                                     <span>이벤트 제목</span> 
                                 </div>
                                 <div class="col">
-                                    <input class="form-control" id="offcanvasEventTitle" type="text">
+                                    <input class="form-control form-control-sm  " id="offcanvasEventTitle" type="text">
                                 </div>
                             </div>
                             <div class="row mt-2">
-                                <div class="col-auto">
+                                <div class="col-auto pt-1">
                                     <span>대표이미지</span>
                                 </div>
-                                <div class="col-4">
-                                    <input id="offcanvasUploadFile" type="file" accept="image/*">
+                                <div class="col">
+                                    <input id="offcanvasUploadFile" class="form-control form-control-sm" type="file" accept="image/*">
                                 </div>
                             </div>
                             <div class="row mt-2">
-                                <div class="col-auto">
+                                <div class="col-auto pt-1">
                                     <span>상세이미지</span>
                                 </div>
                                 <div class="col">
-                                    <input id="offcanvasUploadFiles" type="file" multiple accept="image/*">
+                                    <input id="offcanvasUploadFiles" type="file" multiple accept="image/*" class="form-control form-control-sm">
                                 </div>
                             </div>
                             <div class="row mt-2">
-                                <div class="col-auto">
+                                <div class="col-6">
                                     <div class="row">
-                                        <div class="col">
+                                        <div class="col pt-2">
                                             <span>시작일</span>
                                         </div>
                                     </div>
                                     <div class="row mt-2">
                                         <div class="col">
-                                            <input id="offcanvasEventStartDay" type="date">
+                                            <input id="offcanvasEventStartDay" type="date" class="form-control form-control-sm">
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col">
+                                <div class="col-6">
                                     <div class="row">
-                                        <div class="col">
+                                        <div class="col pt-2">
                                             <span>종료일</span>
                                         </div>
                                     </div>
                                     <div class="row mt-2">
                                         <div class="col">
-                                            <input id="offcanvasEventEndDay" type="date">
+                                            <input id="offcanvasEventEndDay" type="date" class="form-control form-control-sm">
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row mt-2">
+                            <div class="row mt-3">
                                 <div class="col text-end">
-                                    <button type="submit" class="btn btn-danger small" onclick="insertEventProcess()"> 이벤트 등록</button>
+                                    <button type="submit" class="btn small text-white" style="background-color: #B41E30;" onclick="insertEventProcess()"> 이벤트 등록</button>
                                 </div>
                             </div>
                         </div>
@@ -990,7 +1062,7 @@
 </div>
 
 
-<div class="offcanvas offcanvas-bottom" style="height: 80%;" tabindex="-1" id="offcanvasUpdateBottom" aria-labelledby="offcanvasBottomLabel">
+<div class="offcanvas offcanvas-bottom" style="height: 48%;" tabindex="-1" id="offcanvasUpdateBottom" aria-labelledby="offcanvasBottomLabel">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="offcanvasBottomLabel">이벤트 수정</h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -1002,31 +1074,31 @@
                     <form class="row mt-3" id="upadteUploadData">
                         <div class="col">
                             <div class="row mt-2">
-                                <div class="col-auto text-center">
+                                <div class="col-auto pt-1 text-center">
                                     <span>이벤트 제목</span> 
                                 </div>
                                 <div class="col">
-                                    <input class="form-control" id="offcanvasUpdateEventTitle" type="text">
+                                    <input class="form-control form-control-sm" id="offcanvasUpdateEventTitle" type="text">
                                 </div>
                             </div>
                             <div class="row mt-2">
-                                <div class="col-auto">
+                                <div class="col-auto pt-1">
                                     <span>대표이미지</span>
                                 </div>
                                 <div class="col-4">
-                                    <input id="offcanvasUpdateUploadFile" type="file" accept="image/*">
+                                    <input id="offcanvasUpdateUploadFile" type="file"  class="form-control form-control-sm" accept="image/*">
                                 </div>
                             </div>
                             <div class="row mt-2">
-                                <div class="col-auto">
+                                <div class="col-auto pt-1">
                                     <span>상세이미지</span>
                                 </div>
                                 <div class="col">
-                                    <input id="offcanvasUpdateUploadFiles" type="file" multiple accept="image/*">
+                                    <input id="offcanvasUpdateUploadFiles" type="file" class="form-control form-control-sm" multiple accept="image/*">
                                 </div>
                             </div>
                             <div class="row mt-2">
-                                <div class="col-auto">
+                                <div class="col-6">
                                     <div class="row">
                                         <div class="col">
                                             <span>시작일</span>
@@ -1034,11 +1106,11 @@
                                     </div>
                                     <div class="row mt-2">
                                         <div class="col">
-                                            <input id="offcanvasUpdateEventStartDay" type="date">
+                                            <input id="offcanvasUpdateEventStartDay" class="form-control form-control-sm" type="date">
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col">
+                                <div class="col-6">
                                     <div class="row">
                                         <div class="col">
                                             <span>종료일</span>
@@ -1046,7 +1118,7 @@
                                     </div>
                                     <div class="row mt-2">
                                         <div class="col">
-                                            <input id="offcanvasUpdateEventEndDay" type="date">
+                                            <input id="offcanvasUpdateEventEndDay" class="form-control form-control-sm" type="date">
                                         </div>
                                     </div>
                                 </div>
@@ -1054,7 +1126,7 @@
                             <div class="row mt-2">
                                 <div class="col text-end">
                                     <input type="hidden" id="offcanvasUpdateEventNumber">
-                                    <button type="submit" class="btn btn-danger small" onclick="updateEventProcess()"> 이벤트 등록</button>
+                                    <button type="submit" class="btn small text-white" style="background-color: #B41E30;" onclick="updateEventProcess()"> 이벤트 등록</button>
                                 </div>
                             </div>
                         </div>

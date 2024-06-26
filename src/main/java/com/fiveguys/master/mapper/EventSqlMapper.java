@@ -62,5 +62,7 @@ public interface EventSqlMapper {
 
     int selectEventBoardNumerByEventCommentNumber(int eventCommentNumber);
 
+    List<EventBoardDto> selectEventBoardLimit();
+
 
 }

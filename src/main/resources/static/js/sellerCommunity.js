@@ -175,6 +175,7 @@ function getSellerCommunityList(currentPage,searchWord,sortedOption,sellerSort){
                     //세션별 좋아요 싫어요
                     const checkIfSellerCommunityLikeExists = newSellerCommentWrapper.querySelector(".likeDislikeStatus");
                     if(e.checkIfSellerCommunityLikeExists!==0){
+
                         checkIfSellerCommunityLikeExists.classList.add("bi-heart-fill");
                         checkIfSellerCommunityLikeExists.classList.remove("bi-heart");
                     }else{
@@ -817,14 +818,18 @@ function sellerCommunityDetailPage(sellerCommunityNumber,sellerCommunityCommentN
 
 
             const heart = document.querySelector(".heart");
-
+            const likeStatusContainer = document.querySelector(".likeStatusContainer");
 
             if(response.checkIfSellerCommunityLikeExists!==0) {
-                heart.classList.add("bi-heart-fill");
-                heart.classList.remove("bi-heart");
+                likeStatusContainer.classList.remove("border-dark-subtle");
+                likeStatusContainer.classList.add("border-danger-subtle");
+                heart.classList.add("bi-heart-fill","text-danger");
+                heart.classList.remove("bi-heart","text-dark");
             }else{
-                heart.classList.add("bi-heart");
-                heart.classList.remove("bi-heart-fill");
+                likeStatusContainer.classList.add("border-dark-subtle");
+                likeStatusContainer.classList.remove("border-danger-subtle");
+                heart.classList.add("bi-heart","text-dark");
+                heart.classList.remove("bi-heart-fill","text-danger");
             }
 
             const detailLikeCount = document.querySelector("#detailLikeCount");
@@ -834,8 +839,8 @@ function sellerCommunityDetailPage(sellerCommunityNumber,sellerCommunityCommentN
             detailDislikeCount.innerText=response.sellerCommunityDetail.selectTotalCommentReplyCount;
 
             const commentContainer = document.querySelector("#commentContainer");
-            const chatContainer = document.querySelector(".chatContainer");
             commentContainer.innerHTML="";
+            const chatContainer = document.querySelector(".chatContainer");
             for(let e of response.sellerCommunityDetail.selectSellerCommunityComment){
                 const newChatContainer = chatContainer.cloneNode(true);
 
@@ -857,7 +862,6 @@ function sellerCommunityDetailPage(sellerCommunityNumber,sellerCommunityCommentN
 
                 const commentContent = newChatContainer.querySelector(".commentContent");
                 commentContent.innerText=e.sellerCommunityCommentDto.sellerCommunityCommentContent;
-                console.log(commentContent.innerText);
 
                 const commentReplyCount = newChatContainer.querySelector(".commentReplyCount");
                 commentReplyCount.innerText=e.selectEachSellerCommentReplyCount;
@@ -903,15 +907,17 @@ function sellerCommunityDetailPage(sellerCommunityNumber,sellerCommunityCommentN
                 sellerNumberInput.value=response.sellerDto.sellerNumber;
 
                 const replyContainer = newChatContainer.querySelector(".replyContainer");
-                const chatReplyContainer = document.querySelector(".chatReplyContainer");
+
+
                 replyContainer.innerHTML="";
+                const chatReplyContainer = document.querySelector(".chatReplyContainer");
 
                 const showBox = newChatContainer.querySelector(".addReply");
 
-                if(sellerCommunityCommentNumberInputInput!==undefined){
+                if(sellerCommunityCommentNumberInputInput!==undefined ){
                     if(showBox.querySelector(".sellerCommunityCommentNumberInput").value===sellerCommunityCommentNumberInputInput){
                         showBox.classList.remove("d-none");
-                    }else{
+                    } else{
                         showBox.classList.add("d-none");
                     }
                 }
@@ -1081,7 +1087,6 @@ function sellerCommunityLikeProcess(){
 
     const sellerCommunityNumber = document.querySelector("#sellerCommunityNumber").value;
     const sellerNumber = document.querySelector("#sellerNumber").value;
-    const sellerCommunityCommentNumberInput = document.querySelector(".sellerCommunityCommentNumberInput").value;
 
     const likeData ={
         sellerNumber:sellerNumber,
@@ -1101,7 +1106,7 @@ function sellerCommunityLikeProcess(){
             if(response.success===false){
                 window.location.href = "/login/sellerLogin";
             }
-            sellerCommunityDetailPage(sellerCommunityNumber,sellerCommunityCommentNumberInput);
+            sellerCommunityDetailPage(sellerCommunityNumber,"");
         });
 
 }
@@ -1206,7 +1211,7 @@ function commentLikeStatus(target){
 
     const sellerCommunityNumberInput = clickedElementParent.querySelector(".sellerCommunityNumberInput").value;
 
-    const sellerCommunityCommentNumberInput = clickedElementParent.querySelector(".sellerCommunityCommentNumberInput").value;
+    let sellerCommunityCommentNumberInput = clickedElementParent.querySelector(".sellerCommunityCommentNumberInput").value;
     const sellerNumberInput = clickedElementParent.querySelector(".sellerNumberInput").value;
     const sellerCommentLikeStatus = clickedElement.querySelector(".sellerCommentLikeStatus").value;
 
@@ -1232,6 +1237,12 @@ function commentLikeStatus(target){
             if(response.success===false){
                 window.location.href="/login/sellerLogin";
             }
+
+            const isOpen = clickedElementParent.querySelector(".addReply");
+            if(isOpen.classList.contains("d-none")){
+                sellerCommunityCommentNumberInput="";
+            }
+
             sellerCommunityDetailPage(sellerCommunityNumberInput,sellerCommunityCommentNumberInput);
 
         });
@@ -1244,7 +1255,7 @@ function commentDislikeStatus(target){
 
 
     const sellerCommunityNumberInput = clickedElementParent.querySelector(".sellerCommunityNumberInput").value;
-    const sellerCommunityCommentNumberInput = clickedElementParent.querySelector(".sellerCommunityCommentNumberInput").value;
+    let sellerCommunityCommentNumberInput = clickedElementParent.querySelector(".sellerCommunityCommentNumberInput").value;
     const sellerNumberInput = clickedElementParent.querySelector(".sellerNumberInput").value;
     const sellerCommentLikeStatus = clickedElement.querySelector(".sellerCommentLikeStatus").value;
 
@@ -1270,6 +1281,11 @@ function commentDislikeStatus(target){
             if(response.success===false){
                 window.location.href="/login/sellerLogin";
             }
+            const isOpen = clickedElementParent.querySelector(".addReply");
+            if(isOpen.classList.contains("d-none")){
+                sellerCommunityCommentNumberInput="";
+            }
+
             sellerCommunityDetailPage(sellerCommunityNumberInput,sellerCommunityCommentNumberInput);
 
         });

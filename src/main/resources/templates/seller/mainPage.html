@@ -189,20 +189,17 @@
                             <tr>
                                 <th class="text-center" scope="col">작성자</th>
                                 <th class="text-center" scope="col">제목</th>
-                                <th scope="col">작성일</th>
+                                <th class="text-center" scope="col">작성일</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="sellerOrderList : ${sellerOrderList}">
+                            <tr th:each="selectSellerCommunity : ${selectSellerCommunityMainPage}">
 
-                                <td class="text-center" th:text="${sellerOrderList.sellerDto.sellerName}"></td>
+                                <td class="text-center" th:text="${selectSellerCommunity.sellerName}"></td>
                                 <td class="text-center">
-                                    <a th:href="@{/seller/orderDetailCheckPage(id=${sellerOrderList.sellerOrderDto.sellerOrderNumber})}"
-                                       th:text="${#dates.format(sellerOrderList.sellerOrderDto.sellerOrderCreatedAt, 'yyyy-MM-dd')}"
-                                       class="text-decoration-none fw-bold text-black">
-                                    </a>
+                                    <a href="/seller/sellerCommunity" class="text-decoration-none fw-bold text-black" th:text="${selectSellerCommunity.sellerCommunityTitle}"></a>
                                 </td>
-                                <td th:text="${sellerOrderList.sellerOrderDto.sellerOrderStatus}"></td>
+                                <td class="text-center "  th:text="${#dates.format(selectSellerCommunity.sellerCommunityCreatedAt, 'yyyy-MM-dd')}"></td>
                             </tr>
                             </tbody>
                         </table>

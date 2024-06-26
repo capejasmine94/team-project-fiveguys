@@ -249,9 +249,31 @@
         order by communityCommunityReplyNumber desc
     </select>
 
+<!--    프로필-->
 
 
+<select id="selectCommunityLimit" resultType="CommunityDto">
+    select
+        communityNumber,
+        customerNumber,
+        communityTitle,
+        communityContent,
+        communityVisitCount,
+    CASE
+        WHEN FLOOR(TIMESTAMPDIFF(MONTH, communityCreatedAt, NOW()) / 12) >= 1 THEN CONCAT(FLOOR(TIMESTAMPDIFF(MONTH, communityCreatedAt, NOW()) / 12), '년전')
+        WHEN TIMESTAMPDIFF(MONTH, communityCreatedAt, NOW()) >= 1 THEN CONCAT(TIMESTAMPDIFF(MONTH, communityCreatedAt, NOW()), '달전')
+        WHEN DATEDIFF(CURRENT_DATE, communityCreatedAt) >= 1 THEN CONCAT(DATEDIFF(CURRENT_DATE, communityCreatedAt), '일전')
+        WHEN TIMESTAMPDIFF(HOUR, communityCreatedAt, NOW()) >= 1 THEN CONCAT(TIMESTAMPDIFF(HOUR, communityCreatedAt, NOW()), '시간전')
+        ELSE CONCAT(TIMESTAMPDIFF(MINUTE, communityCreatedAt, NOW()), '분전')
+        end as communityCreatedAt,
 
+        communityImage
+
+    from fc_community
+    order by communityCreatedAt
+    limit 3;
+
+</select>
 
 
 </mapper>

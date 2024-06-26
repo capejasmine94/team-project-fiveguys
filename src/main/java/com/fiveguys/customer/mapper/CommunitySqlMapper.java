@@ -49,6 +49,8 @@ public interface CommunitySqlMapper {
     //대댓글
     public void insertCommunityCommentReply(CommunityCommentReplyDto communityCommentReplyDto);
     public List<CommunityCommentReplyDto> selectCommunityCommentReplyList(int communityNumber);
+
+    public void deleteCommunityImage(int communityId);
     
     //메인 페이지 커뮤니티 게시글 보여주기
     public List<CommunityDto> selectCommunityLimit();

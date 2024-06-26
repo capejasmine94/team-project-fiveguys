@@ -249,10 +249,7 @@
         order by communityCommunityReplyNumber desc
     </select>
 
-<!--    프로필-->
-
-
-<select id="selectCommunityLimit" resultType="CommunityDto">
+    <select id="selectCommunityLimit" resultType="CommunityDto">
     select
         communityNumber,
         customerNumber,
@@ -273,7 +270,20 @@
     order by communityCreatedAt
     limit 3;
 
-</select>
+    </select>
+
+    <delete id="deleteCommunityImage">
+        delete from fc_communityDetailImage
+        where communityId = #{communityId}
+    </delete>
+
+
+
+<!--    프로필-->
+
+
+
+
 
 
 </mapper>

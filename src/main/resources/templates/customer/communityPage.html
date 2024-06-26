@@ -26,8 +26,10 @@
 
     <!--자유게시판 메인-->
     <div class="container" style="margin-top: 4rem">
-
-        <div class="row mx-1 my-1 border border-danger bg-white rounded-4 shadow" th:each = "communityData : ${selectCommunityList}"  >
+        <a th:each = "communityData : ${selectCommunityList}"
+                class="text-decoration-none text-black fs-5"
+           th:href="@{./communityReadPage(communityNumber=${communityData.communityDto.communityNumber})}">
+        <div class="row mx-1 my-1 border border-danger bg-white rounded-4 shadow">
             <div class="col ps-4 pe-4">
                 <div class="row">
                     <div class="col p-1">
@@ -51,17 +53,12 @@
                         <div class="row">
                             <div class="col">
         <!--                글제목:-->
-                                <span>
-                                    <a class="text-decoration-none text-black fs-5"
-                                       th:href="@{./communityReadPage(communityNumber=${communityData.communityDto.communityNumber})}"
-                                       th:text="${communityData.communityDto.communityTitle}">
-                                    </a>
-                                </span>
+                                <span th:text="${communityData.communityDto.communityTitle}"></span>
                             </div>
                         </div>
                     </div>
 <!--                    대표 이미지-->
-                    <div class="col-4 p-1">
+                    <div class="col-4 p-1 pt-3">
                         <span>
                             <span th:if="${communityData.communityDto.communityImage != null && !communityData.communityDto.communityImage.isEmpty()}">
                                 <img class="img-fluid rounded-5" th:src="@{|/images/${communityData.communityDto.communityImage}|}">
@@ -90,7 +87,7 @@
                 </div>
             </div>
         </div>
-
+    </a>
 
         <div class="row">
             <div class="col">

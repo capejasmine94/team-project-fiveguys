@@ -38,7 +38,7 @@ public class CommunityController {
 
     //자유게시판 글쓰기프로세스
     @RequestMapping("communityWriteProcess")
-    public String communityWriteProcess(HttpSession session, CommunityDto params, MultipartFile[] uploadFiles, MultipartFile uploadFileMain){
+    public String communityWriteProcess(HttpSession session, CommunityDto params,@RequestParam("uploadFiles") MultipartFile[] uploadFiles,@RequestParam("uploadFileMain") MultipartFile uploadFileMain){
 
         CustomerDto customerDto = (CustomerDto)session.getAttribute("customerDto");
         int userPk = customerDto.getCustomerNumber();
@@ -161,9 +161,29 @@ public class CommunityController {
 
     //자유게시판 글 수정프로세스
     @RequestMapping("communityUpdateProcess")
-    public String communityUpdateProcess(CommunityDto params){
+    public String communityUpdateProcess(CommunityDto params, @RequestParam("uploadFiles") MultipartFile[] uploadFiles){
+
+        List<CommunityDetailImageDto> communityDetailImageDtoList = new ArrayList<>();
+
+        // 멀티 이미지 처리
+        if(uploadFiles != null){
+            for(MultipartFile multipartFile : uploadFiles){
+                if(multipartFile.isEmpty()){
+                    continue;
+                }
+                String imagePath = saveFile(multipartFile);
+
+                //DB 작업용 Dto 생성
+                CommunityDetailImageDto communityDetailImageDto = new CommunityDetailImageDto();
+                communityDetailImageDto.setMultipleImage(imagePath);
+
+                communityDetailImageDtoList.add(communityDetailImageDto);
+            }
+        }
 
         communityService.updateCommunityPage(params);
+        communityService.deleteCommunityImage(params.getCommunityNumber());
+        communityService.insertImageDto(params.getCommunityNumber(), communityDetailImageDtoList);
 
         return "redirect:./communityPage";
     }
@@ -248,6 +268,8 @@ public class CommunityController {
 
     @RequestMapping("communityActivityHistory")
     public String communityActivityHistory(){
+
+
 
 
         return "/customer/communityActivityHistory";

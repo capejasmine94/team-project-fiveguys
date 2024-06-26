@@ -240,6 +240,21 @@ public class CommunityService {
         return result;
     }
 
+    public void deleteCommunityImage(int communityId){
+        communitySqlMapper.deleteCommunityImage(communityId);
+    }
+
+    public void insertImageDto(int CommunityNumber, List<CommunityDetailImageDto> communityDetailImageDtoList){
+        for(CommunityDetailImageDto communityDetailImageDto : communityDetailImageDtoList){
+            communityDetailImageDto.setCommunityId(CommunityNumber);
+
+            communitySqlMapper.communityDetailImageDtoList(communityDetailImageDto);
+        }
+
+    }
+
+
+
 
 
 }

@@ -1,7 +1,9 @@
 package com.fiveguys.customer.controller;
 
+import com.fiveguys.customer.service.CommunityService;
 import com.fiveguys.dto.*;
 import com.fiveguys.login.service.LoginService;
+import com.fiveguys.master.service.EventService;
 import com.fiveguys.seller.service.SellerCustomerService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +28,19 @@ public class CustomerController {
     private SellerCustomerService sellerCustomerService;
     @Autowired
     private LoginService loginService;
+    
+    @Autowired
+    private EventService eventService;
+    @Autowired
+    private CommunityService communityService;
 
     @RequestMapping("mainPage")
-    public String mainPage() {
+    public String mainPage(Model model) {
+        List<EventBoardDto> eventBoardList = eventService.selectEventBoardLimit();
+        List<Map<String,Object>> communityList = communityService.selectCommunityLimit();
+
+        model.addAttribute("eventBoardList", eventBoardList);
+        model.addAttribute("communityList", communityList);
         return "customer/mainPage";
     }
 

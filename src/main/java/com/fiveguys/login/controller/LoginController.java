@@ -1,12 +1,20 @@
 package com.fiveguys.login.controller;
 
+import com.fiveguys.customer.service.CommunityService;
+import com.fiveguys.dto.CommunityDto;
 import com.fiveguys.dto.CustomerDto;
+import com.fiveguys.dto.EventBoardDto;
 import com.fiveguys.dto.MasterDto;
 import com.fiveguys.dto.SellerDto;
 import com.fiveguys.login.service.LoginService;
+import com.fiveguys.master.service.EventService;
+
+import java.util.*;
+
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -32,7 +40,7 @@ public class LoginController {
     }
 
     @RequestMapping("customerLoginProcess")
-    public String customerLoginProcess(HttpSession session, @ModelAttribute CustomerDto customerDto) {
+    public String customerLoginProcess(HttpSession session, @ModelAttribute CustomerDto customerDto, Model model) {
         CustomerDto customerDto1 = loginService.selectCustomerCheck(customerDto);
         if (customerDto1 == null) {
             return "redirect:./customerLogin";

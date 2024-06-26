@@ -164,5 +164,13 @@
         where eventCommentNumber = #{eventCommentNumber}
     </select>
 
+    <select id="selectEventBoardLimit" resultType="EventBoardDto">
+        <![CDATA[
+            select * from fc_eventBoard
+            where eventEndDay >= now()
+            LIMIT 3;
+        ]]>
+    </select>
+
 
 </mapper>

@@ -223,6 +223,23 @@ public class CommunityService {
         communitySqlMapper.insertCommunityCommentReply(communityCommentReplyDto);
     }
 
+    public List<Map<String, Object>> selectCommunityLimit() {
+        List<Map<String, Object>> result = new ArrayList<>();
+
+        List<CommunityDto> communityList = communitySqlMapper.selectCommunityLimit();
+        for(CommunityDto communityDto : communityList){
+            Map<String,Object> map = new HashMap<>();
+            CustomerDto customerDto = communitySqlMapper.selectCustomerNumber(communityDto.getCustomerNumber());
+
+            map.put("communityDto", communityDto);
+            map.put("customerDto", customerDto);
+
+            result.add(map);
+        }
+
+        return result;
+    }
+
 
 
 }

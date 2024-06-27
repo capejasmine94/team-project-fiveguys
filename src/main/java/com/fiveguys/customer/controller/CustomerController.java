@@ -207,6 +207,17 @@ public class CustomerController {
         return "customer/orderDetailHistoryPage";
     }
 
+    @RequestMapping("reviewPage")
+    public String reviewPage(Model model,
+                             @RequestParam("sellerNumber") int sellerNumber) {
+
+        SellerDto sellerDto = sellerCustomerService.selectSellersByNumber(sellerNumber);
+        model.addAttribute("sellerDto", sellerDto);
+
+
+        return "customer/reviewPage";
+    }
+
 
 }
 

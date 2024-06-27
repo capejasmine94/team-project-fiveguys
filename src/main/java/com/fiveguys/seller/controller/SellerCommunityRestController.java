@@ -29,7 +29,6 @@ public class SellerCommunityRestController {
 
         //페이지네이션 처리
         int totalPage = sellerCommunityService.selectSellerCommunityCount(sellerCommunityPaginationDto);
-        System.out.println(totalPage);
 
 
         int lastPageNumber = (int)Math.ceil((double)totalPage/sellerCommunityPaginationDto.getItemsPerPage());

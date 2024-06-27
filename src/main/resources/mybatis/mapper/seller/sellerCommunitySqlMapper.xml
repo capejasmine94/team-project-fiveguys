@@ -45,6 +45,7 @@
     </select>
     <select id="selectSellerCommunityList" >
         <bind name="offset" value="(currentPage - 1) * itemsPerPage"/>
+
         select
         s.sellerCommunityNumber,
         s.sellerNumber,
@@ -75,21 +76,45 @@
         order by
         <choose>
             <when test="sortedOption =='recent'">
-                s.sellerCommunityCreatedAt desc
+                CASE
+                    WHEN s.sellerCommunityNumber IN (
+                        SELECT sellerCommunityNumber
+                        FROM (
+                            SELECT sellerCommunityNumber
+                            FROM fc_sellerCommunity
+                        ORDER BY (SELECT COUNT(*) FROM fc_sellerCommunityLike fsc WHERE fsc.sellerCommunityNumber = fc_sellerCommunity.sellerCommunityNumber) DESC
+                        LIMIT 2
+                        ) AS top_heart
+                    ) THEN 0
+                ELSE 1
+                END,
+                s.sellerCommunityCreatedAt DESC
             </when>
             <when test="sortedOption =='view'">
+                CASE
+                    WHEN s.sellerCommunityNumber IN (
+                        SELECT sellerCommunityNumber
+                        FROM (
+                            SELECT sellerCommunityNumber
+                            FROM fc_sellerCommunity
+                        ORDER BY (SELECT COUNT(*) FROM fc_sellerCommunityLike fsc WHERE fsc.sellerCommunityNumber = fc_sellerCommunity.sellerCommunityNumber) DESC
+                        LIMIT 2
+                    ) AS top_heart
+                ) THEN 0
+                ELSE 1
+                END,
                 s.sellerCommunityVisitCount desc
             </when>
             <when test="sortedOption =='like'">
                 heart desc
             </when>
             <otherwise>
-                heart desc,
-                sellerCommunityCreatedAt desc
+                s.sellerCommunityCreatedAt desc
             </otherwise>
         </choose>
         limit #{offset},#{itemsPerPage}
     </select>
+
     <select id="selectSellerCommunityById">
         select
             sellerCommunityNumber,

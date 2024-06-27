@@ -113,14 +113,15 @@ function getSellerCommunityList(currentPage,searchWord,sortedOption,sellerSort){
             sellerInfo.innerText=response.sellerDto.sellerName;
 
             const sellerCommunityBox = document.getElementById("sellerCommunityBox");
-            const sellerCommentWrapper = document.querySelector(".sellerCommentWrapper");
             sellerCommunityBox.innerHTML = '';
+            const sellerCommentWrapper = document.querySelector(".sellerCommentWrapper");
 
             for(let e of response.sellerCommunity){
 
-                sellerCommentWrapper.classList.remove("bg-body-secondary");
+
 
                 const newSellerCommentWrapper = sellerCommentWrapper.cloneNode(true);
+
 
                 const sellerCommentMain =newSellerCommentWrapper.querySelector(".sellerCommentMain");
 
@@ -187,6 +188,29 @@ function getSellerCommunityList(currentPage,searchWord,sortedOption,sellerSort){
                 newSellerCommentWrapper.classList.remove("d-none");
                 sellerCommunityBox.appendChild(newSellerCommentWrapper);
             }
+
+            const sellerCommentWrapperColor = document.querySelectorAll(".sellerCommentWrapper");
+
+            const badgeShow = document.querySelectorAll(".badgeShow");
+            console.log(response.sellerCommunityPaginationDto.searchWord);
+            console.log(response.sellerCommunityPaginationDto.sellerSort.length);
+
+
+
+            for(let i=0; i<2; i++) {
+                if(response.sellerCommunityPaginationDto.currentPage===1 && response.sellerCommunityPaginationDto.sellerSort.length===0 && response.sellerCommunityPaginationDto.searchWord===""){
+                    sellerCommentWrapperColor[i].classList.add("bg-body-secondary");
+                    badgeShow[i].innerText="인기";
+                    badgeShow[i].classList.add("badge","rounded-pill","text-bg-danger","align-top");
+                }else{
+                    sellerCommentWrapperColor[i].classList.remove("bg-body-secondary");
+                    badgeShow[i].classList.remove("badge","rounded-pill","text-bg-danger","align-top");
+                    badgeShow[i].innerText="";
+                }
+
+            }
+
+
 
             //페이징 위쪽
             const topCurrentPage = document.querySelector("#topCurrentPage");
@@ -727,7 +751,7 @@ function sellerCommunityDetailPage(sellerCommunityNumber,sellerCommunityCommentN
 
             const sellerCommunityContent = document.querySelector("#sellerCommunityContent");
             let textFormat=response.sellerCommunityDetail.selectSellerCommunityById.sellerCommunityContent;
-            textFormat.replace("<br>", '\n');
+            textFormat.replace("\n", "");
             sellerCommunityContent.innerHTML=textFormat;
 
             const imageContainer = document.querySelector("#imageContainer");
@@ -1086,7 +1110,7 @@ function sellerCommunityCommentInsertProcess(event){
             lineChart();
             dayChart();
             pieChart();
-            sellerCommunityDetailPage(sellerCommunityNumber,sellerCommunityCommentNumberInput);
+            sellerCommunityDetailPage(sellerCommunityNumber,"");
 
         });
 
@@ -1446,7 +1470,7 @@ function lineChart(){
 
 
             function updateChart() {
-                myPieChart.data.datasets.forEach((dataset, i) => {
+                myLineChart.data.datasets.forEach((dataset, i) => {
                     dataset.data = data.datasets[i].data;
                 });
                 myLineChart.update();

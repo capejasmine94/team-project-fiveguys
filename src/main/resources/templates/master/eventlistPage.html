@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <script>
+
+        
         function masterEventListPage(){
             const url = "/api/event/eventListPage";
 
@@ -105,6 +107,17 @@
                     endEventLocation.appendChild(newEndEventTemplete);
                 }
 
+                document.getElementById("eventStatus").addEventListener('change',(event)=>{
+                    if(event.target.value==="2"){
+                        endEventLocation.innerHTML="";
+                    }else if(event.target.value==="3"){
+                        runningEventLocation.innerHTML="";
+                    }else{
+                        masterEventListPage()
+                    }
+                    
+
+                })
             })
         }
 
@@ -538,6 +551,7 @@
 
         } 
 
+        
 
 
         window.addEventListener("DOMContentLoaded", () => {
@@ -600,11 +614,10 @@
                                         이벤트 분류
                                     </div>
                                     <div class="col">
-                                        <select class="form-select form-select-sm" name="haha">
-                                            <option selected>선택</option>
-                                            <option value="1">진행중인 이벤트</option>
-                                            <option value="2">종료된 이벤트</option>
-                                            <option value="3">당첨자</option>
+                                        <select class="form-select form-select-sm" name="eventStatus" id="eventStatus">
+                                            <option value="1" selected>선택</option>
+                                            <option value="2">진행중인 이벤트</option>
+                                            <option value="3">종료된 이벤트</option>
                                         </select>
                                     </div>
                                 </div>

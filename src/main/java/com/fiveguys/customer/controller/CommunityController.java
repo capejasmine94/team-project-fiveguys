@@ -270,8 +270,6 @@ public class CommunityController {
     public String communityActivityHistory(){
 
 
-
-
         return "/customer/communityActivityHistory";
     }
 

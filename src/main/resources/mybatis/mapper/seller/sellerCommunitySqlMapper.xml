@@ -80,30 +80,52 @@
                     WHEN s.sellerCommunityNumber IN (
                         SELECT sellerCommunityNumber
                         FROM (
-                            SELECT sellerCommunityNumber
+                            SELECT sellerCommunityNumber,
+                                ROW_NUMBER() OVER (ORDER BY (SELECT COUNT(*) FROM fc_sellerCommunityLike fsc WHERE fsc.sellerCommunityNumber = fc_sellerCommunity.sellerCommunityNumber) DESC) AS row_num
                             FROM fc_sellerCommunity
-                        ORDER BY (SELECT COUNT(*) FROM fc_sellerCommunityLike fsc WHERE fsc.sellerCommunityNumber = fc_sellerCommunity.sellerCommunityNumber) DESC
-                        LIMIT 2
-                        ) AS top_heart
-                    ) THEN 0
+                        ) AS ranked
+                    WHERE row_num &lt;= 2
+                ) THEN 0
                 ELSE 1
                 END,
-                s.sellerCommunityCreatedAt DESC
-            </when>
-            <when test="sortedOption =='view'">
                 CASE
                     WHEN s.sellerCommunityNumber IN (
                         SELECT sellerCommunityNumber
                         FROM (
-                            SELECT sellerCommunityNumber
+                            SELECT sellerCommunityNumber,
+                                ROW_NUMBER() OVER (ORDER BY (SELECT COUNT(*) FROM fc_sellerCommunityLike fsc WHERE fsc.sellerCommunityNumber = fc_sellerCommunity.sellerCommunityNumber) DESC) AS row_num
                             FROM fc_sellerCommunity
-                        ORDER BY (SELECT COUNT(*) FROM fc_sellerCommunityLike fsc WHERE fsc.sellerCommunityNumber = fc_sellerCommunity.sellerCommunityNumber) DESC
-                        LIMIT 2
-                    ) AS top_heart
+                        ) AS ranked
+                    WHERE row_num &lt;= 2
+                ) THEN -1 * (SELECT COUNT(*) FROM fc_sellerCommunityLike fsc WHERE fsc.sellerCommunityNumber = s.sellerCommunityNumber)
+                ELSE TIMESTAMPDIFF(SECOND, s.sellerCommunityCreatedAt, NOW())
+                END
+            </when>
+            <when test="sortedOption =='view'">
+                CASE
+                    WHEN s.sellerCommunityNumber IN (
+                         SELECT sellerCommunityNumber
+                         FROM (
+                            SELECT sellerCommunityNumber,
+                                ROW_NUMBER() OVER (ORDER BY (SELECT COUNT(*) FROM fc_sellerCommunityLike fsc WHERE fsc.sellerCommunityNumber = fc_sellerCommunity.sellerCommunityNumber) DESC) AS row_num
+                        FROM fc_sellerCommunity
+                    ) AS ranked
+                WHERE row_num &lt;= 2
                 ) THEN 0
                 ELSE 1
                 END,
-                s.sellerCommunityVisitCount desc
+                CASE
+                    WHEN s.sellerCommunityNumber IN (
+                        SELECT sellerCommunityNumber
+                    FROM (
+                        SELECT sellerCommunityNumber,
+                            ROW_NUMBER() OVER (ORDER BY (SELECT COUNT(*) FROM fc_sellerCommunityLike fsc WHERE fsc.sellerCommunityNumber = fc_sellerCommunity.sellerCommunityNumber) DESC) AS row_num
+                        FROM fc_sellerCommunity
+                    ) AS ranked
+                    WHERE row_num &lt;= 2
+                ) THEN -1 * (SELECT COUNT(*) FROM fc_sellerCommunityLike fsc WHERE fsc.sellerCommunityNumber = s.sellerCommunityNumber)
+                ELSE -s.sellerCommunityVisitCount
+                END
             </when>
             <when test="sortedOption =='like'">
                 heart desc

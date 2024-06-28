@@ -37,6 +37,7 @@ public class SellerCommunityRestController {
         int startPage =((sellerCommunityPaginationDto.getCurrentPage()-1)/5)*5+1;
         int endPage =((sellerCommunityPaginationDto.getCurrentPage()-1)/5+1)*5;
 
+
         if(endPage>lastPageNumber){
             endPage = lastPageNumber;
         }
@@ -47,6 +48,7 @@ public class SellerCommunityRestController {
 
 
         result.put("sellerCommunityPaginationDto", sellerCommunityPaginationDto);
+        System.out.println(sellerCommunityPaginationDto);
 
         SellerDto sellerDto = (SellerDto) session.getAttribute("sellerDto");
         if(sellerDto!=null){

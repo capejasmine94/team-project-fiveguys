@@ -254,12 +254,14 @@ function getSellerCommunityList(currentPage,searchWord,sortedOption,sellerSort){
             if(response.sellerCommunityPaginationDto.startPage ===1){
                 previousPageContainer.classList.add("text-black-50");
                 previousPage.onclick=null;
+            }else{
+                previousPageContainer.classList.remove("text-black-50");
             }
 
             const firstPageContainer = document.querySelector("#firstPageContainer");
             const firstPage = document.querySelector("#firstPage");
-            firstPageContainer.setAttribute("onclick",`movePage(${response.sellerCommunityPaginationDto.startPage})`);
-            firstPage.innerText=response.sellerCommunityPaginationDto.startPage;
+            firstPageContainer.setAttribute("onclick",`movePage(1)`);
+            firstPage.innerText=1;
 
             if(response.sellerCommunityPaginationDto.currentPage !==1 || response.sellerCommunityPaginationDto.startPage !==1){
                 firstPageContainer.classList.remove("d-none");
@@ -272,7 +274,7 @@ function getSellerCommunityList(currentPage,searchWord,sortedOption,sellerSort){
 
             pageNumbers.innerHTML="";
 
-            for(let e=1; e<=response.sellerCommunityPaginationDto.endPage; e++){
+            for(let e=response.sellerCommunityPaginationDto.startPage; e<=response.sellerCommunityPaginationDto.endPage; e++){
 
                 const newPageNumbers = pageList.cloneNode(true);
 
@@ -304,7 +306,8 @@ function getSellerCommunityList(currentPage,searchWord,sortedOption,sellerSort){
                 endPage.innerText="";
             }
 
-            endPage.setAttribute("onclick",`movePage(${response.sellerCommunityPaginationDto.endPage})`);
+
+            endPage.setAttribute("onclick",`movePage(${response.sellerCommunityPaginationDto.paginationPage})`);
 
             if(response.sellerCommunityPaginationDto.currentPage !== response.sellerCommunityPaginationDto.paginationPage){
                 endPageContainer.classList.remove("d-none");
@@ -532,6 +535,9 @@ function updateSellerCommunity(event){
                 sellerCommunityUpdateModal.hide();
                 getSellerCommunityList(currentPage,searchWord,sortedOption,sellerSort);
                 sellerCommunityDetailPage(sellerCommunityNumber,"");
+                setTimeout(() => {
+                    alert("게시글이 수정되었습니다.");
+                }, 500);
             }
         });
 }
@@ -1024,20 +1030,14 @@ function submitSellerCommunity(event){
     })
         .then(response=>response.json())
         .then(response=>{
-            const inputSuccessMessage = document.querySelector("#inputSuccessMessage");
-            if(response.inputSuccess===true){
-                inputSuccessMessage.innerText="게시글이 성공적으로 등록되었습니다";
-                inputSuccessMessage.classList.add("text-success");
-                sellerCommunityForm.reset();
-            }else{
-                inputSuccessMessage.innerText="게시글 등록 실패입니다";
-                inputSuccessMessage.classList.add("text-danger");
-                sellerCommunityForm.reset();
-            }
+            sellerCommunityForm.reset();
             getSellerCommunityList(currentPage,searchWord,sortedOption,sellerSort);
             lineChart();
             dayChart();
             pieChart();
+            setTimeout(() => {
+                alert("게시글이 등록되었습니다.");
+            }, 500);
         });
 }
 
@@ -1564,7 +1564,8 @@ function dayChart(){
                         legend: {
                             labels: {
                                 font: {
-                                    weight: 'bold'
+                                    weight: 'bold',
+                                    color:'red'
                                 }
                             }
                         }
@@ -1657,9 +1658,33 @@ function pieChart(){
                         tooltip: {
                             callbacks: {
                                 label: function(context) {
-                                    let label = '댓글 : ';
-                                    label += context.raw + '개'; // 소수점 2자리까지 표시
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    label += context.raw.toLocaleString() + '개 (';
+                                    label += ((context.raw / context.dataset.data.reduce((acc, val) => acc + val, 0)) * 100).toFixed(2) + '%)';
                                     return label;
+                                }
+                            }
+                        },
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                generateLabels: function(chart) {
+                                    const data = chart.data;
+                                    if (data.labels.length && data.datasets.length) {
+                                        return data.labels.map((label, i) => {
+                                            const dataset = data.datasets[0];
+                                            const value = dataset.data[i];
+                                            const percent = ((value / dataset.data.reduce((acc, val) => acc + val, 0)) * 100).toFixed(2) + '%';
+                                            return {
+                                                text: `${label}: 글 ${value.toLocaleString()}개 (${percent})`,
+                                                fillStyle: dataset.backgroundColor[i]
+                                            };
+                                        });
+                                    }
+                                    return [];
                                 }
                             }
                         }

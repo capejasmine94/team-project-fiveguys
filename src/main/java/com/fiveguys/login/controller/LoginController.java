@@ -39,6 +39,11 @@ public class LoginController {
         return "login/masterLogin";
     }
 
+    @RequestMapping("customerLogout")
+    public String customerLogout() {
+        return "login/customerLogout";
+    }
+
     @RequestMapping("customerLoginProcess")
     public String customerLoginProcess(HttpSession session, @ModelAttribute CustomerDto customerDto, Model model) {
         CustomerDto customerDto1 = loginService.selectCustomerCheck(customerDto);

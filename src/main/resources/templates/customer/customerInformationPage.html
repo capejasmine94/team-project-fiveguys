@@ -56,6 +56,16 @@
             <span style="color: black"><i class="bi bi-chevron-right"></i></span>
         </div>
     </a>
+    <!-- 리뷰 관리 -->
+    <a href="/customer/myReview"
+        class="row border-top border-bottom py-3 fs-3 customer_navi_link">
+        <div class="col">
+            리뷰 관리
+        </div>
+        <div class="col text-end">
+            <span style="color: black"><i class="bi bi-chevron-right"></i></span>
+        </div>
+    </a>
     <!-- 주소지 관리 -->
     <a th:href="@{/customer/addressManagementPage(customerNumber=${session.customerDto.customerNumber})}"
        class="row border-top border-bottom py-3 fs-3 customer_navi_link">

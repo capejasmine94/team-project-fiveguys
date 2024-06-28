@@ -137,7 +137,7 @@
             <!-- 메뉴 추가 : 지점이동 -->
             <div class="row">
                 <div class="col py-2 text-center">
-                    <span>+ 메뉴추가</span>
+                    <span class="fs-5">+ 메뉴추가</span>
                 </div>
             </div>
 
@@ -147,13 +147,17 @@
 <div class="container py-2 fixed-bottom border bg-light">
     <div class="row mx-2">
         <div class="col border rounded-3 text-center py-1" style="background-color: #D72239">
-            <form action="/customer/settlementPage" method="get">
-                <input type="hidden" name="sellerNumber" th:value="${param.sellerNumber}">
                 <button class="btn border-0 fs-2" style="color:white;">
                     <span><i class="fa-regular fa-credit-card"></i></span>
                     <span>결제 하기</span>
                 </button>
-            </form>
+<!--            <form action="/customer/settlementPage" method="get">-->
+<!--                <input type="hidden" name="sellerNumber" th:value="${param.sellerNumber}">-->
+<!--                <button class="btn border-0 fs-2" style="color:white;">-->
+<!--                    <span><i class="fa-regular fa-credit-card"></i></span>-->
+<!--                    <span>결제 하기</span>-->
+<!--                </button>-->
+<!--            </form>-->
         </div>
     </div>
 </div>

@@ -177,6 +177,10 @@ public class SellerCustomerService {
     public String selectCustomerAddress(int customerNumber){
         return sellerCustomerSqlMapper.selectCustomerAddress(customerNumber);
     }
+    // 주문 주소 삭제
+    public void deleteCustomerAddress(int customerAddressNumber) {
+        sellerCustomerSqlMapper.deleteCustomerAddress(customerAddressNumber);
+    }
 
 }
 

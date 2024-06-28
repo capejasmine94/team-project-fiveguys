@@ -93,6 +93,10 @@
         SELECT deliveryAddress FROM fc_customerAddress WHERE customerNumber = #{customerNumber}
     </select>
 
+    <delete id="deleteCustomerAddress">
+        DELETE FROM fc_customerAddress WHERE customerAddressNumber = #{customerAddressNumber};
+    </delete>
+
 
 
 </mapper>

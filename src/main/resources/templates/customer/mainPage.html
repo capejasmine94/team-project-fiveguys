@@ -44,7 +44,7 @@
             <span class="fs-4">환영합니닭!</span>
         </div>
         <div class="col-1 text-end d-flex justify-content-center align-items-center px-3 rounded-3" style="background-color: #D72239">
-            <a href="/customer/myPage" class="customer_main_link">
+            <a href="/login/customerLogout" class="customer_main_link">
                 <span class="fw-bold"><i class="bi bi-chevron-right"></i></span>
             </a>
         </div>
@@ -52,7 +52,7 @@
     <!-- 비회원 로그인 -->
     <div class="row mt-4 py-3 mx-2 customer_main_loginFont customer_main_loginBorder" th:if="${session.customerDto == null}">
         <div class="col fs-1 fw-bold text-center">
-            <a href="/customer/myPage" class="customer_main_link">
+            <a href="/login/customerLogin" class="customer_main_link">
                 <span><i class="bi bi-escape"></i></span>
                 <span>LOG IN</span>
             </a>

@@ -41,6 +41,8 @@ public interface SellerCustomerSqlMapper {
     public List<CustomerAddressDto> selectCustomerAddressList(int customerNumber);
     // 주문 주소 출력
     public String selectCustomerAddress(int customerNumber);
+    // 주문 주소 삭제
+    public void deleteCustomerAddress(int customerAddressNumber);
 
 
 }

@@ -28,6 +28,12 @@ public class CustomerController {
     @Autowired
     private CommunityService communityService;
 
+    @RequestMapping("joinMembershipPage")
+    public String joinMembershipPage() {
+
+        return "login/joinMembershipPage";
+    }
+
     @RequestMapping("mainPage")
     public String mainPage(Model model) {
         List<EventBoardDto> eventBoardList = eventService.selectEventBoardLimit();
@@ -184,6 +190,8 @@ public class CustomerController {
 
         return "redirect:/customer/addressManagementPage?customerNumber=" + addressDto.getCustomerNumber();
     }
+    // 주소삭제
+
 
     @RequestMapping("settlementPage")
     public String settlementPage(Model model, HttpSession session,
@@ -207,6 +215,7 @@ public class CustomerController {
         return "customer/orderDetailHistoryPage";
     }
 
+
     @RequestMapping("reviewPage")
     public String reviewPage(Model model,
                              @RequestParam("sellerNumber") int sellerNumber) {
@@ -214,8 +223,18 @@ public class CustomerController {
         SellerDto sellerDto = sellerCustomerService.selectSellersByNumber(sellerNumber);
         model.addAttribute("sellerDto", sellerDto);
 
-
         return "customer/reviewPage";
+    }
+    @RequestMapping("myReview")
+    public String myReview() {
+
+        return "customer/myReview";
+    }
+
+    @RequestMapping("createReviewPage")
+    public String createReviewPage() {
+
+        return "customer/createReviewPage";
     }
 
 

@@ -203,7 +203,7 @@ public class MasterController {
 
 
     @RequestMapping("insertMaterial")
-    public String insertMaterial(MaterialDto materialDto, @RequestParam("uploadFile") MultipartFile uploadFile) {
+    public String insertMaterial(MaterialDto materialDto, MultipartFile uploadFile) {
 
 
 
@@ -214,7 +214,7 @@ public class MasterController {
 
             }
 
-            String rootPath = "C:/fiveguys_image/";
+            String rootPath = "/Users/fiveguys_image/";
 
             //날짜별 폴더생성
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy//MM/dd/");

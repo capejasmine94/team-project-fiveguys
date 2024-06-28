@@ -56,19 +56,19 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <th scope="col">재료 이름</th>
-                    <th scope="col">재료 가격</th>
-                    <th scope="col">재료 정보</th>
-                    <th scope="col">재료 수량</th>
+                    <th class="text-center" scope="col">재료 이름</th>
+                    <th class="text-center" scope="col">재료 가격</th>
+                    <th class="text-center" scope="col">재료 정보</th>
+                    <th class="text-center" scope="col">재료 수량</th>
                 </tr>
                 </thead>
 
                 <tbody>
                 <tr th:each="sellerOrderList : ${sellerOrderList}">
-                    <td th:text="${sellerOrderList.materialDto.materialName}"></td>
-                    <td th:text="${sellerOrderList.materialDto.materialPrice}"></td>
-                    <td th:text="${sellerOrderList.materialDto.materialInformation}"></td>
-                    <td th:text="${sellerOrderList.sellerOrderDto.sellerOrderQuantity}"></td>
+                    <td class="text-center" th:text="${sellerOrderList.materialDto.materialName}"></td>
+                    <td class="text-center" th:text="${sellerOrderList.materialDto.materialPrice}"></td>
+                    <td class="text-center" th:text="${sellerOrderList.materialDto.materialInformation}"></td>
+                    <td class="text-center" th:text="${sellerOrderList.sellerOrderDto.sellerOrderQuantity}"></td>
                 </tr>
                 </tbody>
             </table>

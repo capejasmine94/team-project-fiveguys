@@ -86,7 +86,7 @@
 
         <!--            사용자가 로그인했고, 내가 쓴 글이 아닐때 : 좋아요 가능, 사용자가 누르지않으면 빈하트. 누르면 찬 하트 -->
                     <div class="row text-end">
-                        <div class="col">
+                        <div class="col pt-2">
                             <div th:if="${session.customerDto != null and communityData.communityDto.customerNumber != session.customerDto.customerNumber}">
                                 <a th:if="${communityLikeDto1} == null" th:href="@{./communityLikeProcess(communityNumber=${communityData.communityDto.communityNumber}, customerNumber=${session.customerDto.customerNumber})}" class="text-danger"><i class="bi bi-heart"></i></a>
                                 <a th:if="${communityLikeDto1} != null" th:href="@{./deleteLikeNumber(communityNumber=${communityData.communityDto.communityNumber}, customerNumber=${session.customerDto.customerNumber})}" class="text-danger"><i class="bi bi-heart-fill"></i></a>

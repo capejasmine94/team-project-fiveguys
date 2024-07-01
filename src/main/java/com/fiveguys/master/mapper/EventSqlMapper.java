@@ -64,5 +64,9 @@ public interface EventSqlMapper {
 
     List<EventBoardDto> selectEventBoardLimit();
 
+    List<EventBoardDto> scrollEndEventList(int page, int size);
+
+    List<EventBoardDto> scrollEndEventList(int start);
+
 
 }

@@ -197,5 +197,23 @@ public class EventService {
         return eventSqlMapper.selectEventBoardLimit();
     }
 
+    public List<Map<String, Object>> scrollEndEventList(int page, int size) {
+        List<Map<String, Object>> eventBoardInfoList = new ArrayList<>();
+        int start = (page-1)*2;
+        List<EventBoardDto> eventBoardDtoList = eventSqlMapper.scrollEndEventList(start);
+
+        
+        for(EventBoardDto eventBoardDto : eventBoardDtoList){
+            Map<String,Object> map = new HashMap<>();
+            int eventBoardLikeCount = eventSqlMapper.selectEventBoardLikeCount(eventBoardDto.getEventNumber());
+
+            map.put("eventBoardDto",eventBoardDto);
+            eventBoardInfoList.add(map);
+        }
+
+
+        return eventBoardInfoList;
+    }
+
    
 }

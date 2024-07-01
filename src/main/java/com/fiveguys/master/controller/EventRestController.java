@@ -267,6 +267,17 @@ public class EventRestController {
         return map;
     }
 
+    @RequestMapping("scrollEndEventList")
+    public Map<String,Object> scrollEndEventList(@RequestParam("page")int page, @RequestParam("size")int size){
+        
+        List<Map<String,Object>> endEventInfoList = eventService.scrollEndEventList(page,size);
+        Map<String,Object> map = new HashMap<>();
+        int selectEndEvent = eventService.selectEndEvent();
+        map.put("selectEndEvent", selectEndEvent);
+        map.put("endEventInfoList",endEventInfoList);
+
+        return map;
+    }
 
     
 }

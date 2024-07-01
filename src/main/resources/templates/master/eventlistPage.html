@@ -71,41 +71,63 @@
                 endEventLocation.innerHTML="";           
                 const endEventTempleteLocation = document.getElementById("endEventTempleteLocation");
                 const endEventTemplete = endEventTempleteLocation.querySelector(".endEventTemplete");
-                for(endEvent of response.endEventInfoList){
-                    const newEndEventTemplete = endEventTemplete.cloneNode(true);
+                
+                //무한스크롤
+                let page = 1;
+                const size = 2;
+                const scrollAnchor = document.getElementById('scroll-anchor');
+                function loadData(){
+                    const url = "/api/event/scrollEndEventList?page="+page+"&size="+size;
+                    fetch(url)
+                    .then(response => response.json())
+                    .then(response =>{
+                        for(endEvent of response.endEventInfoList){
+                            const newEndEventTemplete = endEventTemplete.cloneNode(true);
 
-                    const endOnclick = newEndEventTemplete.querySelector(".endOnclick");
-                    endOnclick.src = "/images/"+endEvent.eventBoardDto.eventMainImage;
-                    endOnclick.style.cursor = 'pointer';
-                    endOnclick.onclick =(function(eventNumber){
-                        return function(){
-                            showDetailPage(eventNumber);
+                            const endOnclick = newEndEventTemplete.querySelector(".endOnclick");
+                            endOnclick.src = "/images/"+endEvent.eventBoardDto.eventMainImage;
+                            endOnclick.style.cursor = 'pointer';
+                            endOnclick.onclick =(function(eventNumber){
+                                return function(){
+                                    showDetailPage(eventNumber);
+                                }
+                            })(endEvent.eventBoardDto.eventNumber);
+
+                            const updateEndEventpage = newEndEventTemplete.querySelector(".updateEndEventpage");
+                            updateEndEventpage.onclick = (function(eventNumber) {
+                                return function() {
+                                    showUpdateEventpage(eventNumber);
+                                };
+                            })(endEvent.eventBoardDto.eventNumber);
+
+                            const deleteEndEventPage = newEndEventTemplete.querySelector(".deleteEndEventPage");
+                            deleteEndEventPage.onclick = (function(eventNumber) {
+                                return function() {
+                                    deleteEventProcess(eventNumber);
+                                };
+                            })(endEvent.eventBoardDto.eventNumber);
+                            
+
+                            const endEventNumber =  newEndEventTemplete.querySelector(".endEventNumber");
+                            endEventNumber.textContent = endEvent.eventBoardDto.eventNumber;
+
+                            const endEventTitle = newEndEventTemplete.querySelector(".endEventTitle");
+                            endEventTitle.textContent = endEvent.eventBoardDto.eventTitle;  
+                            
+                            endEventLocation.appendChild(newEndEventTemplete);
                         }
-                    })(endEvent.eventBoardDto.eventNumber);
+                        page++;
+                    })
 
-                    const updateEndEventpage = newEndEventTemplete.querySelector(".updateEndEventpage");
-                    updateEndEventpage.onclick = (function(eventNumber) {
-                        return function() {
-                            showUpdateEventpage(eventNumber);
-                        };
-                    })(endEvent.eventBoardDto.eventNumber);
-
-                    const deleteEndEventPage = newEndEventTemplete.querySelector(".deleteEndEventPage");
-                    deleteEndEventPage.onclick = (function(eventNumber) {
-                        return function() {
-                            deleteEventProcess(eventNumber);
-                        };
-                    })(endEvent.eventBoardDto.eventNumber);
-                    
-
-                    const endEventNumber =  newEndEventTemplete.querySelector(".endEventNumber");
-                    endEventNumber.textContent = endEvent.eventBoardDto.eventNumber;
-
-                    const endEventTitle = newEndEventTemplete.querySelector(".endEventTitle");
-                    endEventTitle.textContent = endEvent.eventBoardDto.eventTitle;  
-                    
-                    endEventLocation.appendChild(newEndEventTemplete);
                 }
+                const observer = new IntersectionObserver((entries, observer) => {
+                    if (entries[0].isIntersecting) {
+                        loadData();
+                    }
+                }, { threshold: 1.0 });
+
+                observer.observe(scrollAnchor);
+                
 
                 document.getElementById("eventStatus").addEventListener('change',(event)=>{
                     if(event.target.value==="2"){
@@ -703,6 +725,9 @@
                                                     <div class="col" id="endEventLocation">
                                                         <!-- 종료된 이벤트 -->
                                                     </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col" id="scroll-anchor"></div>
                                                 </div>
                                             </div>
                                         </div>

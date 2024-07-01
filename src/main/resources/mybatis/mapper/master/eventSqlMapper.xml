@@ -172,5 +172,10 @@
         ]]>
     </select>
 
+    <select id="scrollEndEventList" resultType="EventBoardDto">
+        select * from fc_eventBoard
+        limit #{start},2
+    </select>
+
 
 </mapper>

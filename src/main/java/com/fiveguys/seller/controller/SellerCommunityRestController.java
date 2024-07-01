@@ -48,7 +48,6 @@ public class SellerCommunityRestController {
 
 
         result.put("sellerCommunityPaginationDto", sellerCommunityPaginationDto);
-        System.out.println(sellerCommunityPaginationDto);
 
         SellerDto sellerDto = (SellerDto) session.getAttribute("sellerDto");
         if(sellerDto!=null){

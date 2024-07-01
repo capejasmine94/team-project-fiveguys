@@ -153,7 +153,7 @@
                             <tr>
                                 <th class="text-center" scope="col">배송지</th>
                                 <th class="text-center" scope="col">주문일</th>
-                                <th scope="col">주문상태</th>
+                                <th class="text-center" scope="col">주문상태</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -166,7 +166,7 @@
                                        class="text-decoration-none fw-bold text-black">
                                     </a>
                                 </td>
-                                <td th:text="${sellerOrderList.sellerOrderDto.sellerOrderStatus}"></td>
+                                <td class="text-center" th:text="${sellerOrderList.sellerOrderDto.sellerOrderStatus}"></td>
                             </tr>
                             </tbody>
                         </table>
@@ -187,7 +187,7 @@
                         <table class="table">
                             <thead>
                             <tr>
-                                <th class="text-center" scope="col">작성자</th>
+                                <th class="text-end" scope="col">작성자</th>
                                 <th class="text-center" scope="col">제목</th>
                                 <th class="text-center" scope="col">작성일</th>
                             </tr>
@@ -195,7 +195,7 @@
                             <tbody>
                             <tr th:each="selectSellerCommunity : ${selectSellerCommunityMainPage}">
 
-                                <td class="text-center" th:text="${selectSellerCommunity.sellerName}"></td>
+                                <td class="text-end" th:text="${selectSellerCommunity.sellerName}"></td>
                                 <td class="text-center">
                                     <a href="/seller/sellerCommunity" class="text-decoration-none fw-bold text-black" th:text="${selectSellerCommunity.sellerCommunityTitle}"></a>
                                 </td>
